@@ -22,7 +22,7 @@ body {
     justify-content: space-between;
     align-items: center;
     background: linear-gradient(90deg, #4f46e5, #7c3aed);
-    padding: 1rem 2rem;
+    padding: 0.3rem 2rem;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     position: sticky;
     top: 0;
