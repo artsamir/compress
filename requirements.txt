@@ -1,0 +1,7 @@
+Flask
+Pillow
+rembg
+docx2pdf
+pdfkit
+openpyxl
+onnxruntime
