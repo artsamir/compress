@@ -1,8 +1,10 @@
-from flask import Flask, render_template, request, send_file, redirect, url_for
+from flask import Flask, render_template, request, send_file, redirect, url_for, jsonify
 import os
 from PIL import Image
-# from rembg import remove  # Commented out to avoid import error
+from rembg import remove  # Commented out to avoid import error
 from docx2pdf import convert  # For Word to PDF example
+import io
+import base64
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'uploads/'
@@ -102,6 +104,24 @@ def background_remove():
             return send_file(output_path, as_attachment=True)
     return render_template('example_tool.html', tool_name='Background Remove', form_type='image')
 """
+@app.route('/tool/background-remove', methods=['GET', 'POST'])
+def background_remove():
+    if request.method == 'POST':
+        file = request.files.get('file')
+        if file:
+            # Read original image bytes
+            original_bytes = file.read()
+            # Remove background
+            processed_bytes = remove(original_bytes)
+            # Convert to base64
+            original_base64 = base64.b64encode(original_bytes).decode('utf-8')
+            processed_base64 = base64.b64encode(processed_bytes).decode('utf-8')
+            return jsonify({
+                'original': f'data:image/png;base64,{original_base64}',
+                'processed': f'data:image/png;base64,{processed_base64}'
+            })
+        return jsonify({'error': 'No file provided'}), 400
+    return render_template('background_remove.html', tool_name='Background Remove')
 
 @app.route('/tool/passport-maker', methods=['GET', 'POST'])
 def passport_maker():

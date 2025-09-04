@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %}Background Remove - Cutcompress{% endblock %}
+
+{% block content %}
+    <div class="tool-container">
+        <h1>Background Remove</h1>
+        <div id="upload-area" class="drag-drop-area">
+            <p>Drag & drop your image here or click to upload</p>
+            <input type="file" id="file-input" accept="image/*" hidden>
+        </div>
+        <div id="loader" class="loader hidden"></div>
+        <div id="result-section" class="hidden">
+            <div class="slider-container">
+                <div class="image-container" id="before-image"></div>
+                <div class="image-container" id="after-image"></div>
+                <div class="slider"></div>
+            </div>
+            <div class="options">
+                <h3>Add Background Color</h3>
+                <input type="color" id="bg-color" value="#ffffff">
+                <h3>Add Background Image</h3>
+                <div class="predefined-bgs">
+                    <!-- Predefined backgrounds -->
+                    <div class="bg-option" style="background-image: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e');" data-url="https://images.unsplash.com/photo-1507525428034-b723cf961d3e"></div>
+                    <div class="bg-option" style="background-image: url('https://images.unsplash.com/photo-1519125323398-675f0ddb6308');" data-url="https://images.unsplash.com/photo-1519125323398-675f0ddb6308"></div>
+                </div>
+                <input type="file" id="bg-upload" accept="image/*">
+                <button id="reset-btn">Reset</button>
+                <button id="download-btn">Download</button>
+            </div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/background_remove.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/background_remove.css') }}">
+{% endblock %}

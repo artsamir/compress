@@ -16,7 +16,7 @@ body {
     overflow-x: hidden;
 }
 
-/* Navbar (from original, enhanced) */
+/* Navbar */
 .navbar {
     display: flex;
     justify-content: space-between;
