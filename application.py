@@ -9,6 +9,7 @@ import base64
 # Create the Flask application for AWS EB
 application = Flask(__name__)
 application.config['UPLOAD_FOLDER'] = '/tmp/uploads/'  # Safer in EB
+application.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16 MB limit
 os.makedirs(application.config['UPLOAD_FOLDER'], exist_ok=True)
 
 # ---------------- Force HTTPS ----------------
@@ -89,21 +90,52 @@ def image_to_webp():
 def image_to_pdf():
     return render_template('example_tool.html', tool_name='Image to PDF', form_type='image')
 
+
+
 @application.route('/tool/background-remove', methods=['GET', 'POST'])
 def background_remove():
     if request.method == 'POST':
         file = request.files.get('file')
-        if file:
-            original_bytes = file.read()
-            processed_bytes = remove(original_bytes)
+        if not file:
+            return jsonify({'error': 'No file provided'}), 400
+
+        try:
+            # Read file bytes
+            file_bytes = file.read()
+            if len(file_bytes) == 0:
+                return jsonify({'error': 'Empty file'}), 400
+
+            # Open image as RGBA to preserve transparency
+            input_img = Image.open(io.BytesIO(file_bytes)).convert("RGBA")
+
+            # Remove background
+            output_img = remove(input_img)  # returns PIL.Image
+
+            # Save processed image to bytes
+            buf = io.BytesIO()
+            output_img.save(buf, format='PNG')
+            processed_bytes = buf.getvalue()
+
+            # Convert original image to PNG bytes if not already
+            original_buf = io.BytesIO()
+            input_img.save(original_buf, format='PNG')
+            original_bytes = original_buf.getvalue()
+
+            # Encode both images to base64
             original_base64 = base64.b64encode(original_bytes).decode('utf-8')
             processed_base64 = base64.b64encode(processed_bytes).decode('utf-8')
+
             return jsonify({
                 'original': f'data:image/png;base64,{original_base64}',
                 'processed': f'data:image/png;base64,{processed_base64}'
             })
-        return jsonify({'error': 'No file provided'}), 400
+
+        except Exception as e:
+            print("Background removal error:", e)
+            return jsonify({'error': str(e)}), 500
+
     return render_template('background_remove.html', tool_name='Background Remove')
+
 
 @application.route('/tool/passport-maker', methods=['GET', 'POST'])
 def passport_maker():

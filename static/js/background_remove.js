@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const resultSection = document.getElementById('result-section');
     const beforeImage = document.getElementById('before-image');
     const afterImage = document.getElementById('after-image');
-    const slider = document.getElementById('slider');
+    const slider = document.querySelector('.slider');
     const bgColor = document.getElementById('bg-color');
     const bgUpload = document.getElementById('bg-upload');
     const resetBtn = document.getElementById('reset-btn');
@@ -47,60 +47,85 @@ document.addEventListener('DOMContentLoaded', () => {
         uploadArea.classList.add('hidden');
         const formData = new FormData();
         formData.append('file', file);
+
         fetch('/tool/background-remove', {
             method: 'POST',
             body: formData
         })
         .then(response => response.json())
         .then(data => {
-            if (data.error) throw new Error(data.error);
+            console.log("Response from backend:", data); // ✅ Debug
+            if (!data.original || !data.processed) {
+                throw new Error("Invalid data from backend");
+            }
             originalSrc = data.original;
             processedSrc = data.processed;
             showResult();
         })
         .catch(error => {
-            console.error(error);
+            console.error("Upload error:", error);
             alert('Error processing image');
             resetUpload();
         });
     }
+
 
     // Show Result
     function showResult() {
         loader.classList.add('hidden');
         resultSection.classList.remove('hidden');
         beforeImage.style.backgroundImage = `url(${originalSrc})`;
+
+        // Set default background if none
+        if (!currentBg) {
+            currentBg = { type: 'color', value: '#ffffff' }; // white background
+        }
+
         updateAfterImage();
         initSlider();
     }
 
+
+
     // Update After Image (with BG)
     function updateAfterImage() {
-        const img = new Image();
-        img.src = processedSrc;
-        img.onload = () => {
-            canvas.width = img.width;
-            canvas.height = img.height;
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            if (currentBg) {
-                if (currentBg.type === 'color') {
-                    ctx.fillStyle = currentBg.value;
-                    ctx.fillRect(0, 0, canvas.width, canvas.height);
-                } else if (currentBg.type === 'image') {
-                    const bgImg = new Image();
-                    bgImg.src = currentBg.value;
-                    bgImg.onload = () => {
-                        ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height);
-                        ctx.drawImage(img, 0, 0);
-                        afterImage.style.backgroundImage = `url(${canvas.toDataURL()})`;
-                    };
-                    return;
-                }
+    const img = new Image();
+    img.src = processedSrc;
+    img.onload = () => {
+        canvas.width = img.width;
+        canvas.height = img.height;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        if (currentBg) {
+            if (currentBg.type === 'color') {
+                ctx.fillStyle = currentBg.value;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+            } else if (currentBg.type === 'image') {
+                const bgImg = new Image();
+                bgImg.src = currentBg.value;
+                bgImg.onload = () => {
+                    ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height);
+                    ctx.drawImage(img, 0, 0);
+                    afterImage.style.backgroundImage = `url(${canvas.toDataURL()})`;
+                };
+                return; // important: stop here until bg image loads
             }
-            ctx.drawImage(img, 0, 0);
-            afterImage.style.backgroundImage = `url(${canvas.toDataURL()})`;
-        };
-    }
+        }
+
+        // Always draw the processed image even if no background
+        ctx.drawImage(img, 0, 0);
+        afterImage.style.backgroundImage = `url(${canvas.toDataURL()})`;
+
+        // Initialize slider clip if not set
+        if (!afterImage.style.clipPath) {
+            slider.style.left = '50%';
+            afterImage.style.clipPath = 'inset(0 50% 0 0)';
+        }
+    };
+}
+
+
+
 
     // Slider Functionality
     function initSlider() {
