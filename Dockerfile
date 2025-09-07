@@ -30,5 +30,9 @@ RUN pip install --no-cache-dir -r requirements.txt gunicorn
 COPY . .
 
 # Run the Flask app with shell form (allows $PORT)
-CMD gunicorn -b 0.0.0.0:$PORT application:application
+CMD gunicorn -b 0.0.0.0:$PORT application:application \
+    --workers 4 \
+    --threads 4 \
+    --timeout 120 \
+    --preload
 
