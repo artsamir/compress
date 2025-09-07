@@ -11,6 +11,15 @@ application = Flask(__name__)
 application.config['UPLOAD_FOLDER'] = '/tmp/uploads/'  # Safer in EB
 os.makedirs(application.config['UPLOAD_FOLDER'], exist_ok=True)
 
+# ---------------- Force HTTPS ----------------
+@application.before_request
+def enforce_https():
+    if os.environ.get("RAILWAY_ENV") == "production":
+        if request.headers.get("X-Forwarded-Proto", "http") != "https":
+            url = request.url.replace("http://", "https://", 1)
+            return redirect(url, code=301)
+# --------------------------------------------
+
 # ----------------- Basic Routes -----------------
 @application.route('/')
 def index():
