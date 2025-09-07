@@ -6,7 +6,7 @@ ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
 # Set working directory
-WORKDIR /app
+WORKDIR /application
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -28,5 +28,5 @@ RUN pip install --no-cache-dir -r requirements.txt gunicorn
 COPY . .
 
 # Run the Flask app with shell form (allows $PORT)
-CMD gunicorn -b 0.0.0.0:$PORT app:app
+CMD gunicorn -b 0.0.0.0:$PORT application:application
 
