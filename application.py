@@ -97,41 +97,46 @@ def background_remove():
     if request.method == 'POST':
         file = request.files.get('file')
         if not file:
+            print("Error: No file provided")
             return jsonify({'error': 'No file provided'}), 400
 
         try:
-            # Read file bytes
             file_bytes = file.read()
             if len(file_bytes) == 0:
+                print("Error: Empty file")
                 return jsonify({'error': 'Empty file'}), 400
 
-            # Open image as RGBA to preserve transparency
+            print("Processing image with rembg...")
             input_img = Image.open(io.BytesIO(file_bytes)).convert("RGBA")
+            print("Input image mode:", input_img.mode, "Size:", input_img.size)
 
-            # Remove background
-            output_img = remove(input_img)  # returns PIL.Image
+            output_img = remove(input_img)
+            print("Output image mode:", output_img.mode, "Size:", output_img.size)
 
-            # Save processed image to bytes
+            # Save for debugging
+            debug_path = os.path.join(application.config['UPLOAD_FOLDER'], 'debug_output.png')
+            output_img.save(debug_path, format='PNG')
+            print(f"Saved debug image to {debug_path}")
+
             buf = io.BytesIO()
             output_img.save(buf, format='PNG')
             processed_bytes = buf.getvalue()
 
-            # Convert original image to PNG bytes if not already
             original_buf = io.BytesIO()
             input_img.save(original_buf, format='PNG')
             original_bytes = original_buf.getvalue()
 
-            # Encode both images to base64
             original_base64 = base64.b64encode(original_bytes).decode('utf-8')
             processed_base64 = base64.b64encode(processed_bytes).decode('utf-8')
 
+            print("Returning JSON response with processed image")
             return jsonify({
                 'original': f'data:image/png;base64,{original_base64}',
                 'processed': f'data:image/png;base64,{processed_base64}'
             })
 
         except Exception as e:
-            print("Background removal error:", e)
+            print("Background removal error:", str(e))
             return jsonify({'error': str(e)}), 500
 
     return render_template('background_remove.html', tool_name='Background Remove')

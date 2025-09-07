@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let originalSrc = '';
     let processedSrc = '';
-    let currentBg = null;  // {type: 'color'|'image', value: color or dataURL}
+    let currentBg = null;
     let canvas = document.createElement('canvas');
     let ctx = canvas.getContext('2d');
 
@@ -48,13 +48,17 @@ document.addEventListener('DOMContentLoaded', () => {
         const formData = new FormData();
         formData.append('file', file);
 
+        console.log("Uploading image:", file.name, file.size, "bytes");
         fetch('/tool/background-remove', {
             method: 'POST',
             body: formData
         })
-        .then(response => response.json())
+        .then(response => {
+            console.log("Fetch response status:", response.status);
+            return response.json();
+        })
         .then(data => {
-            console.log("Response from backend:", data); // ✅ Debug
+            console.log("Response from backend:", data);
             if (!data.original || !data.processed) {
                 throw new Error("Invalid data from backend");
             }
@@ -64,74 +68,95 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .catch(error => {
             console.error("Upload error:", error);
-            alert('Error processing image');
+            alert(`Error processing image: ${error.message}`);
             resetUpload();
         });
     }
-
 
     // Show Result
     function showResult() {
         loader.classList.add('hidden');
         resultSection.classList.remove('hidden');
         beforeImage.style.backgroundImage = `url(${originalSrc})`;
-
-        // Set default background if none
-        if (!currentBg) {
-            currentBg = { type: 'color', value: '#ffffff' }; // white background
-        }
-
+        console.log("Original image set:", originalSrc.substring(0, 50) + "...");
+        console.log("Processed image set:", processedSrc.substring(0, 50) + "...");
         updateAfterImage();
         initSlider();
     }
 
-
-
-    // Update After Image (with BG)
+    // Update After Image
     function updateAfterImage() {
-    const img = new Image();
-    img.src = processedSrc;
-    img.onload = () => {
-        canvas.width = img.width;
-        canvas.height = img.height;
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        let overlay = afterImage.querySelector('.overlay');
+        if (!overlay) {
+            overlay = document.createElement('div');
+            overlay.className = 'overlay';
+            afterImage.appendChild(overlay);
+        }
 
-        if (currentBg) {
-            if (currentBg.type === 'color') {
-                ctx.fillStyle = currentBg.value;
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-            } else if (currentBg.type === 'image') {
-                const bgImg = new Image();
-                bgImg.src = currentBg.value;
-                bgImg.onload = () => {
-                    ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height);
-                    ctx.drawImage(img, 0, 0);
-                    afterImage.style.backgroundImage = `url(${canvas.toDataURL()})`;
-                };
-                return; // important: stop here until bg image loads
+        const img = new Image();
+        img.crossOrigin = "anonymous";
+        img.src = processedSrc;
+        img.onload = () => {
+            console.log("Processed image loaded:", img.width, img.height);
+            canvas.width = img.width;
+            canvas.height = img.height;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw checkerboard only if no custom background
+            if (!currentBg) {
+                const patternSize = 20;
+                for (let y = 0; y < canvas.height; y += patternSize) {
+                    for (let x = 0; x < canvas.width; x += patternSize) {
+                        ctx.fillStyle = ((x / patternSize + y / patternSize) % 2 === 0) ? "#eee" : "#ccc";
+                        ctx.fillRect(x, y, patternSize, patternSize);
+                    }
+                }
             }
-        }
 
-        // Always draw the processed image even if no background
-        ctx.drawImage(img, 0, 0);
-        afterImage.style.backgroundImage = `url(${canvas.toDataURL()})`;
+            // Draw processed image on top
+            ctx.drawImage(img, 0, 0);
 
-        // Initialize slider clip if not set
-        if (!afterImage.style.clipPath) {
-            slider.style.left = '50%';
-            afterImage.style.clipPath = 'inset(0 50% 0 0)';
-        }
-    };
-}
+            // Apply custom background if selected
+            if (currentBg) {
+                if (currentBg.type === 'color') {
+                    ctx.fillStyle = currentBg.value;
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    ctx.drawImage(img, 0, 0);
+                    console.log("Applied color background:", currentBg.value);
+                } else if (currentBg.type === 'image') {
+                    const bgImg = new Image();
+                    bgImg.crossOrigin = "anonymous";
+                    bgImg.src = currentBg.value;
+                    bgImg.onload = () => {
+                        ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height);
+                        ctx.drawImage(img, 0, 0);
+                        overlay.style.backgroundImage = `url(${canvas.toDataURL()})`;
+                        console.log("Applied background image:", currentBg.value);
+                    };
+                    return;
+                }
+            }
 
-
-
+            overlay.style.backgroundImage = `url(${canvas.toDataURL()})`;
+            console.log("Overlay updated with canvas data URL");
+        };
+        img.onerror = () => {
+            console.error("Failed to load processed image:", processedSrc.substring(0, 50) + "...");
+            alert("Error loading processed image");
+        };
+    }
 
     // Slider Functionality
     function initSlider() {
         let isDragging = false;
-        slider.addEventListener('mousedown', () => isDragging = true);
-        document.addEventListener('mouseup', () => isDragging = false);
+        slider.addEventListener('mousedown', () => {
+            isDragging = true;
+            console.log("Slider drag started");
+        });
+        document.addEventListener('mouseup', () => {
+            isDragging = false;
+            console.log("Slider drag ended");
+        });
         document.addEventListener('mousemove', (e) => {
             if (!isDragging) return;
             const container = slider.parentElement;
@@ -141,6 +166,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const percent = (x / rect.width) * 100;
             slider.style.left = `${percent}%`;
             afterImage.style.clipPath = `inset(0 ${100 - percent}% 0 0)`;
+            console.log("Slider position:", percent, "Clip path:", afterImage.style.clipPath);
+            console.log("After image visibility:", afterImage.offsetWidth, afterImage.offsetHeight);
         });
     }
 
@@ -185,9 +212,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // Download
     downloadBtn.addEventListener('click', () => {
         const a = document.createElement('a');
-        a.href = canvas.toDataURL('image/png');
+        a.href = processedSrc;
         a.download = 'processed_image.png';
         a.click();
+        console.log("Download initiated for processed image");
     });
 
     // Reset Upload on Error

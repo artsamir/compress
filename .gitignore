@@ -5,3 +5,4 @@ uploads/
 *.log
 .env
 
+test_rembg.py

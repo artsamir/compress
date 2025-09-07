@@ -75,7 +75,7 @@ body {
     100% { transform: rotate(360deg); }
 }
 
-/* Slider Container */
+/* Slider and Image Containers */
 .slider-container {
     position: relative;
     width: 100%;
@@ -99,12 +99,34 @@ body {
 }
 
 #before-image {
-    z-index: 1;
+    z-index: 1; /* Original image behind after-image */
+}
+
+#after-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2; /* Above before-image */
 }
 
 #after-image {
-    z-index: 2;
-    clip-path: inset(0 50% 0 0); /* Show right half initially */
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+#after-image .overlay {
+    position: absolute;
+    inset: 0;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    z-index: 3; /* Above all */
 }
 
 .slider {
@@ -114,9 +136,8 @@ body {
     width: 6px;
     height: 100%;
     background: linear-gradient(180deg, #2dd4bf, #f43f5e);
-    z-index: 3;
+    z-index: 4; /* Above images */
     cursor: ew-resize;
-    transition: left 0.1s ease;
 }
 
 .slider::before {
