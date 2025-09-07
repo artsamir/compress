@@ -1,5 +1,5 @@
-// Animate auth button to alternate between Sign Up and Login every 3 seconds
 document.addEventListener('DOMContentLoaded', function() {
+    // Animate auth button to alternate between Sign Up and Login every 3 seconds
     const authLink = document.getElementById('auth-link');
     let isSignUp = true;
 
@@ -13,4 +13,16 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         isSignUp = !isSignUp;
     }, 3000);  // Change every 3 seconds
+
+    // Hamburger menu toggle
+    const navToggle = document.querySelector('.nav-toggle');
+    const navLinks = document.querySelector('.nav-links');
+    const authButton = document.querySelector('.auth-button');
+
+    navToggle.addEventListener('click', () => {
+        navLinks.classList.toggle('active');
+        authButton.classList.toggle('active');
+        navToggle.classList.toggle('active');
+        console.log('Nav toggle clicked:', navLinks.classList.contains('active') ? 'Menu opened' : 'Menu closed');
+    });
 });

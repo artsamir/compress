@@ -22,6 +22,9 @@
         <div class="auth-button">
             <a id="auth-link" href="{{ url_for('signup') }}">Sign Up</a>
         </div>
+        <button class="nav-toggle" aria-label="Toggle navigation">
+            <span class="hamburger"></span>
+        </button>
     </nav>
     <main>
         {% block content %}{% endblock %}
