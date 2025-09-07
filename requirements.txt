@@ -1,7 +1,8 @@
-Flask
-Pillow
-rembg
-docx2pdf
-pdfkit
-openpyxl
-onnxruntime
+Flask==3.0.3
+Pillow==10.4.0
+rembg==2.0.50
+docx2pdf==0.1.8
+pdfkit==1.0.0
+openpyxl==3.1.5
+onnxruntime==1.17.0
+numpy==1.26.4
