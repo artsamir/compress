@@ -19,14 +19,12 @@ body {
 /* Navbar */
 .navbar {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    background: linear-gradient(90deg, #4f46e5, #7c3aed);
-    padding: 0.3rem 2rem;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    position: sticky;
-    top: 0;
-    z-index: 1000;
+    justify-content: space-between;
+    padding: 0 24px;
+    height: 64px;
+    background: #4f46e5;
+    position: relative;
 }
 
 .logo img {
@@ -227,6 +225,50 @@ body {
     text-decoration: underline;
 }
 
+/* Colored icons for tool boxes */
+.tool-box .tool-box-header i {
+  font-size: 1.75rem;
+  margin-right: 10px;
+  vertical-align: middle;
+  transition: transform .18s ease, filter .18s ease;
+}
+
+/* Small icons for list items */
+.tool-box ul li i {
+  margin-right: 10px;
+  width: 20px;
+  text-align: center;
+  transition: transform .18s ease, filter .18s ease;
+}
+
+/* Per-box color palette */
+.tool-box:nth-of-type(1) .tool-box-header i,
+.tool-box:nth-of-type(1) ul li i { color: #ef4444; }   /* red */
+.tool-box:nth-of-type(2) .tool-box-header i,
+.tool-box:nth-of-type(2) ul li i { color: #06b6d4; }   /* teal/cyan */
+.tool-box:nth-of-type(3) .tool-box-header i,
+.tool-box:nth-of-type(3) ul li i { color: #7c3aed; }   /* purple */
+.tool-box:nth-of-type(4) .tool-box-header i,
+.tool-box:nth-of-type(4) ul li i { color: #10b981; }   /* green */
+.tool-box:nth-of-type(5) .tool-box-header i,
+.tool-box:nth-of-type(5) ul li i { color: #f59e0b; }   /* amber */
+
+/* Hover/tap affordance */
+.tool-box ul li a:hover i,
+.tool-box ul li a:focus i {
+  transform: translateX(4px);
+  filter: brightness(0.9);
+}
+
+/* Ensure icons contrast on dark bg */
+.tool-box {
+  --icon-contrast: 1;
+}
+@media (prefers-color-scheme: dark) {
+  .tool-box ul li i,
+  .tool-box .tool-box-header i { filter: drop-shadow(0 1px 0 rgba(0,0,0,0.15)); }
+}
+
 /* Scrollbar */
 ::-webkit-scrollbar {
     width: 10px;
@@ -258,20 +300,65 @@ body {
     to { transform: translateX(0); }
 }
 
-/* Responsive Design */
-@media (max-width: 900px) {
-    .tool-boxes {
-        grid-template-columns: 1fr;
-        padding: 1.5rem;
+/* Desktop/Mobile visibility classes */
+.mobile-only {
+    display: none;
+}
+
+.desktop-only {
+    display: block;
+}
+
+@media (max-width: 700px) {
+    .mobile-only {
+        display: block;
     }
-    .tool-box {
-        max-width: 100%;
+
+    .desktop-only {
+        display: none;
     }
-    .hero h1 {
-        font-size: 2rem;
+
+    .navbar {
+        padding: 0 16px;
+        justify-content: space-between;
+        position: relative; /* Add this */
     }
-    .hero p {
-        font-size: 1rem;
+
+    .logo {
+        order: 1;
+    }
+
+    .nav-links {
+        order: 3; /* Change from 2 to 3 */
+        position: absolute;
+        top: 56px;
+        left: 0;
+        width: 100%;
+        display: none;
+        background: #4f46e5;
+    }
+
+    .nav-toggle {
+        order: 2; /* Change from 3 to 2 */
+        display: block;
+        margin-left: auto;
+        padding: 12px;
+        position: absolute; /* Add this */
+        right: 16px; /* Add this */
+        top: 50%; /* Add this */
+        transform: translateY(-50%); /* Add this */
+    }
+
+    /* Hide desktop auth button */
+    .navbar > .auth-button {
+        display: none;
+    }
+
+    /* Ensure toggle button visibility */
+    .hamburger,
+    .hamburger::before,
+    .hamburger::after {
+        background: #fff;
     }
 }
 
