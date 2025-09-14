@@ -6,3 +6,6 @@ uploads/
 .env
 
 test_rembg.py
+signup.html
+signup.css
+signup.js

@@ -1,12 +1,69 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 
 {% block title %}Sign Up - Cutcompress{% endblock %}
 
 {% block content %}
-    <h1>Sign Up</h1>
-    <form method="POST">
-        <input type="text" name="username" placeholder="Username" required>
-        <input type="password" name="password" placeholder="Password" required>
-        <button type="submit">Sign Up</button>
+<div class="signup-container">
+    <h1>Create an Account</h1>
+    <form id="signup-form" method="POST">
+    <!-- First Name -->
+    <div class="form-group">
+        <label for="firstName">First Name</label>
+        <input type="text" id="firstName" name="firstName" required>
+    </div>
+
+    <!-- Last Name -->
+    <div class="form-group">
+        <label for="lastName">Last Name</label>
+        <input type="text" id="lastName" name="lastName" required>
+    </div>
+
+    <!-- Mobile -->
+    <div class="form-group">
+        <label for="mobile">Mobile Number</label>
+        <input type="tel" id="mobile" name="mobile" required pattern="[0-9]{10}">
+    </div>
+
+    <!-- Email -->
+    <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required>
+    </div>
+
+    <!-- Age Category -->
+    <div class="form-group">
+        <label for="ageCategory">Age Category</label>
+        <select id="ageCategory" name="ageCategory" required>
+        <option value="">Select Age Category</option>
+        <option value="child">Child (0-12)</option>
+        <option value="teenager">Teenager (13-19)</option>
+        <option value="boy">Boy (20-29)</option>
+        <option value="adult">Adult (30+)</option>
+        </select>
+    </div>
+
+    <!-- Country -->
+    <div class="form-group">
+        <label for="country">Country</label>
+        <select id="country" name="country" required></select>
+    </div>
+
+    <!-- State -->
+    <div class="form-group">
+        <label for="state">State</label>
+        <select id="state" name="state" required></select>
+    </div>
+
+    <!-- Terms -->
+    <div class="form-group terms">
+        <input type="checkbox" id="terms" required>
+        <label for="terms">I agree to the <a href="#">Terms & Conditions</a></label>
+    </div>
+
+    <button type="submit" class="btn">Sign Up</button>
     </form>
+</div>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/signup.css') }}">
+<script src="{{ url_for('static', filename='js/signup.js') }}"></script>
 {% endblock %}

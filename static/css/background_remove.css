@@ -284,3 +284,77 @@ button:hover {
         height: 60px;
     }
 }
+
+
+.blog-section {
+    margin: 3rem auto;
+    max-width: 1000px;
+    padding: 1rem;
+}
+
+.blog-container {
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+    padding: 2rem;
+    margin-bottom: 2rem;
+    font-family: 'Inter', sans-serif;
+    line-height: 1.8;
+    animation: fadeIn 0.6s ease-in;
+}
+
+.blog-container h1 {
+    font-size: 1.8rem;
+    color: #1e293b;
+    margin-bottom: 1rem;
+    font-weight: 700;
+}
+
+.blog-container h2 {
+    font-size: 1.3rem;
+    margin: 1.2rem 0 0.8rem;
+    color: #0f172a;
+}
+
+.blog-container p {
+    font-size: 1.1rem;
+    color: #334155;
+    margin-bottom: 1rem;
+}
+
+.blog-container ul,
+.blog-container ol {
+    margin: 1rem 0 1.5rem 2rem;
+    color: #475569;
+    font-size: 1.05rem;
+}
+
+.blog-container li {
+    margin-bottom: 0.6rem;
+}
+
+.blog-container img {
+    width: 100%;
+    max-height: 400px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin: 1.5rem 0;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 768px) {
+    .blog-container {
+        padding: 1.2rem;
+    }
+    .blog-container h1 {
+        font-size: 1.5rem;
+    }
+    .blog-container p {
+        font-size: 1rem;
+    }
+}
