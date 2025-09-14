@@ -454,53 +454,63 @@ canvas.addEventListener("touchend", e => {
 }, { passive: false });
 
 // --- Download ---
+const MM_TO_PX = 11.811; // 1mm = 11.811px at 300dpi
+
+function parseSizeSwap() {
+    const raw = (sizeSelect.value || '').toString().toLowerCase().replace(/mm/g, '').replace(/\s+/g, '');
+    const parts = raw.split('x').map(Number);
+    if (parts.length !== 2 || parts.some(isNaN)) return null;
+    const [firstMM, secondMM] = parts;
+    // swap: first x second -> width = second, height = first (45 x 35 for "35x45")
+    const widthMM = secondMM;
+    const heightMM = firstMM;
+    const widthPX = Math.round(widthMM * MM_TO_PX);
+    const heightPX = Math.round(heightMM * MM_TO_PX);
+    return { widthMM, heightMM, widthPX, heightPX };
+}
+
 downloadBtn.addEventListener("click", () => {
     try {
-        // Get the exact size in pixels based on mm selection
-        const [widthMM, heightMM] = sizeSelect.value.split("x").map(Number);
-        const widthPX = Math.round(widthMM * MM_TO_PX);
-        const heightPX = Math.round(heightMM * MM_TO_PX);
-
-        // Create a temporary canvas at the exact required size
-        const tempCanvas = document.createElement('canvas');
-        tempCanvas.width = widthPX;
-        tempCanvas.height = heightPX;
-        const tempCtx = tempCanvas.getContext('2d');
-
-        // Clear with transparency
-        tempCtx.clearRect(0, 0, widthPX, heightPX);
-
-        // Draw background if set
-        if (bgImage) {
-            tempCtx.drawImage(bgImage, 0, 0, widthPX, heightPX);
-        } else if (bgColor !== 'transparent') {
-            tempCtx.fillStyle = bgColor;
-            tempCtx.fillRect(0, 0, widthPX, heightPX);
+        const size = parseSizeSwap();
+        if (!size) {
+            alert("Invalid size selected.");
+            return;
         }
 
-        // Draw images at their exact positions and sizes
+        const tempCanvas = document.createElement("canvas");
+        tempCanvas.width = size.widthPX;
+        tempCanvas.height = size.heightPX;
+        const tempCtx = tempCanvas.getContext("2d");
+
+        // preserve transparency
+        tempCtx.clearRect(0, 0, tempCanvas.width, tempCanvas.height);
+
+        // draw background only if set
+        if (bgImage) {
+            tempCtx.drawImage(bgImage, 0, 0, tempCanvas.width, tempCanvas.height);
+        } else if (bgColor && bgColor !== "transparent") {
+            tempCtx.fillStyle = bgColor;
+            tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+        }
+
+        // draw each image scaled from current logical canvas -> target size
         images.forEach(obj => {
-            // Calculate actual positions and sizes relative to the passport/ID size
-            const x = Math.round((obj.x / canvas.width) * widthPX);
-            const y = Math.round((obj.y / canvas.height) * heightPX);
-            const w = Math.round((obj.w / canvas.width) * widthPX);
-            const h = Math.round((obj.h / canvas.height) * heightPX);
-            
+            const x = Math.round((obj.x / canvas.width) * tempCanvas.width);
+            const y = Math.round((obj.y / canvas.height) * tempCanvas.height);
+            const w = Math.round((obj.w / canvas.width) * tempCanvas.width);
+            const h = Math.round((obj.h / canvas.height) * tempCanvas.height);
             tempCtx.drawImage(obj.img, x, y, w, h);
         });
 
-        // Create and trigger download with correct size
-        const dataUrl = tempCanvas.toDataURL('image/png', 1.0);
-        const link = document.createElement('a');
-        link.download = `merged_${widthMM}x${heightMM}mm.png`;
-        link.href = dataUrl;
+        const link = document.createElement("a");
+        link.download = `merged_${size.widthMM}x${size.heightMM}mm.png`;
+        link.href = tempCanvas.toDataURL("image/png");
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
-
-    } catch (error) {
-        console.error('Download error:', error);
-        alert('Failed to download. Please try again.');
+    } catch (err) {
+        console.error("Download error:", err);
+        alert("Failed to download. Try again.");
     }
 });
 
@@ -518,46 +528,48 @@ document.addEventListener('DOMContentLoaded', function() {
 //     <option value="20x25">Photo ID (20x25 mm)</option>
 // </select>
 
-// Add this conversion helper
-const MM_TO_PX = 11.811; // 1mm = 11.811px at 300dpi
-
 function setCanvasSizeFromSelect() {
-    // Get exact size in pixels
-    let [widthMM, heightMM] = sizeSelect.value.split("x").map(Number);
+    const raw = (sizeSelect.value || '').toString().toLowerCase().replace(/mm/g, '').replace(/\s+/g, '');
+    const parts = raw.split('x').map(Number);
+    if (parts.length !== 2 || parts.some(isNaN)) return;
+
+    // swap order so first x second -> width = second, height = first (e.g. "35x45" -> 45 x 35)
+    const [firstMM, secondMM] = parts;
+    const widthMM = secondMM;
+    const heightMM = firstMM;
+
     const widthPX = Math.round(widthMM * MM_TO_PX);
     const heightPX = Math.round(heightMM * MM_TO_PX);
 
-    // Set canvas actual size
+    // set logical canvas size
+    const prevW = parseInt(canvas.dataset.prevWidth, 10) || widthPX;
+    const prevH = parseInt(canvas.dataset.prevHeight, 10) || heightPX;
+
     canvas.width = widthPX;
     canvas.height = heightPX;
 
-    // Scale for display
-    let scale;
-    if (window.innerWidth < 600) {
-        // Mobile: Scale to fit width with padding
-        const maxWidth = window.innerWidth - 32;
-        scale = maxWidth / widthPX;
-    } else {
-        // Desktop: Scale to reasonable height
-        const maxHeight = 400;
-        scale = maxHeight / heightPX;
-    }
+    // compute visual scale to fit wrapper without swapping
+    const wrapperWidth = canvasWrapper?.clientWidth || Math.min(window.innerWidth - 32, 900);
+    const maxPreviewHeight = window.innerWidth < 600 ? Math.round(window.innerHeight * 0.6) : 420;
+    const scale = Math.min(wrapperWidth / widthPX, maxPreviewHeight / heightPX, 1);
 
-    // Apply visual scaling
-    canvas.style.width = Math.round(widthPX * scale) + "px";
-    canvas.style.height = Math.round(heightPX * scale) + "px";
+    canvas.style.width = Math.round(widthPX * scale) + 'px';
+    canvas.style.height = Math.round(heightPX * scale) + 'px';
 
-    // Update image positions if they exist
-    if (images.length === 2) {
-        images.forEach(img => {
-            // Keep relative positions
-            img.x = Math.round(img.x * (widthPX / canvas.width));
-            img.y = Math.round(img.y * (heightPX / canvas.height));
-            img.w = Math.round(img.w * (widthPX / canvas.width));
-            img.h = Math.round(img.h * (heightPX / canvas.height));
+    // rescale existing images proportionally
+    if (Array.isArray(images) && images.length) {
+        images.forEach(obj => {
+            obj.x = Math.round(((obj.x || 0) / prevW) * widthPX);
+            obj.y = Math.round(((obj.y || 0) / prevH) * heightPX);
+            obj.w = Math.round(((obj.w || widthPX * 0.35) / prevW) * widthPX);
+            obj.h = Math.round(((obj.h || heightPX * 0.8) / prevH) * heightPX);
         });
-        drawCanvas();
     }
+
+    canvas.dataset.prevWidth = widthPX;
+    canvas.dataset.prevHeight = heightPX;
+
+    drawCanvas();
 }
 
 // Call this on merge and on size change
@@ -641,5 +653,69 @@ mergeBtn.addEventListener("click", async () => {
         mergeBtn.disabled = false;
     }
 });
+
+function applyPreviewAreaToCanvas() {
+    const previewArea = document.getElementById('previewArea');
+    if (!previewArea || !canvas) return;
+
+    // If canvas has a visual CSS size set by JS, use it
+    const cssW = canvas.style.width;
+    const cssH = canvas.style.height;
+
+    if (cssW && cssH) {
+        previewArea.style.width = cssW;
+        previewArea.style.height = cssH;
+    } else {
+        // fallback to default fixed size (matches CSS default)
+        previewArea.style.width = '531px';
+        previewArea.style.height = '413px';
+    }
+}
+
+// Call applyPreviewAreaToCanvas() at the end of setCanvasSizeFromSelect()
+function setCanvasSizeFromSelect() {
+    const raw = (sizeSelect.value || '').toString().toLowerCase().replace(/mm/g, '').replace(/\s+/g, '');
+    const parts = raw.split('x').map(Number);
+    if (parts.length !== 2 || parts.some(isNaN)) return;
+
+    // swap order so first x second -> width = second, height = first (e.g. "35x45" -> 45 x 35)
+    const [firstMM, secondMM] = parts;
+    const widthMM = secondMM;
+    const heightMM = firstMM;
+
+    const widthPX = Math.round(widthMM * MM_TO_PX);
+    const heightPX = Math.round(heightMM * MM_TO_PX);
+
+    // set logical canvas size
+    const prevW = parseInt(canvas.dataset.prevWidth, 10) || widthPX;
+    const prevH = parseInt(canvas.dataset.prevHeight, 10) || heightPX;
+
+    canvas.width = widthPX;
+    canvas.height = heightPX;
+
+    // compute visual scale to fit wrapper without swapping
+    const wrapperWidth = canvasWrapper?.clientWidth || Math.min(window.innerWidth - 32, 900);
+    const maxPreviewHeight = window.innerWidth < 600 ? Math.round(window.innerHeight * 0.6) : 420;
+    const scale = Math.min(wrapperWidth / widthPX, maxPreviewHeight / heightPX, 1);
+
+    canvas.style.width = Math.round(widthPX * scale) + 'px';
+    canvas.style.height = Math.round(heightPX * scale) + 'px';
+
+    // rescale existing images proportionally
+    if (Array.isArray(images) && images.length) {
+        images.forEach(obj => {
+            obj.x = Math.round(((obj.x || 0) / prevW) * widthPX);
+            obj.y = Math.round(((obj.y || 0) / prevH) * heightPX);
+            obj.w = Math.round(((obj.w || widthPX * 0.35) / prevW) * widthPX);
+            obj.h = Math.round(((obj.h || heightPX * 0.8) / prevH) * heightPX);
+        });
+    }
+
+    canvas.dataset.prevWidth = widthPX;
+    canvas.dataset.prevHeight = heightPX;
+
+    applyPreviewAreaToCanvas();
+    drawCanvas();
+}
 
 

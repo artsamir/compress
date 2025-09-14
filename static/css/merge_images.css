@@ -336,10 +336,11 @@ h1 {
 }
 
 #previewArea {
-  width: 100%;
-  max-width: 380px;
-  height: auto;
-  aspect-ratio: 3/4;
+  /* default fixed size you requested */
+  width: 531px;
+  height: 413px;
+  max-width: 100%;
+  aspect-ratio: auto; /* let JS set exact visual size when needed */
   position: relative;
   border: 3px solid #f1f1f1;
   border-radius: 24px;
@@ -351,8 +352,9 @@ h1 {
   justify-content: center;
 }
 
-#previewArea:hover {
-  transform: scale(1.02);
+/* keep responsive behavior on small screens */
+@media (max-width: 600px) {
+  #previewArea { width: 98vw; height: auto; }
 }
 
 .checkerboard {
@@ -531,6 +533,50 @@ select:focus {
 }
 @keyframes spin {
   to { transform: rotate(360deg); }
+}
+
+/* Checkerboard preview wrapper — responsive and centered */
+#previewArea,
+.preview-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  padding: 12px;              /* space around canvas */
+  background-color: transparent;
+  /* classic checkerboard */
+  background-image:
+    linear-gradient(45deg, #e6e6e6 25%, transparent 25%),
+    linear-gradient(-45deg, #e6e6e6 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #e6e6e6 75%),
+    linear-gradient(-45deg, transparent 75%, #e6e6e6 75%);
+  background-size: 20px 20px; /* tile size */
+  background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+}
+
+/* Prevent any CSS from forcing mm sized box */
+#previewArea[style],
+.preview-wrapper[style] {
+  width: auto !important;
+  height: auto !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+}
+
+/* Canvas must use the size set by JS (logical canvas width/height) while remaining responsive */
+#mergeCanvas,
+#previewArea canvas {
+  display: block;
+  max-width: 100%;
+  width: auto !important;    /* let JS set CSS width when scaling */
+  height: auto !important;   /* preserve aspect ratio, no CSS swap */
+  background: transparent;    /* keep canvas transparent so checker shows */
+  box-shadow: none;
+}
+
+/* Desktop/ Mobile specific tweaks if needed */
+@media (max-width: 700px) {
+  #previewArea { padding: 8px; background-size: 16px 16px; }
 }
 
 /* Responsive */
