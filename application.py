@@ -146,9 +146,63 @@ def background_remove():
 def passport_maker():
     return render_template('example_tool.html', tool_name='Passport Maker', form_type='image')
 
+
+# @application.route('/tool/merge-images', methods=['GET', 'POST'])
+# def merge_images():
+#     return render_template('example_tool.html', tool_name='Merge Two Images', form_type='multi-image')
+
+# @application.route('/tool/merge-images', methods=['GET', 'POST'])
+# def merge_images():
+#     if request.method == 'POST':
+#         # Handle uploaded files (if you want backend merging later)
+#         files = request.files.getlist('files')
+#         if len(files) < 2:
+#             return jsonify({'error': 'Need 2 images'}), 400
+
+#         try:
+#             images = []
+#             for file in files:
+#                 file_bytes = file.read()
+#                 input_img = Image.open(io.BytesIO(file_bytes)).convert("RGBA")
+#                 output_img = remove(input_img)
+#                 buf = io.BytesIO()
+#                 output_img.save(buf, format='PNG')
+#                 images.append(base64.b64encode(buf.getvalue()).decode('utf-8'))
+
+#             return jsonify({
+#                 'processed1': f'data:image/png;base64,{images[0]}',
+#                 'processed2': f'data:image/png;base64,{images[1]}'
+#             })
+#         except Exception as e:
+#             return jsonify({'error': str(e)}), 500
+
+#     return render_template('merge_images.html', tool_name='Merge Two Images')
+
+
 @application.route('/tool/merge-images', methods=['GET', 'POST'])
 def merge_images():
-    return render_template('example_tool.html', tool_name='Merge Two Images', form_type='multi-image')
+    return render_template('merge_images.html', tool_name='Merge Images')
+
+
+@application.route('/api/merge-remove', methods=['POST'])
+def api_merge_remove():
+    """Remove background from uploaded image and return base64"""
+    file = request.files.get('file')
+    if not file:
+        return jsonify({'error': 'No file provided'}), 400
+
+    try:
+        img = Image.open(file.stream).convert("RGBA")
+        output_img = remove(img)
+
+        buf = io.BytesIO()
+        output_img.save(buf, format="PNG")
+        processed_base64 = base64.b64encode(buf.getvalue()).decode('utf-8')
+
+        return jsonify({'processed': f"data:image/png;base64,{processed_base64}"})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    
 
 # ----------------- Text Tools -----------------
 @application.route('/tool/word-to-hashtag', methods=['GET', 'POST'])

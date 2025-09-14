@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block title %}Merge Images - Cutcompress{% endblock %}
+
+{% block content %}
+<div class="container">
+  <h1>Merge Two Photos</h1>
+  <p>Upload two photos, remove background automatically, and merge them.</p>
+
+  <div class="merge-main-flex">
+  <!-- Upload Section -->
+  <div class="upload-section">
+    <div class="upload-box" id="uploadBox1">
+      <input type="file" id="image1" accept="image/*" hidden>
+      <div class="upload-icon">
+        <i class="fa-solid fa-cloud-arrow-up"></i>
+      </div>
+      <div class="upload-hint">Drag & Drop or Click</div>
+      <img id="preview1" class="preview-img" alt="Preview 1">
+    </div>
+    <div class="upload-box" id="uploadBox2">
+      <input type="file" id="image2" accept="image/*" hidden>
+      <div class="upload-icon">
+        <i class="fa-solid fa-cloud-arrow-up"></i>
+      </div>
+      <div class="upload-hint">Drag & Drop or Click</div>
+      <img id="preview2" class="preview-img" alt="Preview 2">
+    </div>
+  </div>
+
+  <!-- Preview & Controls -->
+  <div class="preview-controls-section">
+    <div class="preview-container">
+      <div class="canvas-wrapper">
+        <div id="previewArea" class="checkerboard">
+          <div id="previewLoading" class="preview-loading" style="display:none;">
+            <div class="spinner"></div>
+          </div>
+          <canvas id="mergeCanvas"></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="bg-controls">
+      <label>Background Color:
+        <input type="color" id="bgColorPicker" value="#ffffff">
+      </label>
+      <label class="bg-upload-label">
+        <span>Or Upload Background</span>
+        <input type="file" id="bgImageInput" accept="image/*" hidden>
+        <button type="button" id="bgImageBtn"><i class="fa-solid fa-image"></i></button>
+      </label>
+    </div>
+    <div class="controls">
+      <button id="mergeBtn">Merge</button>
+      <button id="downloadBtn" disabled>Download</button>
+      <select id="sizeSelect">
+        <option value="600x800">Passport (600x800)</option>
+        <option value="1200x1600">Large (1200x1600)</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/merge_images.css') }}">
+<script src="{{ url_for('static', filename='js/merge_images.js') }}"></script>
+{% endblock %}
