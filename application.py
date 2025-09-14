@@ -5,6 +5,8 @@ from rembg import remove
 from docx2pdf import convert
 import io
 import base64
+# from models import db
+# from auth import auth_bp
 
 # Create the Flask application for AWS EB
 application = Flask(__name__)
@@ -146,37 +148,6 @@ def background_remove():
 def passport_maker():
     return render_template('example_tool.html', tool_name='Passport Maker', form_type='image')
 
-
-# @application.route('/tool/merge-images', methods=['GET', 'POST'])
-# def merge_images():
-#     return render_template('example_tool.html', tool_name='Merge Two Images', form_type='multi-image')
-
-# @application.route('/tool/merge-images', methods=['GET', 'POST'])
-# def merge_images():
-#     if request.method == 'POST':
-#         # Handle uploaded files (if you want backend merging later)
-#         files = request.files.getlist('files')
-#         if len(files) < 2:
-#             return jsonify({'error': 'Need 2 images'}), 400
-
-#         try:
-#             images = []
-#             for file in files:
-#                 file_bytes = file.read()
-#                 input_img = Image.open(io.BytesIO(file_bytes)).convert("RGBA")
-#                 output_img = remove(input_img)
-#                 buf = io.BytesIO()
-#                 output_img.save(buf, format='PNG')
-#                 images.append(base64.b64encode(buf.getvalue()).decode('utf-8'))
-
-#             return jsonify({
-#                 'processed1': f'data:image/png;base64,{images[0]}',
-#                 'processed2': f'data:image/png;base64,{images[1]}'
-#             })
-#         except Exception as e:
-#             return jsonify({'error': str(e)}), 500
-
-#     return render_template('merge_images.html', tool_name='Merge Two Images')
 
 
 @application.route('/tool/merge-images', methods=['GET', 'POST'])
