@@ -217,12 +217,25 @@ body {
 .tool-box ul li a {
     color: #4b5563;
     text-decoration: none;
-    transition: color 0.2s;
+    transition: color 0.2s, background 0.2s;
+    display: inline-flex;
+    align-items: center;
+    border-radius: 8px;
+    padding: 2px 8px;
 }
 
 .tool-box ul li a:hover {
     color: #4f46e5;
-    text-decoration: underline;
+    background: #f3f4f6;
+}
+
+.tool-box ul li i {
+    margin-right: 10px;
+    width: 20px;
+    text-align: center;
+    background: transparent !important; /* Ensure icon never gets background */
+    border-radius: 0;
+    transition: transform .18s, filter .18s;
 }
 
 /* Colored icons for tool boxes */
