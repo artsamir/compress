@@ -7,12 +7,18 @@ import io
 import base64
 # from models import db
 # from auth import auth_bp
+from blueprints.image_to_jpg_api import bp as image_to_jpg_api_bp
+from blueprints.image_convert_api import bp as image_convert_bp
 
-# Create the Flask application for AWS EB
+# Create the single Flask application instance
 application = Flask(__name__)
 application.config['UPLOAD_FOLDER'] = '/tmp/uploads/'  # Safer in EB
 application.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16 MB limit
 os.makedirs(application.config['UPLOAD_FOLDER'], exist_ok=True)
+
+# Register blueprints AFTER creating `application`
+application.register_blueprint(image_to_jpg_api_bp)
+application.register_blueprint(image_convert_bp)
 
 # ---------------- Force HTTPS ----------------
 @application.before_request
@@ -78,19 +84,19 @@ def image_to_jpg():
             output_path = os.path.join(application.config['UPLOAD_FOLDER'], 'converted.jpg')
             img.convert('RGB').save(output_path, 'JPEG')
             return send_file(output_path, as_attachment=True)
-    return render_template('example_tool.html', tool_name='Image to JPG', form_type='image')
+    return render_template('image_to_jpg.html', tool_name='Image to JPG', form_type='image')
 
-@application.route('/tool/image-to-png', methods=['GET', 'POST'])
-def image_to_png():
-    return render_template('example_tool.html', tool_name='Image to PNG', form_type='image')
+@application.route('/tool/image-to-png')
+def tool_image_to_png():
+    return render_template('image_to_png.html')
 
-@application.route('/tool/image-to-webp', methods=['GET', 'POST'])
-def image_to_webp():
-    return render_template('example_tool.html', tool_name='Image to WEBP', form_type='image')
+@application.route('/tool/image-to-webp')
+def tool_image_to_webp():
+    return render_template('image_to_webp.html')
 
-@application.route('/tool/image-to-pdf', methods=['GET', 'POST'])
-def image_to_pdf():
-    return render_template('example_tool.html', tool_name='Image to PDF', form_type='image')
+@application.route('/tool/image-to-pdf')
+def tool_image_to_pdf():
+    return render_template('image_to_pdf.html')
 
 
 
