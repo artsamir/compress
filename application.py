@@ -59,19 +59,124 @@ def login():
     return render_template('login.html')
 
 # ----------------- Image Tools -----------------
-@application.route('/tool/reduce-image-size', methods=['GET', 'POST'])
+@application.route('/tool/reduce-image-size')
 def reduce_image_size():
-    if request.method == 'POST':
-        file = request.files.get('file')
-        if file:
-            filepath = os.path.join(application.config['UPLOAD_FOLDER'], file.filename)
-            file.save(filepath)
-            img = Image.open(filepath)
-            img.thumbnail((800, 800))
-            output_path = os.path.join(application.config['UPLOAD_FOLDER'], 'reduced_' + file.filename)
-            img.save(output_path)
-            return send_file(output_path, as_attachment=True)
-    return render_template('example_tool.html', tool_name='Reduce Image Size', form_type='image')
+    return render_template('reduce_image_size.html')
+
+@application.route('/api/reduce-images', methods=['POST'])
+def api_reduce_images():
+    try:
+        files = request.files.getlist('files[]')
+        width = request.form.get('width', type=int)
+        height = request.form.get('height', type=int)
+        preset_size = request.form.get('preset_size')
+        max_file_size = request.form.get('max_file_size', type=int)  # in KB
+        
+        if not files:
+            return jsonify({'error': 'No files uploaded'}), 400
+        
+        results = []
+        
+        for file in files:
+            if file and file.filename:
+                # Save original file
+                original_filename = file.filename
+                filepath = os.path.join(application.config['UPLOAD_FOLDER'], original_filename)
+                file.save(filepath)
+                
+                # Open and process image
+                img = Image.open(filepath)
+                original_size = os.path.getsize(filepath)
+                
+                # Determine target dimensions
+                if preset_size:
+                    preset_dimensions = {
+                        '1024x768': (1024, 768),
+                        '800x800': (800, 800),
+                        '800x600': (800, 600),
+                        '640x480': (640, 480),
+                        '350x270': (350, 270)
+                    }
+                    target_width, target_height = preset_dimensions.get(preset_size, (800, 800))
+                else:
+                    target_width = width or img.width
+                    target_height = height or img.height
+                
+                # Resize image
+                if img.width != target_width or img.height != target_height:
+                    img = img.resize((target_width, target_height), Image.Resampling.LANCZOS)
+                
+                # Generate output filename
+                name, ext = os.path.splitext(original_filename)
+                output_filename = f"reduced_{name}{ext}"
+                output_path = os.path.join(application.config['UPLOAD_FOLDER'], output_filename)
+                
+                # Save with quality adjustment if file size constraint is specified
+                quality = 95
+                if max_file_size:
+                    while quality > 10:
+                        img.save(output_path, quality=quality, optimize=True)
+                        if os.path.getsize(output_path) <= max_file_size * 1024:
+                            break
+                        quality -= 5
+                else:
+                    img.save(output_path, quality=quality, optimize=True)
+                
+                # Get final file info
+                final_size = os.path.getsize(output_path)
+                final_img = Image.open(output_path)
+                
+                results.append({
+                    'original_filename': original_filename,
+                    'output_filename': output_filename,
+                    'original_size': original_size,
+                    'final_size': final_size,
+                    'original_dimensions': f"{img.width}x{img.height}" if 'img' in locals() else "N/A",
+                    'final_dimensions': f"{final_img.width}x{final_img.height}",
+                    'download_url': f'/download/{output_filename}'
+                })
+                
+                # Clean up original file
+                os.remove(filepath)
+        
+        return jsonify({'results': results})
+    
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@application.route('/download/<filename>')
+def download_file(filename):
+    filepath = os.path.join(application.config['UPLOAD_FOLDER'], filename)
+    if os.path.exists(filepath):
+        return send_file(filepath, as_attachment=True)
+    return "File not found", 404
+
+@application.route('/api/download-all')
+def download_all():
+    import zipfile
+    import tempfile
+    
+    try:
+        # Get all reduced files
+        reduced_files = [f for f in os.listdir(application.config['UPLOAD_FOLDER']) if f.startswith('reduced_')]
+        
+        if not reduced_files:
+            return "No files to download", 404
+        
+        # Create a temporary zip file
+        temp_zip = tempfile.NamedTemporaryFile(delete=False, suffix='.zip')
+        
+        with zipfile.ZipFile(temp_zip, 'w') as zipf:
+            for filename in reduced_files:
+                filepath = os.path.join(application.config['UPLOAD_FOLDER'], filename)
+                if os.path.exists(filepath):
+                    zipf.write(filepath, filename)
+        
+        temp_zip.close()
+        return send_file(temp_zip.name, as_attachment=True, download_name='reduced_images.zip')
+    
+    except Exception as e:
+        return f"Error creating zip: {str(e)}", 500
 
 @application.route('/tool/image-to-jpg', methods=['GET', 'POST'])
 def image_to_jpg():
