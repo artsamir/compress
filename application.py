@@ -71,6 +71,8 @@ def api_reduce_images():
         height = request.form.get('height', type=int)
         preset_size = request.form.get('preset_size')
         max_file_size = request.form.get('max_file_size', type=int)  # in KB
+        custom_target_size = request.form.get('custom_target_size', type=float)
+        size_unit = request.form.get('size_unit', 'kb')
         
         if not files:
             return jsonify({'error': 'No files uploaded'}), 400
@@ -108,19 +110,295 @@ def api_reduce_images():
                 
                 # Generate output filename
                 name, ext = os.path.splitext(original_filename)
-                output_filename = f"reduced_{name}{ext}"
+                output_filename = f"converted_{name}{ext}"
                 output_path = os.path.join(application.config['UPLOAD_FOLDER'], output_filename)
                 
-                # Save with quality adjustment if file size constraint is specified
-                quality = 95
-                if max_file_size:
-                    while quality > 10:
-                        img.save(output_path, quality=quality, optimize=True)
-                        if os.path.getsize(output_path) <= max_file_size * 1024:
-                            break
-                        quality -= 5
+                # Handle custom target size (force to specific size)
+                if custom_target_size:
+                    # Convert target size to bytes
+                    if size_unit == 'mb':
+                        target_size_bytes = int(custom_target_size * 1024 * 1024)
+                    else:  # kb
+                        target_size_bytes = int(custom_target_size * 1024)
+                    
+                    current_size = os.path.getsize(filepath)
+                    
+                    # Handle different image formats
+                    is_png = ext.lower() == '.png'
+                    is_jpeg = ext.lower() in ['.jpg', '.jpeg']
+                    
+                    if target_size_bytes > current_size:
+                        # INCREASE file size - add padding or reduce compression
+                        if is_png:
+                            # For PNG, reduce compression and add metadata if needed
+                            best_size = 0
+                            best_compress_level = 9
+                            
+                            # Try different compression levels (9=most, 0=least)
+                            for compress_level in range(9, -1, -1):
+                                temp_path = os.path.join(application.config['UPLOAD_FOLDER'], f"temp_expand_{compress_level}_{name}{ext}")
+                                try:
+                                    img.save(temp_path, optimize=False, compress_level=compress_level)
+                                    current_test_size = os.path.getsize(temp_path)
+                                    
+                                    if current_test_size <= target_size_bytes and current_test_size > best_size:
+                                        best_size = current_test_size
+                                        best_compress_level = compress_level
+                                        if os.path.exists(output_path):
+                                            os.remove(output_path)
+                                        os.rename(temp_path, output_path)
+                                    else:
+                                        os.remove(temp_path)
+                                except Exception:
+                                    if os.path.exists(temp_path):
+                                        os.remove(temp_path)
+                            
+                            # If still not big enough, add padding bytes
+                            if os.path.exists(output_path):
+                                current_size = os.path.getsize(output_path)
+                                if current_size < target_size_bytes:
+                                    with open(output_path, 'ab') as f:
+                                        padding_needed = target_size_bytes - current_size
+                                        # Add null bytes as padding
+                                        f.write(b'\x00' * padding_needed)
+                            else:
+                                # Fallback: save without compression and add padding
+                                img.save(output_path, optimize=False, compress_level=0)
+                                current_size = os.path.getsize(output_path)
+                                if current_size < target_size_bytes:
+                                    with open(output_path, 'ab') as f:
+                                        padding_needed = target_size_bytes - current_size
+                                        f.write(b'\x00' * padding_needed)
+                        
+                        elif is_jpeg:
+                            # For JPEG, use lowest quality and add padding
+                            save_img = img.convert('RGB') if img.mode in ('RGBA', 'P') else img
+                            save_img.save(output_path, quality=100, optimize=False)
+                            
+                            current_size = os.path.getsize(output_path)
+                            if current_size < target_size_bytes:
+                                with open(output_path, 'ab') as f:
+                                    padding_needed = target_size_bytes - current_size
+                                    f.write(b'\x00' * padding_needed)
+                        
+                        else:
+                            # For other formats, save with best quality and add padding
+                            img.save(output_path, optimize=False)
+                            current_size = os.path.getsize(output_path)
+                            if current_size < target_size_bytes:
+                                with open(output_path, 'ab') as f:
+                                    padding_needed = target_size_bytes - current_size
+                                    f.write(b'\x00' * padding_needed)
+                    
+                    else:
+                        # DECREASE file size - compress aggressively
+                        if is_png:
+                            # For PNG, try different compression levels and resizing
+                            achieved = False
+                            
+                            # First try compression levels
+                            for compress_level in range(9, -1, -1):
+                                temp_path = os.path.join(application.config['UPLOAD_FOLDER'], f"temp_compress_{compress_level}_{name}{ext}")
+                                try:
+                                    img.save(temp_path, optimize=True, compress_level=compress_level)
+                                    current_test_size = os.path.getsize(temp_path)
+                                    
+                                    if current_test_size <= target_size_bytes:
+                                        if os.path.exists(output_path):
+                                            os.remove(output_path)
+                                        os.rename(temp_path, output_path)
+                                        achieved = True
+                                        break
+                                    else:
+                                        os.remove(temp_path)
+                                except Exception:
+                                    if os.path.exists(temp_path):
+                                        os.remove(temp_path)
+                            
+                            # If compression alone isn't enough, try resizing
+                            if not achieved:
+                                scale_factor = 0.9
+                                while scale_factor > 0.1:
+                                    new_width = max(1, int(img.width * scale_factor))
+                                    new_height = max(1, int(img.height * scale_factor))
+                                    resized_img = img.resize((new_width, new_height), Image.Resampling.LANCZOS)
+                                    
+                                    temp_path = os.path.join(application.config['UPLOAD_FOLDER'], f"temp_resize_{int(scale_factor*100)}_{name}{ext}")
+                                    try:
+                                        resized_img.save(temp_path, optimize=True, compress_level=9)
+                                        current_test_size = os.path.getsize(temp_path)
+                                        
+                                        if current_test_size <= target_size_bytes:
+                                            if os.path.exists(output_path):
+                                                os.remove(output_path)
+                                            os.rename(temp_path, output_path)
+                                            achieved = True
+                                            break
+                                        else:
+                                            os.remove(temp_path)
+                                            scale_factor -= 0.1
+                                    except Exception:
+                                        if os.path.exists(temp_path):
+                                            os.remove(temp_path)
+                                        scale_factor -= 0.1
+                            
+                            # Final fallback for PNG
+                            if not achieved:
+                                img.save(output_path, optimize=True, compress_level=9)
+                        
+                        elif is_jpeg:
+                            # For JPEG, use binary search with quality and resizing
+                            achieved = False
+                            save_img = img.convert('RGB') if img.mode in ('RGBA', 'P') else img
+                            
+                            # First try quality reduction
+                            for quality in range(1, 101):
+                                temp_path = os.path.join(application.config['UPLOAD_FOLDER'], f"temp_quality_{quality}_{name}{ext}")
+                                try:
+                                    save_img.save(temp_path, quality=quality, optimize=True)
+                                    current_test_size = os.path.getsize(temp_path)
+                                    
+                                    if current_test_size <= target_size_bytes:
+                                        if os.path.exists(output_path):
+                                            os.remove(output_path)
+                                        os.rename(temp_path, output_path)
+                                        achieved = True
+                                        break
+                                    else:
+                                        os.remove(temp_path)
+                                except Exception:
+                                    if os.path.exists(temp_path):
+                                        os.remove(temp_path)
+                            
+                            # If quality reduction isn't enough, try resizing
+                            if not achieved:
+                                scale_factor = 0.9
+                                while scale_factor > 0.1:
+                                    new_width = max(1, int(save_img.width * scale_factor))
+                                    new_height = max(1, int(save_img.height * scale_factor))
+                                    resized_img = save_img.resize((new_width, new_height), Image.Resampling.LANCZOS)
+                                    
+                                    temp_path = os.path.join(application.config['UPLOAD_FOLDER'], f"temp_resize_{int(scale_factor*100)}_{name}{ext}")
+                                    try:
+                                        resized_img.save(temp_path, quality=1, optimize=True)
+                                        current_test_size = os.path.getsize(temp_path)
+                                        
+                                        if current_test_size <= target_size_bytes:
+                                            if os.path.exists(output_path):
+                                                os.remove(output_path)
+                                            os.rename(temp_path, output_path)
+                                            achieved = True
+                                            break
+                                        else:
+                                            os.remove(temp_path)
+                                            scale_factor -= 0.1
+                                    except Exception:
+                                        if os.path.exists(temp_path):
+                                            os.remove(temp_path)
+                                        scale_factor -= 0.1
+                            
+                            # Final fallback for JPEG
+                            if not achieved:
+                                save_img.save(output_path, quality=1, optimize=True)
+                        
+                        else:
+                            # For other formats, try quality reduction and resizing
+                            achieved = False
+                            
+                            # Try quality if supported
+                            for quality in range(1, 101):
+                                temp_path = os.path.join(application.config['UPLOAD_FOLDER'], f"temp_other_{quality}_{name}{ext}")
+                                try:
+                                    img.save(temp_path, quality=quality, optimize=True)
+                                    current_test_size = os.path.getsize(temp_path)
+                                    
+                                    if current_test_size <= target_size_bytes:
+                                        if os.path.exists(output_path):
+                                            os.remove(output_path)
+                                        os.rename(temp_path, output_path)
+                                        achieved = True
+                                        break
+                                    else:
+                                        os.remove(temp_path)
+                                except Exception:
+                                    if os.path.exists(temp_path):
+                                        os.remove(temp_path)
+                                    # Quality not supported, break and try resizing
+                                    break
+                            
+                            # Try resizing if quality didn't work
+                            if not achieved:
+                                scale_factor = 0.9
+                                while scale_factor > 0.1:
+                                    new_width = max(1, int(img.width * scale_factor))
+                                    new_height = max(1, int(img.height * scale_factor))
+                                    resized_img = img.resize((new_width, new_height), Image.Resampling.LANCZOS)
+                                    
+                                    temp_path = os.path.join(application.config['UPLOAD_FOLDER'], f"temp_resize_other_{int(scale_factor*100)}_{name}{ext}")
+                                    try:
+                                        resized_img.save(temp_path, optimize=True)
+                                        current_test_size = os.path.getsize(temp_path)
+                                        
+                                        if current_test_size <= target_size_bytes:
+                                            if os.path.exists(output_path):
+                                                os.remove(output_path)
+                                            os.rename(temp_path, output_path)
+                                            achieved = True
+                                            break
+                                        else:
+                                            os.remove(temp_path)
+                                            scale_factor -= 0.1
+                                    except Exception:
+                                        if os.path.exists(temp_path):
+                                            os.remove(temp_path)
+                                        scale_factor -= 0.1
+                            
+                            # Final fallback
+                            if not achieved:
+                                img.save(output_path, optimize=True)
+                
+                # Handle max file size constraint (original logic)
+                elif max_file_size:
+                    target_max_bytes = max_file_size * 1024
+                    is_png = ext.lower() == '.png'
+                    is_jpeg = ext.lower() in ['.jpg', '.jpeg']
+                    
+                    if is_png:
+                        # For PNG, try compression levels
+                        for compress_level in range(9, -1, -1):  # Start with highest compression
+                            img.save(output_path, optimize=True, compress_level=compress_level)
+                            if os.path.getsize(output_path) <= target_max_bytes:
+                                break
+                    else:
+                        # For JPEG and other quality-supporting formats
+                        quality = 95
+                        while quality > 10:
+                            try:
+                                if is_jpeg:
+                                    save_img = img.convert('RGB') if img.mode in ('RGBA', 'P') else img
+                                    save_img.save(output_path, quality=quality, optimize=True)
+                                else:
+                                    img.save(output_path, quality=quality, optimize=True)
+                                
+                                if os.path.getsize(output_path) <= target_max_bytes:
+                                    break
+                                quality -= 5
+                            except Exception:
+                                # Fallback without quality
+                                img.save(output_path, optimize=True)
+                                break
                 else:
-                    img.save(output_path, quality=quality, optimize=True)
+                    # No size constraints - save with best quality
+                    is_jpeg = ext.lower() in ['.jpg', '.jpeg']
+                    try:
+                        if is_jpeg:
+                            save_img = img.convert('RGB') if img.mode in ('RGBA', 'P') else img
+                            save_img.save(output_path, quality=95, optimize=True)
+                        else:
+                            img.save(output_path, optimize=True)
+                    except Exception:
+                        # Final fallback
+                        img.save(output_path)
                 
                 # Get final file info
                 final_size = os.path.getsize(output_path)

@@ -131,10 +131,31 @@
                 </div>
             </div>
             
+            <div class="custom-target-size-section">
+                <h3>Custom Target Size</h3>
+                <p>Force images to a specific size (can increase or decrease original size)</p>
+                <div class="custom-size-controls">
+                    <div class="control-group">
+                        <label for="customTargetSize">Target Size:</label>
+                        <input type="number" id="customTargetSize" name="custom_target_size" min="1" max="10000" placeholder="e.g., 500">
+                    </div>
+                    <div class="control-group">
+                        <label for="sizeUnit">Unit:</label>
+                        <select id="sizeUnit" name="size_unit">
+                            <option value="kb">KB</option>
+                            <option value="mb">MB</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="size-example">
+                    <small><i class="fas fa-info-circle"></i> Example: Enter 1 with "MB" to make all images exactly 1MB</small>
+                </div>
+            </div>
+            
             <div class="convert-button-container">
                 <button id="convertButton" class="convert-btn" disabled>
-                    <i class="fas fa-compress-alt"></i>
-                    Reduce Images
+                    <i class="fas fa-magic"></i>
+                    Convert Size
                 </button>
             </div>
         </div>
@@ -143,7 +164,7 @@
     <!-- Results Section -->
     <div class="results-section" id="resultsSection" style="display: none;">
         <div class="results-header">
-            <h2>Compressed Images</h2>
+            <h2>Converted Images</h2>
             <button id="downloadAllBtn" class="download-all-btn">
                 <i class="fas fa-download"></i>
                 Download All as ZIP

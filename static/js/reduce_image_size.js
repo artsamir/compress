@@ -23,6 +23,9 @@ class ImageReducer {
         this.heightInput = document.getElementById('height');
         this.customControls = document.getElementById('customControls');
         this.downloadAllBtn = document.getElementById('downloadAllBtn');
+        this.maxFileSizeSelect = document.getElementById('maxFileSize');
+        this.customTargetSizeInput = document.getElementById('customTargetSize');
+        this.sizeUnitSelect = document.getElementById('sizeUnit');
 
         console.log('Elements initialized:', {
             dragDropArea: !!this.dragDropArea,
@@ -170,10 +173,19 @@ class ImageReducer {
                 <div class="gallery-filename">${fileObj.name}</div>
                 <div class="gallery-size">${this.formatFileSize(fileObj.size)}</div>
             </div>
-            <button class="remove-btn" onclick="imageReducer.removeFile('${fileObj.id}')">
+            <button class="remove-btn" data-file-id="${fileObj.id}">
                 <i class="fas fa-times"></i>
             </button>
         `;
+        
+        // Add event listener to the remove button
+        const removeBtn = item.querySelector('.remove-btn');
+        removeBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            this.removeFile(fileObj.id);
+        });
+        
         return item;
     }
 
@@ -240,7 +252,9 @@ class ImageReducer {
             const presetSize = this.presetSize.value;
             const width = this.widthInput.value;
             const height = this.heightInput.value;
-            const maxFileSize = document.getElementById('maxFileSize').value;
+            const maxFileSize = this.maxFileSizeSelect.value;
+            const customTargetSize = this.customTargetSizeInput.value;
+            const sizeUnit = this.sizeUnitSelect.value;
 
             if (presetSize) {
                 formData.append('preset_size', presetSize);
@@ -251,6 +265,11 @@ class ImageReducer {
             
             if (maxFileSize) {
                 formData.append('max_file_size', maxFileSize);
+            }
+            
+            if (customTargetSize) {
+                formData.append('custom_target_size', customTargetSize);
+                formData.append('size_unit', sizeUnit);
             }
 
             const response = await fetch('/api/reduce-images', {
@@ -288,8 +307,31 @@ class ImageReducer {
         const item = document.createElement('div');
         item.className = 'result-item';
         
-        const compressionRatio = ((result.original_size - result.final_size) / result.original_size * 100).toFixed(1);
-        const savedSize = result.original_size - result.final_size;
+        // Calculate size change
+        const originalSize = result.original_size;
+        const finalSize = result.final_size;
+        const sizeDifference = finalSize - originalSize;
+        const isReduced = sizeDifference < 0;
+        const isIncreased = sizeDifference > 0;
+        
+        let changeText = '';
+        let changeColor = '';
+        
+        if (isReduced) {
+            // Size was reduced
+            const reductionPercentage = ((originalSize - finalSize) / originalSize * 100).toFixed(1);
+            changeText = `Reduced by ${reductionPercentage}% (${this.formatFileSize(Math.abs(sizeDifference))} saved)`;
+            changeColor = '#52c41a'; // Green for reduction
+        } else if (isIncreased) {
+            // Size was increased
+            const increasePercentage = ((finalSize - originalSize) / originalSize * 100).toFixed(1);
+            changeText = `Increased by ${increasePercentage}% (${this.formatFileSize(sizeDifference)} added)`;
+            changeColor = '#1890ff'; // Blue for increase
+        } else {
+            // Size stayed the same
+            changeText = 'Size unchanged';
+            changeColor = '#666';
+        }
         
         item.innerHTML = `
             <div class="result-preview-container">
@@ -297,7 +339,7 @@ class ImageReducer {
             </div>
             <div class="result-info">
                 <h4>${result.output_filename}</h4>
-                <p>Reduced by ${compressionRatio}% (${this.formatFileSize(savedSize)} saved)</p>
+                <p style="color: ${changeColor}; font-weight: 600;">${changeText}</p>
             </div>
             <div class="result-size">
                 <div>Original: ${this.formatFileSize(result.original_size)}</div>
