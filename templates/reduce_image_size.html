@@ -1,0 +1,188 @@
+{% extends 'base.html' %}
+
+{% block title %}Reduce Image Size - Cutcompress{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/reduce_image_size.css') }}">
+<style>
+/* Inline critical styles to ensure they load first */
+.reduce-image-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.drag-drop-area {
+    border: 3px dashed #667eea;
+    border-radius: 15px;
+    padding: 3rem 2rem;
+    text-align: center;
+    background: linear-gradient(135deg, #f5f7ff 0%, #e8f2ff 100%);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    margin: 2rem 0;
+}
+
+.drag-drop-area:hover {
+    border-color: #5a6fd8;
+    background: linear-gradient(135deg, #e8f2ff 0%, #d1e7ff 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(103, 126, 234, 0.2);
+}
+
+.upload-icon {
+    font-size: 4rem;
+    color: #667eea;
+    margin-bottom: 1rem;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="reduce-image-container">
+    <div class="tool-header">
+        <h1><i class="fas fa-compress-alt"></i> Reduce Image Size</h1>
+        <p>Compress and resize your images while maintaining quality. Upload single or multiple images with drag & drop.</p>
+    </div>
+
+    <!-- Upload Section -->
+    <div class="upload-section">
+        <div class="drag-drop-area" id="dragDropArea">
+            <div class="upload-icon">
+                <i class="fas fa-cloud-upload-alt"></i>
+            </div>
+            <h3>🎯 Drag & Drop Your Images Here</h3>
+            <p><strong>or click to browse files</strong></p>
+            <input type="file" id="fileInput" multiple accept="image/*" hidden>
+            <div class="supported-formats">
+                <small>✅ Supported: JPG, PNG, WEBP, GIF, BMP | 📁 Multiple files supported</small>
+            </div>
+        </div>
+        
+        <!-- Quick tips -->
+        <div class="upload-tips">
+            <div class="tip-item">
+                <i class="fas fa-info-circle"></i>
+                <span>Drop multiple images at once for batch processing</span>
+            </div>
+            <div class="tip-item">
+                <i class="fas fa-magic"></i>
+                <span>Choose from preset sizes or set custom dimensions</span>
+            </div>
+            <div class="tip-item">
+                <i class="fas fa-download"></i>
+                <span>Download individually or get all as ZIP file</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gallery Section -->
+    <div class="gallery-section" id="gallerySection" style="display: none;">
+        <h2>Selected Images</h2>
+        <div class="image-gallery" id="imageGallery">
+            <!-- Images will be dynamically added here -->
+        </div>
+    </div>
+
+    <!-- Controls Section -->
+    <div class="controls-section" id="controlsSection" style="display: none;">
+        <h2>Compression Settings</h2>
+        <div class="controls-container">
+            <div class="preset-controls">
+                <label for="presetSize">Preset Sizes:</label>
+                <select id="presetSize" name="preset_size">
+                    <option value="">Custom Size</option>
+                    <option value="1024x768">1024 × 768 px</option>
+                    <option value="800x800">800 × 800 px</option>
+                    <option value="800x600">800 × 600 px</option>
+                    <option value="640x480">640 × 480 px</option>
+                    <option value="350x270">350 × 270 px</option>
+                </select>
+            </div>
+            
+            <div class="custom-controls" id="customControls">
+                <div class="dimension-controls">
+                    <div class="control-group">
+                        <label for="width">Width (px):</label>
+                        <input type="number" id="width" name="width" min="1" max="4000">
+                    </div>
+                    <div class="control-group">
+                        <label for="height">Height (px):</label>
+                        <input type="number" id="height" name="height" min="1" max="4000">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="size-controls">
+                <div class="control-group">
+                    <label for="maxFileSize">Max File Size:</label>
+                    <select id="maxFileSize" name="max_file_size">
+                        <option value="">No Limit</option>
+                        <option value="100">100 KB</option>
+                        <option value="200">200 KB</option>
+                        <option value="500">500 KB</option>
+                        <option value="1024">1 MB</option>
+                        <option value="2048">2 MB</option>
+                        <option value="5120">5 MB</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="custom-target-size-section">
+                <h3>Custom Target Size</h3>
+                <p>Force images to a specific size (can increase or decrease original size)</p>
+                <div class="custom-size-controls">
+                    <div class="control-group">
+                        <label for="customTargetSize">Target Size:</label>
+                        <input type="number" id="customTargetSize" name="custom_target_size" min="1" max="10000" placeholder="e.g., 500">
+                    </div>
+                    <div class="control-group">
+                        <label for="sizeUnit">Unit:</label>
+                        <select id="sizeUnit" name="size_unit">
+                            <option value="kb">KB</option>
+                            <option value="mb">MB</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="size-example">
+                    <small><i class="fas fa-info-circle"></i> Example: Enter 1 with "MB" to make all images exactly 1MB</small>
+                </div>
+            </div>
+            
+            <div class="convert-button-container">
+                <button id="convertButton" class="convert-btn" disabled>
+                    <i class="fas fa-magic"></i>
+                    Convert Size
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results Section -->
+    <div class="results-section" id="resultsSection" style="display: none;">
+        <div class="results-header">
+            <h2>Converted Images</h2>
+            <button id="downloadAllBtn" class="download-all-btn">
+                <i class="fas fa-download"></i>
+                Download All as ZIP
+            </button>
+        </div>
+        <div class="results-container" id="resultsContainer">
+            <!-- Results will be dynamically added here -->
+        </div>
+    </div>
+
+    <!-- Loading Indicator -->
+    <div class="loading-overlay" id="loadingOverlay" style="display: none;">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <p>Compressing images...</p>
+        </div>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/reduce_image_size.js') }}"></script>
+{% endblock %}

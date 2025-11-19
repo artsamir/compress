@@ -1,0 +1,17 @@
+venv/
+__pycache__/
+*.pyc
+uploads/
+*.log
+.env
+
+test_rembg.py
+signup.html
+signup.css
+signup.js
+merge_images.css
+merge_images.html
+merge_images.js
+background_remove.html
+background_remove.css
+background_remove.js

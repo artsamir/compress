@@ -1,0 +1,553 @@
+{% extends 'base.html' %}
+
+{% block title %}Login - Cutcompress{% endblock %}
+
+{% block content %}
+<div class="login-main">
+    <div class="login-container">
+        <!-- Left Side - Info Section -->
+        <div class="login-left">
+            <div class="login-info">
+                <h1>Welcome Back</h1>
+                <p>Access your Cutcompress account and continue using powerful image tools.</p>
+                
+                <div class="benefits-list">
+                    <div class="benefit-item">
+                        <div class="benefit-icon">🚀</div>
+                        <div class="benefit-text">
+                            <h4>Quick Access</h4>
+                            <p>Get instant access to all tools</p>
+                        </div>
+                    </div>
+                    
+                    <div class="benefit-item">
+                        <div class="benefit-icon">💾</div>
+                        <div class="benefit-text">
+                            <h4>Save History</h4>
+                            <p>Keep track of your conversions</p>
+                        </div>
+                    </div>
+                    
+                    <div class="benefit-item">
+                        <div class="benefit-icon">👥</div>
+                        <div class="benefit-text">
+                            <h4>Community</h4>
+                            <p>Join thousands of users</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="login-quote">
+                    <p>"Process images faster than ever before"</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Side - Form Section -->
+        <div class="login-right">
+            <div class="form-wrapper">
+                <h2>Sign In</h2>
+                <p class="form-subtitle">Enter your credentials</p>
+
+                {% if error %}
+                <div class="error-alert">
+                    <div class="error-icon">⚠️</div>
+                    <div class="error-message">
+                        <strong>Authentication Failed</strong>
+                        <p>{{ error }}</p>
+                    </div>
+                </div>
+                {% endif %}
+
+                <form id="login-form" method="POST">
+                    <!-- Email -->
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email" placeholder="you@example.com" required>
+                        <span class="input-icon">✉️</span>
+                    </div>
+
+                    <!-- Password -->
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" placeholder="••••••••" required>
+                        <span class="input-icon">🔒</span>
+                    </div>
+
+                    <!-- Remember Me & Forgot Password -->
+                    <div class="form-options">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="remember" name="remember">
+                            <span class="checkbox-custom"></span>
+                            <span>Remember me</span>
+                        </label>
+                        <a href="#" class="forgot-link">Forgot password?</a>
+                    </div>
+
+                    <button type="submit" class="btn-login">Sign In</button>
+
+                    <div class="form-footer">
+                        <p>Don't have an account? <a href="{{ url_for('signup') }}">Create one now</a></p>
+                    </div>
+                </form>
+
+                <div class="divider">
+                    <span>Or continue as guest</span>
+                </div>
+
+                <a href="{{ url_for('tools') }}" class="btn-guest">Browse Tools</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .login-main {
+        background: linear-gradient(135deg, #f8fafc 0%, #e0e7ff 100%);
+        min-height: calc(100vh - 200px);
+        padding: 3rem 2rem;
+    }
+
+    .login-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 20px 60px rgba(102, 126, 234, 0.3);
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        animation: slideIn 0.6s ease-out;
+    }
+
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Left Side */
+    .login-left {
+        background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+        color: white;
+        padding: 3rem 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .login-info h1 {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        font-weight: 700;
+    }
+
+    .login-info > p {
+        font-size: 1.1rem;
+        opacity: 0.9;
+        margin-bottom: 2rem;
+        line-height: 1.6;
+    }
+
+    /* Benefits List */
+    .benefits-list {
+        margin-bottom: 2rem;
+    }
+
+    .benefit-item {
+        display: flex;
+        margin-bottom: 1.5rem;
+        animation: fadeInLeft 0.6s ease-out;
+        animation-fill-mode: both;
+    }
+
+    .benefit-item:nth-child(1) { animation-delay: 0.1s; }
+    .benefit-item:nth-child(2) { animation-delay: 0.2s; }
+    .benefit-item:nth-child(3) { animation-delay: 0.3s; }
+
+    @keyframes fadeInLeft {
+        from {
+            opacity: 0;
+            transform: translateX(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    .benefit-icon {
+        font-size: 2.5rem;
+        margin-right: 1rem;
+        min-width: 60px;
+    }
+
+    .benefit-text h4 {
+        margin: 0 0 0.3rem 0;
+        font-size: 1.1rem;
+        font-weight: 600;
+    }
+
+    .benefit-text p {
+        margin: 0;
+        font-size: 0.9rem;
+        opacity: 0.85;
+    }
+
+    /* Login Quote */
+    .login-quote {
+        background: rgba(255, 255, 255, 0.15);
+        padding: 1.5rem;
+        border-radius: 12px;
+        text-align: center;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .login-quote p {
+        margin: 0;
+        font-size: 1.1rem;
+        font-style: italic;
+        color: #fff;
+    }
+
+    /* Right Side - Form */
+    .login-right {
+        padding: 3rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .form-wrapper {
+        width: 100%;
+    }
+
+    .form-wrapper h2 {
+        font-size: 2rem;
+        color: #2c3e50;
+        margin-bottom: 0.5rem;
+        font-weight: 700;
+    }
+
+    .form-subtitle {
+        color: #7f8c8d;
+        margin-bottom: 1.5rem;
+        font-size: 1rem;
+    }
+
+    /* Error Alert */
+    .error-alert {
+        background: #fff2f0;
+        border: 2px solid #ff4d4f;
+        border-radius: 12px;
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+        display: flex;
+        gap: 1rem;
+        animation: slideDown 0.4s ease-out;
+    }
+
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .error-icon {
+        font-size: 1.5rem;
+        flex-shrink: 0;
+    }
+
+    .error-message strong {
+        color: #ff4d4f;
+        display: block;
+        margin-bottom: 0.3rem;
+    }
+
+    .error-message p {
+        color: #ff7875;
+        margin: 0;
+        font-size: 0.9rem;
+    }
+
+    /* Form Fields */
+    .form-group {
+        margin-bottom: 1.5rem;
+        position: relative;
+        animation: fadeInUp 0.6s ease-out forwards;
+        opacity: 0;
+    }
+
+    .form-group:nth-child(1) { animation-delay: 0.1s; }
+    .form-group:nth-child(2) { animation-delay: 0.15s; }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .form-group label {
+        display: block;
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 0.5rem;
+        font-size: 0.95rem;
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 0.75rem 1rem 0.75rem 2.5rem;
+        border: 2px solid #e1e8ed;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-family: inherit;
+        transition: all 0.3s ease;
+        background: white;
+    }
+
+    .form-group input:focus {
+        outline: none;
+        border-color: #4f46e5;
+        box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+        background: #f8f9ff;
+    }
+
+    .form-group input::placeholder {
+        color: #bdc3c7;
+    }
+
+    /* Input Icons */
+    .input-icon {
+        position: absolute;
+        left: 0.75rem;
+        top: 2.3rem;
+        font-size: 1.2rem;
+    }
+
+    /* Form Options */
+    .form-options {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        gap: 1rem;
+    }
+
+    .checkbox-label {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        color: #555;
+        font-weight: normal;
+        font-size: 0.95rem;
+    }
+
+    .checkbox-label input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+        width: 20px;
+        height: 20px;
+        margin: 0;
+        padding: 0;
+    }
+
+    .checkbox-custom {
+        width: 20px;
+        height: 20px;
+        border: 2px solid #4f46e5;
+        border-radius: 4px;
+        margin-right: 0.75rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        flex-shrink: 0;
+    }
+
+    .checkbox-label input:checked + .checkbox-custom {
+        background: #4f46e5;
+        border-color: #4f46e5;
+        color: white;
+        font-size: 0.8rem;
+    }
+
+    .checkbox-label input:checked + .checkbox-custom::after {
+        content: '✓';
+        color: white;
+    }
+
+    .forgot-link {
+        color: #4f46e5;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.95rem;
+        transition: color 0.3s ease;
+    }
+
+    .forgot-link:hover {
+        color: #7c3aed;
+        text-decoration: underline;
+    }
+
+    /* Login Button */
+    .btn-login {
+        width: 100%;
+        padding: 1rem;
+        background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 1.05rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3);
+        animation: fadeInUp 0.6s ease-out 0.2s both;
+    }
+
+    .btn-login:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(79, 70, 229, 0.4);
+    }
+
+    .btn-login:active {
+        transform: translateY(0);
+    }
+
+    /* Divider */
+    .divider {
+        text-align: center;
+        margin: 2rem 0;
+        position: relative;
+        color: #bdc3c7;
+        font-size: 0.9rem;
+    }
+
+    .divider::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: #e1e8ed;
+        z-index: -1;
+    }
+
+    .divider span {
+        background: white;
+        padding: 0 1rem;
+        position: relative;
+    }
+
+    /* Guest Button */
+    .btn-guest {
+        width: 100%;
+        padding: 1rem;
+        background: white;
+        color: #4f46e5;
+        border: 2px solid #4f46e5;
+        border-radius: 8px;
+        font-size: 1.05rem;
+        font-weight: 600;
+        text-decoration: none;
+        display: block;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        animation: fadeInUp 0.6s ease-out 0.25s both;
+    }
+
+    .btn-guest:hover {
+        background: #f3f0ff;
+        transform: translateY(-2px);
+    }
+
+    /* Form Footer */
+    .form-footer {
+        text-align: center;
+        margin-top: 1.5rem;
+        animation: fadeInUp 0.6s ease-out 0.3s both;
+    }
+
+    .form-footer p {
+        margin: 0;
+        color: #555;
+        font-size: 0.95rem;
+    }
+
+    .form-footer a {
+        color: #4f46e5;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .form-footer a:hover {
+        text-decoration: underline;
+    }
+
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+        .login-container {
+            grid-template-columns: 1fr;
+            border-radius: 15px;
+        }
+
+        .login-left {
+            padding: 2rem;
+            min-height: 300px;
+        }
+
+        .login-info h1 {
+            font-size: 1.8rem;
+        }
+
+        .login-info > p {
+            font-size: 1rem;
+        }
+
+        .login-right {
+            padding: 2rem;
+        }
+
+        .form-wrapper h2 {
+            font-size: 1.5rem;
+        }
+
+        .form-options {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .benefit-item {
+            margin-bottom: 1rem;
+        }
+
+        .benefit-icon {
+            font-size: 2rem;
+        }
+
+        .login-main {
+            padding: 1rem;
+        }
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,319 @@
+{% extends 'base.html' %}
+
+{% block title %}Home - Cutcompress{% endblock %}
+
+{% block content %}
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>Welcome to Cutcompress</h1>
+        <p>Your one-stop solution for image, text, and document tools. Fast, simple, and free!</p>
+        <a href="{{ url_for('tools') }}" class="cta-button">Explore Tools</a>
+    </section>
+
+    <!-- Tool Boxes Section -->
+    <section id="tools" class="tool-boxes">
+        <div class="tool-box" style="--i: 1;">
+            <div class="tool-box-header">
+                <i class="fas fa-image"></i>
+                <h2>Image Converter</h2>
+            </div>
+            <ul>
+                <li><a href="/tool/reduce-image-size"><i class="fas fa-compress-alt" aria-hidden="true"></i> Reduce Image Size</a></li>
+                <!-- <li><a href="http://cutcompress-app1.s3-website-us-east-1.amazonaws.com/"><i class="fas fa-compress-alt" aria-hidden="true"></i> Reduce Image Size</a></li> -->
+                <li><a href="/tool/image-to-jpg"><i class="fas fa-file-image"></i> Any Image to JPG</a></li>
+                <li><a href="/tool/image-to-png"><i class="fas fa-file-image" aria-hidden="true"></i> Any Image to PNG</a></li>
+                <li><a href="/tool/image-to-webp"><i class="fas fa-file-image" aria-hidden="true"></i> Any Image to WEBP</a></li>
+                <li><a href="/tool/image-to-pdf"><i class="fas fa-file-pdf" aria-hidden="true"></i> Image to PDF</a></li>
+            </ul>
+        </div>
+
+        <div class="tool-box" style="--i: 2;">
+            <div class="tool-box-header">
+                <i class="fas fa-crop-alt"></i>
+                <h2>Image Processing</h2>
+            </div>
+            <ul>
+                <li><a href="/tool/background-remove"><i class="fas fa-eraser" aria-hidden="true"></i> Background Remove</a></li>
+                <li><a href="{{ url_for('coming_soon') }}"><i class="fas fa-id-card" aria-hidden="true"></i> Passport Maker</a></li>
+                <li><a href="/tool/merge-images"><i class="fas fa-layer-group" aria-hidden="true"></i> Merge Two Images</a></li>
+            </ul>
+        </div>
+
+        <div class="tool-box" style="--i: 3;">
+            <div class="tool-box-header">
+                <i class="fas fa-file-alt"></i>
+                <h2>Text Converter</h2>
+            </div>
+            <ul>
+                <li><a href="{{ url_for('coming_soon') }}"><i class="fas fa-hashtag" aria-hidden="true"></i> Word to Hashtag</a></li>
+                <li><a href="{{ url_for('coming_soon') }}"><i class="fas fa-file-pdf" aria-hidden="true"></i> Word to PDF</a></li>
+                <li><a href="{{ url_for('coming_soon') }}"><i class="fas fa-file-excel" aria-hidden="true"></i> Excel to PDF</a></li>
+                <li><a href="{{ url_for('coming_soon') }}"><i class="fas fa-file-powerpoint" aria-hidden="true"></i> PowerPoint to PDF</a></li>
+            </ul>
+        </div>
+
+        <div class="tool-box" style="--i: 4;">
+            <div class="tool-box-header">
+                <i class="fas fa-tools"></i>
+                <h2>Builder</h2>
+            </div>
+            <ul>
+                <li><a href="{{ url_for('coming_soon') }}"><i class="fas fa-user-tie" aria-hidden="true"></i> Resume Maker</a></li>
+                <li><a href="{{ url_for('coming_soon') }}"><i class="fas fa-file-contract" aria-hidden="true"></i> Project Front Page Maker</a></li>
+                <li><a href="{{ url_for('coming_soon') }}"><i class="fas fa-id-badge" aria-hidden="true"></i> ID Card Maker</a></li>
+                <li><a href="{{ url_for('coming_soon') }}"><i class="fas fa-award" aria-hidden="true"></i> Certificate Maker</a></li>
+            </ul>
+        </div>
+
+        <div class="tool-box" style="--i: 5;">
+            <div class="tool-box-header">
+                <i class="fas fa-envelope"></i>
+                <h2>Other Tools</h2>
+            </div>
+            <ul>
+                <li><a href="{{ url_for('coming_soon') }}"><i class="fas fa-envelope-open" aria-hidden="true"></i> Email Templates</a></li>
+                <li><a href="{{ url_for('coming_soon') }}"><i class="fas fa-file-signature" aria-hidden="true"></i> Application Letter Template</a></li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Blog Section -->
+    <section class="blog-section">
+        <div class="blog-container">
+            <div class="blog-header">
+                <h2>Learn & Understand</h2>
+                <p>Helpful guides and tips for managing your digital content</p>
+            </div>
+
+            <div class="blog-grid">
+                <article class="blog-card">
+                    <div class="blog-image" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);"></div>
+                    <div class="blog-content">
+                        <span class="blog-category">Images</span>
+                        <h3>Why You Should Compress Your Images</h3>
+                        <p>Large image files can slow down your projects and websites. When you compress images, you reduce their file size without losing important visual information. This is especially useful for presentations, assignments, and online portfolios. Smaller files load faster and take less storage space on your devices.</p>
+                        <a href="{{ url_for('blog') }}" class="read-more">Read More →</a>
+                    </div>
+                </article>
+
+                <article class="blog-card">
+                    <div class="blog-image" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);"></div>
+                    <div class="blog-content">
+                        <span class="blog-category">Documents</span>
+                        <h3>Converting Documents: A Student's Guide</h3>
+                        <p>Converting documents from one format to another is a practical skill. Whether you need to change Word files to PDF or presentations to images, understanding these conversions helps you complete assignments properly. Different formats have different advantages - PDFs are great for sharing because they look the same on every device, while Word documents are easy to edit.</p>
+                        <a href="{{ url_for('blog') }}" class="read-more">Read More →</a>
+                    </div>
+                </article>
+
+                <article class="blog-card">
+                    <div class="blog-image" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);"></div>
+                    <div class="blog-content">
+                        <span class="blog-category">Tips & Tricks</span>
+                        <h3>Quick Tips for Better Digital Projects</h3>
+                        <p>Creating digital projects is becoming an important part of school work. Before submitting your project, make sure all images are properly formatted and file sizes are reasonable. Remove unnecessary backgrounds or elements to make your work cleaner. Always keep backups of your important files. These small steps can significantly improve the quality of your presentations and assignments.</p>
+                        <a href="{{ url_for('blog') }}" class="read-more">Read More →</a>
+                    </div>
+                </article>
+
+                <article class="blog-card">
+                    <div class="blog-image" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);"></div>
+                    <div class="blog-content">
+                        <span class="blog-category">Career</span>
+                        <h3>Digital Skills That Matter for Your Future</h3>
+                        <p>Learning to work with digital tools is essential in today's world. Whether you're interested in design, content creation, or business, knowing how to handle images and documents efficiently gives you an advantage. These are practical skills that many employers look for. Starting to learn these skills now, while you're in school, prepares you for better opportunities ahead.</p>
+                        <a href="{{ url_for('blog') }}" class="read-more">Read More →</a>
+                    </div>
+                </article>
+
+                <article class="blog-card">
+                    <div class="blog-image" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);"></div>
+                    <div class="blog-content">
+                        <span class="blog-category">Technology</span>
+                        <h3>Understanding File Formats and When to Use Them</h3>
+                        <p>Different file formats serve different purposes. JPG files are good for photographs because they compress well. PNG files are better for graphics with transparent areas. PDF files are universal - they maintain their appearance on any device. Understanding which format to use for each situation helps you make better choices when working on projects or creating content for social media.</p>
+                        <a href="{{ url_for('blog') }}" class="read-more">Read More →</a>
+                    </div>
+                </article>
+
+                <article class="blog-card">
+                    <div class="blog-image" style="background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);"></div>
+                    <div class="blog-content">
+                        <span class="blog-category">Productivity</span>
+                        <h3>Organize Your Files Like a Professional</h3>
+                        <p>Good file organization saves you time and reduces stress. Create clear folder structures with meaningful names. Keep your project files, images, and documents sorted logically. Use naming conventions that help you find things quickly. This skill is important not just for school projects, but also for your future workplace. Employers appreciate people who can manage their work efficiently and keep things organized.</p>
+                        <a href="{{ url_for('blog') }}" class="read-more">Read More →</a>
+                    </div>
+                </article>
+            </div>
+
+            <div class="blog-cta">
+                <h3>Want to read more helpful articles?</h3>
+                <p>Check out our blog section for detailed guides, tutorials, and tips</p>
+                <a href="{{ url_for('blog') }}" class="cta-button-secondary">Visit Blog</a>
+            </div>
+        </div>
+    </section>
+
+    <style>
+        .blog-section {
+            background: #f8f9fa;
+            padding: 4rem 2rem;
+            margin-top: 3rem;
+        }
+
+        .blog-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .blog-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .blog-header h2 {
+            font-size: 2.5rem;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+
+        .blog-header p {
+            font-size: 1.1rem;
+            color: #7f8c8d;
+        }
+
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .blog-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .blog-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+        }
+
+        .blog-image {
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .blog-content {
+            padding: 1.5rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .blog-category {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            width: fit-content;
+        }
+
+        .blog-card h3 {
+            color: #2c3e50;
+            font-size: 1.3rem;
+            margin-bottom: 0.75rem;
+            line-height: 1.4;
+        }
+
+        .blog-card p {
+            color: #555;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+            flex: 1;
+        }
+
+        .read-more {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+            align-self: flex-start;
+        }
+
+        .read-more:hover {
+            color: #764ba2;
+        }
+
+        .blog-cta {
+            background: linear-gradient(135deg, #667eea08 0%, #764ba208 100%);
+            padding: 2.5rem;
+            border-radius: 12px;
+            text-align: center;
+            border: 2px solid #667eea20;
+        }
+
+        .blog-cta h3 {
+            color: #2c3e50;
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .blog-cta p {
+            color: #7f8c8d;
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-button-secondary {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 0.75rem 2rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(103, 126, 234, 0.3);
+        }
+
+        .cta-button-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(103, 126, 234, 0.4);
+        }
+
+        @media (max-width: 768px) {
+            .blog-section {
+                padding: 2rem 1rem;
+            }
+
+            .blog-header h2 {
+                font-size: 1.8rem;
+            }
+
+            .blog-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .blog-cta {
+                padding: 1.5rem;
+            }
+
+            .blog-cta h3 {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+
+{% endblock %}

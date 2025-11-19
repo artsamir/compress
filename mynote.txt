@@ -1,0 +1,7 @@
+.\venv\Scripts\Activate.ps1 - --- to activate venv
+
+pip freeze > requirements.txt
+
+add windows requirements
+pywin32==311
+pyreadline3==3.5.4

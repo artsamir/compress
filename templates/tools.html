@@ -1,0 +1,356 @@
+{% extends 'base.html' %}
+
+{% block title %}Tools - Cutcompress{% endblock %}
+
+{% block content %}
+<div class="tools-container">
+    <section class="tools-hero">
+        <h1>Our Tools</h1>
+        <p>Professional image & document processing tools</p>
+    </section>
+
+    <section class="tools-grid">
+        <!-- Available Tools -->
+        <div class="tools-section">
+            <h2>Available Tools</h2>
+            <div class="tools-list">
+                <a href="{{ url_for('reduce_image_size') }}" class="tool-card available">
+                    <div class="tool-icon">🖼️</div>
+                    <h3>Reduce Image Size</h3>
+                    <p>Compress images to desired file size</p>
+                    <span class="tool-badge available-badge">Available</span>
+                </a>
+
+                <a href="{{ url_for('image_to_jpg') }}" class="tool-card coming">
+                    <div class="tool-icon">🎨</div>
+                    <h3>Image to JPG</h3>
+                    <p>Convert images to JPG format</p>
+                    <span class="tool-badge available-badge">Available</span>
+                </a>
+
+                <a href="{{ url_for('tool_image_to_png') }}" class="tool-card coming">
+                    <div class="tool-icon">🌅</div>
+                    <h3>Image to PNG</h3>
+                    <p>Convert images to PNG format</p>
+                    <span class="tool-badge available-badge">Available</span>
+                </a>
+
+                <a href="{{ url_for('tool_image_to_webp') }}" class="tool-card coming">
+                    <div class="tool-icon">✨</div>
+                    <h3>Image to WebP</h3>
+                    <p>Convert images to modern WebP format</p>
+                    <span class="tool-badge available-badge">Available</span>
+                </a>
+
+                <a href="{{ url_for('tool_image_to_pdf') }}" class="tool-card coming">
+                    <div class="tool-icon">📄</div>
+                    <h3>Image to PDF</h3>
+                    <p>Convert images to PDF documents</p>
+                    <span class="tool-badge available-badge">Available</span>
+                </a>
+
+                <a href="{{ url_for('merge_images') }}" class="tool-card coming">
+                    <div class="tool-icon">🖼️</div>
+                    <h3>Merge Images</h3>
+                    <p>Combine multiple images into one</p>
+                    <span class="tool-badge available-badge">Available</span>
+                </a>
+
+                <a href="{{ url_for('background_remove') }}" class="tool-card coming">
+                    <div class="tool-icon">🎭</div>
+                    <h3>Background Remove</h3>
+                    <p>Remove image backgrounds easily</p>
+                    <span class="tool-badge available-badge">Available</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Coming Soon Tools -->
+        <div class="tools-section">
+            <h2>Coming Soon</h2>
+            <div class="tools-list">
+                <a href="{{ url_for('coming_soon') }}" class="tool-card coming">
+                    <div class="tool-icon">🛂</div>
+                    <h3>Passport Maker</h3>
+                    <p>Create professional passport photos</p>
+                    <span class="tool-badge coming-badge">Coming Soon</span>
+                </a>
+
+                <a href="{{ url_for('coming_soon') }}" class="tool-card coming">
+                    <div class="tool-icon">#️⃣</div>
+                    <h3>Word to Hashtag</h3>
+                    <p>Convert text to hashtags</p>
+                    <span class="tool-badge coming-badge">Coming Soon</span>
+                </a>
+
+                <a href="{{ url_for('coming_soon') }}" class="tool-card coming">
+                    <div class="tool-icon">📄</div>
+                    <h3>Word to PDF</h3>
+                    <p>Convert Word documents to PDF</p>
+                    <span class="tool-badge coming-badge">Coming Soon</span>
+                </a>
+
+                <a href="{{ url_for('coming_soon') }}" class="tool-card coming">
+                    <div class="tool-icon">📊</div>
+                    <h3>Excel to PDF</h3>
+                    <p>Convert Excel spreadsheets to PDF</p>
+                    <span class="tool-badge coming-badge">Coming Soon</span>
+                </a>
+
+                <a href="{{ url_for('coming_soon') }}" class="tool-card coming">
+                    <div class="tool-icon">🎬</div>
+                    <h3>PowerPoint to PDF</h3>
+                    <p>Convert presentations to PDF</p>
+                    <span class="tool-badge coming-badge">Coming Soon</span>
+                </a>
+
+                <a href="{{ url_for('coming_soon') }}" class="tool-card coming">
+                    <div class="tool-icon">📋</div>
+                    <h3>Resume Maker</h3>
+                    <p>Create professional resumes</p>
+                    <span class="tool-badge coming-badge">Coming Soon</span>
+                </a>
+
+                <a href="{{ url_for('coming_soon') }}" class="tool-card coming">
+                    <div class="tool-icon">📑</div>
+                    <h3>Project Front Page Maker</h3>
+                    <p>Design project cover pages</p>
+                    <span class="tool-badge coming-badge">Coming Soon</span>
+                </a>
+
+                <a href="{{ url_for('coming_soon') }}" class="tool-card coming">
+                    <div class="tool-icon">🪪</div>
+                    <h3>ID Card Maker</h3>
+                    <p>Create professional ID cards</p>
+                    <span class="tool-badge coming-badge">Coming Soon</span>
+                </a>
+
+                <a href="{{ url_for('coming_soon') }}" class="tool-card coming">
+                    <div class="tool-icon">🏆</div>
+                    <h3>Certificate Maker</h3>
+                    <p>Generate certificates and awards</p>
+                    <span class="tool-badge coming-badge">Coming Soon</span>
+                </a>
+
+                <a href="{{ url_for('coming_soon') }}" class="tool-card coming">
+                    <div class="tool-icon">✉️</div>
+                    <h3>Email Templates</h3>
+                    <p>Professional email templates</p>
+                    <span class="tool-badge coming-badge">Coming Soon</span>
+                </a>
+
+                <a href="{{ url_for('coming_soon') }}" class="tool-card coming">
+                    <div class="tool-icon">📝</div>
+                    <h3>Application Letter Template</h3>
+                    <p>Job application letter templates</p>
+                    <span class="tool-badge coming-badge">Coming Soon</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <h2>Have a Tool Idea?</h2>
+        <p>We're always adding new features. Let us know what tools you'd like to see!</p>
+        <a href="{{ url_for('contact') }}" class="cta-button">Contact Us</a>
+    </section>
+</div>
+
+<style>
+.tools-container {
+    width: 100%;
+}
+
+.tools-hero {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 3rem 2rem;
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.tools-hero h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.tools-hero p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+}
+
+.tools-grid {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem 3rem;
+}
+
+.tools-section {
+    margin-bottom: 4rem;
+}
+
+.tools-section h2 {
+    color: #2c3e50;
+    font-size: 1.8rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 3px solid #667eea;
+}
+
+.tools-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 2rem;
+}
+
+.tool-card {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    text-decoration: none;
+    color: inherit;
+    position: relative;
+    overflow: hidden;
+}
+
+.tool-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    opacity: 0;
+    z-index: -1;
+    transition: left 0.3s ease;
+}
+
+.tool-card.available:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.2);
+}
+
+.tool-card.coming:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+.tool-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    transition: transform 0.3s ease;
+}
+
+.tool-card:hover .tool-icon {
+    transform: scale(1.1);
+}
+
+.tool-card h3 {
+    color: #2c3e50;
+    font-size: 1.2rem;
+    margin-bottom: 0.75rem;
+    font-weight: 600;
+}
+
+.tool-card p {
+    color: #7f8c8d;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    line-height: 1.4;
+}
+
+.tool-badge {
+    display: inline-block;
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.available-badge {
+    background: #d4edda;
+    color: #155724;
+}
+
+.coming-badge {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.cta-section {
+    background: linear-gradient(135deg, #667eea08 0%, #764ba208 100%);
+    padding: 3rem 2rem;
+    text-align: center;
+    border-radius: 12px;
+    margin: 2rem;
+}
+
+.cta-section h2 {
+    color: #2c3e50;
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.cta-section p {
+    color: #7f8c8d;
+    font-size: 1.05rem;
+    margin-bottom: 1.5rem;
+}
+
+.cta-button {
+    display: inline-block;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 0.75rem 2rem;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 15px rgba(103, 126, 234, 0.3);
+}
+
+.cta-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(103, 126, 234, 0.4);
+}
+
+@media (max-width: 768px) {
+    .tools-hero h1 {
+        font-size: 1.8rem;
+    }
+
+    .tools-list {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 1rem;
+    }
+
+    .tool-card {
+        padding: 1.5rem;
+    }
+
+    .tool-icon {
+        font-size: 2.5rem;
+    }
+
+    .tool-card h3 {
+        font-size: 1rem;
+    }
+
+    .tool-card p {
+        font-size: 0.8rem;
+    }
+
+    .cta-section {
+        margin: 1rem;
+    }
+
+    .cta-section h2 {
+        font-size: 1.5rem;
+    }
+}
+</style>
+{% endblock %}
