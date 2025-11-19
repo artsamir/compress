@@ -1,0 +1,513 @@
+{% extends "base.html" %}
+
+{% block title %}Sign Up - Cutcompress{% endblock %}
+
+{% block content %}
+<div class="signup-main">
+    <div class="signup-container">
+        <!-- Left Side - Info Section -->
+        <div class="signup-left">
+            <div class="signup-info">
+                <h1>Join Our Community</h1>
+                <p>Create your free account and start using powerful image tools today.</p>
+                
+                <div class="features-list">
+                    <div class="feature-item">
+                        <div class="feature-icon">✨</div>
+                        <div class="feature-text">
+                            <h4>Free Tools</h4>
+                            <p>Access all image processing tools for free</p>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-item">
+                        <div class="feature-icon">⚡</div>
+                        <div class="feature-text">
+                            <h4>Fast Processing</h4>
+                            <p>Convert and compress images instantly</p>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-item">
+                        <div class="feature-icon">🔒</div>
+                        <div class="feature-text">
+                            <h4>Secure & Safe</h4>
+                            <p>Your files are protected with encryption</p>
+                        </div>
+                    </div>
+
+                    <div class="feature-item">
+                        <div class="feature-icon">🌍</div>
+                        <div class="feature-text">
+                            <h4>Works Everywhere</h4>
+                            <p>Access from any device, anytime</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="social-proof">
+                    <p>Join <strong>1,100+</strong> students and professionals</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Side - Form Section -->
+        <div class="signup-right">
+            <div class="form-wrapper">
+                <h2>Create Your Account</h2>
+                <p class="form-subtitle">It only takes a minute</p>
+
+                <form id="signup-form" method="POST">
+                    <!-- First Row: Name Fields -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="firstName">First Name</label>
+                            <input type="text" id="firstName" name="firstName" placeholder="John" required>
+                            <span class="input-icon">👤</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="lastName">Last Name</label>
+                            <input type="text" id="lastName" name="lastName" placeholder="Doe" required>
+                            <span class="input-icon">👤</span>
+                        </div>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email" placeholder="you@example.com" required>
+                        <span class="input-icon">✉️</span>
+                    </div>
+
+                    <!-- Mobile -->
+                    <div class="form-group">
+                        <label for="mobile">Mobile Number</label>
+                        <input type="tel" id="mobile" name="mobile" placeholder="+91 98765 43210" required pattern="[0-9]{10}">
+                        <span class="input-icon">📱</span>
+                    </div>
+
+                    <!-- Age Category -->
+                    <div class="form-group">
+                        <label for="ageCategory">Age Category</label>
+                        <select id="ageCategory" name="ageCategory" required>
+                            <option value="">Select Age Category</option>
+                            <option value="child">Child (0-12)</option>
+                            <option value="teenager">Teenager (13-19)</option>
+                            <option value="boy">Young Adult (20-29)</option>
+                            <option value="adult">Adult (30+)</option>
+                        </select>
+                        <span class="input-icon">🎂</span>
+                    </div>
+
+                    <!-- Country and State Row -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="country">Country</label>
+                            <input type="text" id="country" name="country" placeholder="e.g., India, United States" required>
+                            <span class="input-icon">🌍</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="state">State/Province</label>
+                            <input type="text" id="state" name="state" placeholder="e.g., Maharashtra, California" required>
+                            <span class="input-icon">📍</span>
+                        </div>
+                    </div>
+
+                    <!-- Terms & Conditions -->
+                    <div class="form-group terms-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="terms" name="terms" required>
+                            <span class="checkbox-custom"></span>
+                            <span>I agree to the <a href="{{ url_for('terms') }}" target="_blank">Terms & Conditions</a> and <a href="{{ url_for('privacy_policy') }}" target="_blank">Privacy Policy</a></span>
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn-signup">Create Account</button>
+
+                    <div class="form-footer">
+                        <p>Already have an account? <a href="{{ url_for('login') }}">Sign In</a></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .signup-main {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: calc(100vh - 200px);
+        padding: 3rem 2rem;
+    }
+
+    .signup-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 20px 60px rgba(102, 126, 234, 0.3);
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        animation: slideIn 0.6s ease-out;
+    }
+
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Left Side */
+    .signup-left {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 3rem 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .signup-info h1 {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        font-weight: 700;
+    }
+
+    .signup-info > p {
+        font-size: 1.1rem;
+        opacity: 0.9;
+        margin-bottom: 2rem;
+        line-height: 1.6;
+    }
+
+    /* Features List */
+    .features-list {
+        margin-bottom: 2rem;
+    }
+
+    .feature-item {
+        display: flex;
+        margin-bottom: 1.5rem;
+        animation: fadeInLeft 0.6s ease-out;
+        animation-fill-mode: both;
+    }
+
+    .feature-item:nth-child(1) { animation-delay: 0.1s; }
+    .feature-item:nth-child(2) { animation-delay: 0.2s; }
+    .feature-item:nth-child(3) { animation-delay: 0.3s; }
+    .feature-item:nth-child(4) { animation-delay: 0.4s; }
+
+    @keyframes fadeInLeft {
+        from {
+            opacity: 0;
+            transform: translateX(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    .feature-icon {
+        font-size: 2.5rem;
+        margin-right: 1rem;
+        min-width: 60px;
+    }
+
+    .feature-text h4 {
+        margin: 0 0 0.3rem 0;
+        font-size: 1.1rem;
+        font-weight: 600;
+    }
+
+    .feature-text p {
+        margin: 0;
+        font-size: 0.9rem;
+        opacity: 0.85;
+    }
+
+    /* Social Proof */
+    .social-proof {
+        background: rgba(255, 255, 255, 0.15);
+        padding: 1.5rem;
+        border-radius: 12px;
+        text-align: center;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .social-proof p {
+        margin: 0;
+        font-size: 1rem;
+    }
+
+    .social-proof strong {
+        font-size: 1.3rem;
+        color: #ffd700;
+    }
+
+    /* Right Side - Form */
+    .signup-right {
+        padding: 3rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .form-wrapper {
+        width: 100%;
+    }
+
+    .form-wrapper h2 {
+        font-size: 2rem;
+        color: #2c3e50;
+        margin-bottom: 0.5rem;
+        font-weight: 700;
+    }
+
+    .form-subtitle {
+        color: #7f8c8d;
+        margin-bottom: 2rem;
+        font-size: 1rem;
+    }
+
+    /* Form Fields */
+    .form-group {
+        margin-bottom: 1.5rem;
+        position: relative;
+        animation: fadeInUp 0.6s ease-out forwards;
+        opacity: 0;
+    }
+
+    .form-group:nth-child(1) { animation-delay: 0.1s; }
+    .form-group:nth-child(2) { animation-delay: 0.15s; }
+    .form-group:nth-child(3) { animation-delay: 0.2s; }
+    .form-group:nth-child(4) { animation-delay: 0.25s; }
+    .form-group:nth-child(5) { animation-delay: 0.3s; }
+    .form-group:nth-child(6) { animation-delay: 0.35s; }
+    .form-group:nth-child(7) { animation-delay: 0.4s; }
+    .form-group:nth-child(8) { animation-delay: 0.45s; }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+
+    .form-group label {
+        display: block;
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 0.5rem;
+        font-size: 0.95rem;
+    }
+
+    .form-group input,
+    .form-group select {
+        width: 100%;
+        padding: 0.75rem 1rem 0.75rem 2.5rem;
+        border: 2px solid #e1e8ed;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-family: inherit;
+        transition: all 0.3s ease;
+        background: white;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        background: #f8f9ff;
+    }
+
+    .form-group input::placeholder {
+        color: #bdc3c7;
+    }
+
+    /* Input Icons */
+    .input-icon {
+        position: absolute;
+        left: 0.75rem;
+        top: 2.3rem;
+        font-size: 1.2rem;
+    }
+
+    /* Terms & Conditions */
+    .terms-group {
+        margin: 2rem 0;
+    }
+
+    .checkbox-label {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        color: #555;
+        font-weight: normal;
+        font-size: 0.95rem;
+    }
+
+    .checkbox-label input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+        width: 20px;
+        height: 20px;
+        margin: 0;
+        padding: 0;
+    }
+
+    .checkbox-custom {
+        width: 20px;
+        height: 20px;
+        border: 2px solid #667eea;
+        border-radius: 4px;
+        margin-right: 0.75rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        flex-shrink: 0;
+    }
+
+    .checkbox-label input:checked + .checkbox-custom {
+        background: #667eea;
+        border-color: #667eea;
+        color: white;
+        font-size: 0.8rem;
+    }
+
+    .checkbox-label input:checked + .checkbox-custom::after {
+        content: '✓';
+        color: white;
+    }
+
+    .checkbox-label a {
+        color: #667eea;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .checkbox-label a:hover {
+        text-decoration: underline;
+    }
+
+    /* Submit Button */
+    .btn-signup {
+        width: 100%;
+        padding: 1rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 1.05rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        margin-top: 1rem;
+        animation: fadeInUp 0.6s ease-out 0.5s both;
+    }
+
+    .btn-signup:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-signup:active {
+        transform: translateY(0);
+    }
+
+    /* Form Footer */
+    .form-footer {
+        text-align: center;
+        margin-top: 1.5rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid #e1e8ed;
+        animation: fadeInUp 0.6s ease-out 0.55s both;
+    }
+
+    .form-footer p {
+        margin: 0;
+        color: #555;
+        font-size: 0.95rem;
+    }
+
+    .form-footer a {
+        color: #667eea;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .form-footer a:hover {
+        text-decoration: underline;
+    }
+
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+        .signup-container {
+            grid-template-columns: 1fr;
+            border-radius: 15px;
+        }
+
+        .signup-left {
+            padding: 2rem;
+            min-height: 300px;
+        }
+
+        .signup-info h1 {
+            font-size: 1.8rem;
+        }
+
+        .signup-info > p {
+            font-size: 1rem;
+        }
+
+        .signup-right {
+            padding: 2rem;
+        }
+
+        .form-wrapper h2 {
+            font-size: 1.5rem;
+        }
+
+        .form-row {
+            grid-template-columns: 1fr;
+        }
+
+        .feature-item {
+            margin-bottom: 1rem;
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+        }
+
+        .signup-main {
+            padding: 1rem;
+        }
+    }
+</style>
+
+<script src="{{ url_for('static', filename='js/signup.js') }}"></script>
+{% endblock %}

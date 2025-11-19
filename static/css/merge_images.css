@@ -1,0 +1,1000 @@
+/* 🌐 Global Styles */
+body {
+  font-family: "Segoe UI", Roboto, Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(135deg, #e0eafc, #cfdef3);
+  color: #333;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* --- Navbar Styles --- */
+.navbar {
+  width: 100vw;
+  min-width: 0;
+  background: linear-gradient(90deg, #00b4d8 0%, #007bff 100%);
+  color: #fff;
+  padding: 0 28px;
+  font-size: 1.08rem;
+  font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.09);
+  border-bottom-left-radius: 18px;
+  border-bottom-right-radius: 18px;
+  transition: background 0.3s;
+}
+
+/* ensure navbar is a positioned container and logo sits left */
+.navbar { position: relative; justify-content: flex-start !important; }
+.logo { order: 1; margin-right: auto; }
+
+/* Navbar Layout */
+.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    padding: 0 24px;
+    height: 64px;
+    background: #4f46e5;
+    z-index: 1000;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  height: 56px;
+}
+.logo img {
+  height: 38px;
+  width: auto;
+  margin-right: 8px;
+  
+}
+
+/* Logo positioning */
+.logo {
+    flex: 0 0 auto;
+}
+
+/* Nav links */
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-links li a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1.05rem;
+  padding: 6px 14px;
+  border-radius: 8px;
+  transition: background 0.18s, color 0.18s;
+  letter-spacing: 0.5px;
+}
+.nav-links li a:hover,
+.nav-links li a:focus {
+  background: rgba(255,255,255,0.13);
+  color: #ffe066;
+}
+
+.auth-button {
+  margin-left: 18px;
+}
+.auth-button a {
+  display: inline-block;
+  padding: 8px 24px;
+  background: #00b4d8;
+  color: white;
+  border-radius: 24px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+.auth-button a:hover {
+  background: #0096c7;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 180, 216, 0.2);
+}
+
+/* Mobile Specific Styles */
+@media (max-width: 700px) {
+    /* Mobile auth button styling */
+    .nav-links .auth-button a {
+        width: 100%;
+        padding: 8px 24px;
+        background: transparent;
+        box-shadow: none;
+        text-align: left;
+    }
+
+    .nav-links .auth-button a:hover {
+        background: rgba(255, 255, 255, 0.1);
+        transform: none;
+        box-shadow: none;
+    }
+
+    .navbar {
+        padding: 0 16px;
+    }
+
+    .logo {
+        order: 1;
+    }
+
+    .nav-toggle {
+        order: 3;
+        position: absolute !important;
+        right: 16px !important;
+        top: 50% !important;
+        transform: translateY(-50%) !important;
+        margin: 0 !important;
+        padding: 8px !important;
+        background: transparent !important;
+        border: none !important;
+        outline: none !important;
+        box-shadow: none !important;
+        z-index: 1100 !important;
+    }
+
+    /* keep nav links hidden by default and full width when open */
+    .nav-links {
+        order: 2;
+        position: absolute;
+        top: 64px;
+        left: 0;
+        width: 100%;
+        display: none;
+        flex-direction: column;
+        padding: 0;
+        margin: 0;
+        z-index: 1000;
+        align-items: flex-start; /* avoid centering items */
+    }
+
+    .nav-links.open {
+        display: flex;
+    }
+
+    .container {
+        margin-top: 72px;
+        padding: 0 16px;
+    }
+}
+
+.nav-toggle {
+  display: none;
+  background: none;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  margin-left: 18px;
+}
+.hamburger {
+  display: block;
+  width: 26px;
+  height: 3px;
+  background: #fff;
+  border-radius: 2px;
+  position: relative;
+}
+.hamburger::before,
+.hamburger::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  width: 26px;
+  height: 3px;
+  background: #fff;
+  border-radius: 2px;
+  transition: 0.2s;
+}
+.hamburger::before {
+  top: -8px;
+}
+.hamburger::after {
+  top: 8px;
+}
+
+/* --- Adjust Container for Navbar --- */
+body {
+  padding-top: 70px; /* Height of navbar + some space */
+  box-sizing: border-box;
+  min-width: 0;
+}
+
+/* Container */
+.container {
+  margin: 0 auto;
+  margin-top: 30px;
+  max-width: 1200px;
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  text-align: center;
+  background: #ffffffc7;
+  border-radius: 20px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(6px);
+  transition: transform 0.3s ease;
+}
+
+.container:hover {
+  transform: translateY(-3px);
+}
+
+h1 {
+  margin-bottom: 25px;
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #1a1a1a;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  background: linear-gradient(135deg, #007bff, #00b4d8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Upload Section */
+.upload-section {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.upload-box {
+  border: 2.5px dashed #00b4d8;
+  padding: 24px 10px 10px 10px;
+  text-align: center;
+  cursor: pointer;
+  position: relative;
+  width: 180px;
+  min-height: 220px;
+  background: linear-gradient(135deg, #f8fdff 60%, #e0f7fa 100%);
+  border-radius: 18px;
+  box-shadow: 0 4px 18px rgba(0, 180, 216, 0.07);
+  transition: border-color 0.2s, background 0.2s, box-shadow 0.2s, transform 0.2s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.upload-box:hover, .upload-box.dragover {
+  border-color: #007bff;
+  background: linear-gradient(135deg, #e0f7fa 60%, #caf0f8 100%);
+}
+
+.upload-icon {
+  font-size: 2.8rem;
+  color: #00b4d8;
+  margin-bottom: 10px;
+  transition: color 0.2s;
+}
+
+.upload-box:hover .upload-icon,
+.upload-box.dragover .upload-icon {
+  color: #007bff;
+}
+
+.upload-hint {
+  color: #0096c7;
+  font-size: 1.07rem;
+  font-weight: 500;
+  margin-bottom: 6px;
+  letter-spacing: 0.2px;
+  transition: color 0.2s;
+}
+
+.upload-box:hover .upload-hint,
+.upload-box.dragover .upload-hint {
+  color: #0077b6;
+}
+
+.preview-img {
+  width: 100%;
+  height: auto;
+  display: none;
+  margin-top: 10px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.09);
+  /* background: #fff; */
+}
+
+/* Preview Container */
+.preview-container {
+  margin: 25px 0;
+}
+
+.canvas-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+#previewArea {
+  /* default fixed size you requested */
+  width: 531px;
+  height: 413px;
+  max-width: 100%;
+  aspect-ratio: auto; /* let JS set exact visual size when needed */
+  position: relative;
+  border: 3px solid #f1f1f1;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* keep responsive behavior on small screens */
+@media (max-width: 600px) {
+  #previewArea { width: 98vw; height: auto; }
+}
+
+.checkerboard {
+  background-image:
+      linear-gradient(45deg, #f0f0f0 25%, transparent 25%),
+      linear-gradient(-45deg, #f0f0f0 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, #f0f0f0 75%),
+      linear-gradient(-45deg, transparent 75%, #f0f0f0 75%);
+  background-size: 20px 20px;
+  background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+}
+
+#mergeCanvas {
+  border: 1px solid #ccc;
+  /* background: #fff; */
+  border-radius: 6px;
+}
+
+/* Controls */
+.controls {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+button, select {
+  padding: 12px 20px;
+  font-size: 15px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  font-weight: 600;
+}
+
+/* Buttons */
+button {
+  background: linear-gradient(135deg, #007bff, #00b4d8);
+  color: #fff;
+  box-shadow: 0 6px 18px rgba(0, 123, 255, 0.35);
+}
+
+button:hover {
+  background: linear-gradient(135deg, #0056b3, #0096c7);
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 8px 22px rgba(0, 123, 255, 0.45);
+}
+
+button:active {
+  transform: translateY(1px) scale(0.98);
+}
+
+/* Dropdown */
+select {
+  border: 1px solid #ccc;
+  background: #fff;
+  color: #333;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06);
+}
+
+select:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 8px rgba(0, 123, 255, 0.4);
+}
+
+/* Main flex container for side-by-side layout */
+.merge-main-flex {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: center;
+  width: 100%;
+  gap: 0;
+  margin: 0 auto;
+  max-width: 1200px;
+  min-height: 600px;
+}
+
+/* Upload section on the left */
+.upload-section {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  min-width: 200px;
+  max-width: 220px;
+  width: 100%;
+  align-items: center;
+  justify-content: flex-start;
+  background: #f8fdff;
+  border-radius: 18px 0 0 18px;
+  box-shadow: 0 4px 18px rgba(0, 180, 216, 0.07);
+  padding: 24px 10px 24px 10px;
+}
+
+/* Preview and controls on the right */
+.preview-controls-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  background: #fff;
+  border-radius: 0 18px 18px 0;
+  box-shadow: 0 4px 18px rgba(0, 180, 216, 0.07);
+  padding: 24px 18px 24px 18px;
+  min-width: 400px;
+  width: 100%;
+  max-width: 600px;
+}
+
+.bg-controls {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  margin-bottom: 18px;
+  margin-top: 8px;
+}
+.bg-controls label {
+  font-size: 1rem;
+  color: #0077b6;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.bg-upload-label {
+  gap: 4px;
+}
+#bgImageBtn {
+  background: #e0eafc;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 10px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  color: #0077b6;
+  margin-left: 4px;
+  transition: background 0.2s, color 0.2s;
+}
+#bgImageBtn:hover {
+  background: #caf0f8;
+  color: #0096c7;
+}
+
+/* Hide upload icon and hint after image is uploaded */
+.upload-box.uploaded .upload-icon,
+.upload-box.uploaded .upload-hint {
+  display: none;
+}
+.upload-box .preview-img {
+  display: none;
+}
+.upload-box.uploaded .preview-img {
+  display: block;
+}
+
+/* Spinner for loading animation */
+.preview-loading {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(255,255,255,0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  border-radius: 24px;
+}
+.spinner {
+  width: 48px;
+  height: 48px;
+  border: 5px solid #00b4d8;
+  border-top: 5px solid #fff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Checkerboard preview wrapper — responsive and centered */
+#previewArea,
+.preview-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  padding: 12px;              /* space around canvas */
+  background-color: transparent;
+  /* classic checkerboard */
+  background-image:
+    linear-gradient(45deg, #e6e6e6 25%, transparent 25%),
+    linear-gradient(-45deg, #e6e6e6 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #e6e6e6 75%),
+    linear-gradient(-45deg, transparent 75%, #e6e6e6 75%);
+  background-size: 20px 20px; /* tile size */
+  background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+}
+
+/* Prevent any CSS from forcing mm sized box */
+#previewArea[style],
+.preview-wrapper[style] {
+  width: auto !important;
+  height: auto !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+}
+
+/* Canvas must use the size set by JS (logical canvas width/height) while remaining responsive */
+#mergeCanvas,
+#previewArea canvas {
+  display: block;
+  max-width: 100%;
+  width: auto !important;    /* let JS set CSS width when scaling */
+  height: auto !important;   /* preserve aspect ratio, no CSS swap */
+  background: transparent;    /* keep canvas transparent so checker shows */
+  box-shadow: none;
+}
+
+/* Desktop/ Mobile specific tweaks if needed */
+@media (max-width: 700px) {
+  #previewArea { padding: 8px; background-size: 16px 16px; }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .navbar {
+    font-size: 1rem;
+    padding: 12px 20px;
+    height: 52px;
+  }
+
+  h1 {
+    font-size: 1.7rem;
+  }
+
+  .upload-section {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  #previewArea {
+    max-width: 98vw;
+    min-width: 0;
+    border-radius: 16px;
+  }
+
+  button, select {
+    width: 100%;
+    max-width: 300px;
+  }
+}
+
+@media (max-width: 600px) {
+  .navbar {
+    font-size: 1rem;
+    padding: 12px 10px;
+  }
+  .navbar-brand {
+    font-size: 1.1rem;
+  }
+  .container {
+    padding: 6px;
+    margin-top: 18px;
+  }
+  .upload-section {
+    gap: 10px;
+  }
+  #previewArea {
+    max-width: 98vw;
+    min-width: 0;
+    border-radius: 16px;
+  }
+  #mergeCanvas {
+    width: 100% !important;
+    height: 100% !important; /* auto */
+    max-width: 98vw;
+    min-width: 0;
+    border-radius: 12px;
+  }
+  .upload-box {
+    width: 90vw;
+    max-width: 365px;
+    min-width: 120px;
+    min-height: 120px;
+    padding: 10px;
+  }
+  .controls {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+    width: 100%;
+    margin-top: 18px;
+  }
+  .controls button,
+  .controls select {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    font-size: 1.1rem;
+    padding: 14px 0;
+  }
+}
+
+/* Responsive: stack upload above preview below 600px */
+@media (max-width: 600px) {
+  .merge-main-flex {
+    flex-direction: column;
+    align-items: stretch;
+    max-width: 100vw;
+    min-width: 0;
+  }
+  .upload-section {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 100vw;
+    min-width: 0;
+    margin-bottom: 12px;
+    border-radius: 18px;
+    box-shadow: 0 2px 8px rgba(0, 180, 216, 0.09);
+    padding: 12px 2vw;
+  }
+  .preview-controls-section {
+    width: 100%;
+    max-width: 100vw;
+    min-width: 0;
+    border-radius: 18px;
+    box-shadow: 0 2px 8px rgba(0, 180, 216, 0.09);
+    padding: 12px 2vw;
+    margin-top: 0;
+  }
+}
+
+@media (max-width: 400px) {
+  .navbar {
+    font-size: 0.9rem;
+    padding: 8px 2vw;
+  }
+  .container {
+    padding: 2px;
+    margin-top: 10px;
+  }
+  #previewArea {
+    width: 96vw;
+    max-width: 380px;
+    /* height: 40vw; */
+    /* max-height: 180px; */
+  }
+  .upload-box {
+    max-width: 295px;
+    min-width: 80px;
+    min-height: 80px;
+    padding: 4px;
+  }
+  .controls select{
+    font: 1em sans-serif;
+    padding: 10px;
+  }
+}
+
+/* --- Samsung Z Fold (280px width) --- */
+@media (max-width: 320px) {
+  .navbar {
+    font-size: 0.8rem;
+    padding: 6px 1vw;
+  }
+  .container {
+    padding: 1px;
+    margin-top: 6px;
+  }
+  #previewArea {
+    width: 94vw;
+    max-width: 120px;
+    height: 38vw;
+    max-height: 120px;
+  }
+  .upload-box {
+    max-width: 90px;
+    min-width: 60px;
+    min-height: 60px;
+    padding: 2px;
+  }
+}
+
+/* --- Responsive Navbar --- */
+@media (max-width: 900px) {
+  .nav-links {
+    gap: 16px;
+  }
+  .auth-button {
+    margin-left: 8px;
+  }
+}
+
+@media (max-width: 700px) {
+  .navbar {
+    /* flex-wrap: wrap; */
+    height: auto;
+    padding: 0 8px;
+    border-radius: 0 0 14px 14px;
+  }
+  .logo img {
+    height: 39px;
+    margin-right: 4px;
+  }
+  .nav-links {
+    position: absolute;
+    top: 56px;
+    left: 0;
+    width: 100vw;
+    background: linear-gradient(90deg, #00b4d8 0%, #007bff 100%);
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
+    padding: 0;
+    display: none;
+    border-bottom-left-radius: 14px;
+    border-bottom-right-radius: 14px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.10);
+  }
+  .nav-links.open {
+    display: flex;
+  }
+  .nav-links li {
+    width: 100%;
+  }
+  .nav-links li a {
+    display: block;
+    width: 100%;
+    padding: 8px 24px;
+    font-size: 1rem;
+    border-radius: 0;
+  }
+  .auth-button {
+    margin: 0;
+    padding: 8px 0 8px 16px;
+  }
+  .nav-toggle {
+    display: flex;
+    justify-content: end;
+  }
+
+  /* Hide auth button from navbar */
+  .auth-button {
+    display: none;
+  }
+
+  /* Show auth button in nav-links (toggle menu) */
+  .nav-links .auth-button {
+    display: block;
+    width: 100%;
+    margin: 0;
+    padding: 12px 24px;
+    background: transparent;
+  }
+
+  .nav-links .auth-button a {
+    display: block;
+    width: 100%;
+    background: transparent;
+    box-shadow: none;
+    text-align: left;
+    font-size: 1rem;
+    padding: 0;
+  }
+
+  .nav-links .auth-button a:hover {
+    background: transparent;
+    color: #ffe066;
+    box-shadow: none;
+  }
+
+  /* Adjust nav-links to include auth button */
+  .nav-links.open {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+/* --- Extra Small Devices (Samsung Z Fold, etc) --- */
+@media (max-width: 350px) {
+  .navbar {
+    font-size: 0.85rem;
+    padding: 0 2vw;
+    height: 44px;
+  }
+  .logo img {
+    height: 32px;
+  }
+  .auth-button a {
+    padding: 5px 10px;
+    font-size: 0.95rem;
+  }
+}
+
+/* Base Layout */
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Main Content Container */
+.container {
+    margin-top: 80px; /* navbar height + 16px */
+    padding: 0 24px;
+    max-width: 1200px;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    box-sizing: border-box;
+}
+
+/* Merge Section Layout */
+.merge-main-flex {
+    display: flex;
+    gap: 24px;
+    margin-top: 24px;
+}
+
+@media (max-width: 600px) {
+    .merge-main-flex {
+        flex-direction: column;
+        gap: 16px;
+    }
+}
+
+/* Desktop layout: logo left, nav centered, auth button right */
+@media (min-width: 701px) {
+  .navbar {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    height: 64px;
+  }
+
+  .logo {
+    order: 1;
+    flex: 0 0 auto;
+    margin-right: 0;
+  }
+
+  /* center the nav by absolutely positioning it in the navbar */
+  .nav-links {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    gap: 24px;
+    align-items: center;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    z-index: 100; /* above background */
+  }
+
+  /* auth button stays on the right */
+  .auth-button {
+    order: 3;
+    flex: 0 0 auto;
+    margin-left: auto;
+  }
+
+  /* hide mobile toggle on desktop */
+  .nav-toggle {
+    display: none !important;
+  }
+}
+
+button.nav-toggle {
+    width: 44px !important;
+}
+
+
+
+/* 📖 Blog Section Styling */
+.blog-section {
+  margin: 50px auto;
+  padding: 20px;
+  max-width: 1000px;
+}
+
+.blog-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #333;
+  text-align: center;
+  margin: 30px 0 20px;
+  font-family: "Poppins", sans-serif;
+}
+
+.blog-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.blog-card {
+  background: linear-gradient(135deg, #f9f9f9, #ffffff);
+  border-radius: 15px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  padding: 20px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  font-family: "Poppins", sans-serif;
+}
+
+.blog-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.15);
+}
+
+.blog-card h3 {
+  font-size: 1.3rem;
+  margin-bottom: 10px;
+  color: #007bff;
+}
+
+.blog-card p {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #444;
+}
+
+/* Mobile responsive */
+@media (max-width: 600px) {
+  .blog-title {
+    font-size: 1.4rem;
+  }
+  .blog-card h3 {
+    font-size: 1.1rem;
+  }
+  .blog-card p {
+    font-size: 0.95rem;
+  }
+}
