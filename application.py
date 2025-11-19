@@ -1,5 +1,7 @@
-from flask import Flask, render_template, request, send_file, redirect, url_for, jsonify
+from flask import Flask, render_template, request, send_file, redirect, url_for, jsonify, flash
+from flask_mail import Mail, Message
 import os
+from dotenv import load_dotenv
 from PIL import Image
 from rembg import remove
 from docx2pdf import convert
@@ -10,11 +12,28 @@ import base64
 from blueprints.image_to_jpg_api import bp as image_to_jpg_api_bp
 from blueprints.image_convert_api import bp as image_convert_bp
 
+# Load environment variables from .env file
+load_dotenv()
+
 # Create the single Flask application instance
 application = Flask(__name__)
+
+# Secret Key Configuration (required for sessions and flash messages)
+application.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'dev-secret-key-change-in-production')
+
 application.config['UPLOAD_FOLDER'] = '/tmp/uploads/'  # Safer in EB
 application.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16 MB limit
 os.makedirs(application.config['UPLOAD_FOLDER'], exist_ok=True)
+
+# Flask-Mail Configuration for Gmail
+application.config['MAIL_SERVER'] = 'smtp.gmail.com'
+application.config['MAIL_PORT'] = 587
+application.config['MAIL_USE_TLS'] = True
+application.config['MAIL_USERNAME'] = 'smartsamir0205@gmail.com'
+application.config['MAIL_PASSWORD'] = os.getenv('GMAIL_PASSWORD', '')
+application.config['MAIL_DEFAULT_SENDER'] = 'smartsamir0205@gmail.com'
+
+mail = Mail(application)
 
 # Register blueprints AFTER creating `application`
 application.register_blueprint(image_to_jpg_api_bp)
@@ -60,20 +79,81 @@ def privacy_policy():
 
 @application.route('/contact', methods=['GET', 'POST'])
 def contact():
-    if request.method == 'POST':
-        # Handle contact form submission
-        name = request.form.get('name')
-        email = request.form.get('email')
-        phone = request.form.get('phone', '')
-        subject = request.form.get('subject')
-        message = request.form.get('message')
+    return render_template('contact.html')
+
+@application.route('/send-contact', methods=['POST'])
+def send_contact():
+    try:
+        # Get form data
+        name = request.form.get('name', '').strip()
+        email = request.form.get('email', '').strip()
+        phone = request.form.get('phone', '').strip()
+        subject = request.form.get('subject', '').strip()
+        message = request.form.get('message', '').strip()
         subscribe = request.form.get('subscribe', 'no')
         
-        # TODO: Implement email sending or database storage
-        # For now, just redirect with success message
+        # Validate required fields
+        if not all([name, email, subject, message]):
+            flash('Please fill in all required fields.', 'error')
+            return redirect(url_for('contact'))
+        
+        # Create email message to yourself
+        msg = Message(
+            subject=f"New Contact Form: {subject}",
+            recipients=['smartsamir0205@gmail.com'],
+            body=f"""
+You have a new message from Cutcompress contact form:
+
+Name: {name}
+Email: {email}
+Phone: {phone if phone else 'Not provided'}
+Subject: {subject}
+Subscribe to newsletter: {'Yes' if subscribe == 'on' else 'No'}
+
+Message:
+{message}
+
+---
+This is an automated message from Cutcompress contact form.
+            """,
+            reply_to=email
+        )
+        
+        # Send email
+        mail.send(msg)
+        
+        # Optional: Send confirmation email to user
+        confirmation_msg = Message(
+            subject="We received your message - Cutcompress",
+            recipients=[email],
+            body=f"""
+Hi {name},
+
+Thank you for contacting Cutcompress! We received your message and will get back to you as soon as possible.
+
+Your Message Details:
+Subject: {subject}
+Date: {__import__('datetime').datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+
+We appreciate your interest and will respond within 24-48 hours.
+
+Best regards,
+Samir Saren
+Cutcompress Team
+smartsamir0205@gmail.com
++91 8918103540
+            """
+        )
+        
+        mail.send(confirmation_msg)
+        
+        flash('Thank you! Your message has been sent successfully. We will get back to you soon.', 'success')
         return redirect(url_for('contact'))
-    
-    return render_template('contact.html')
+        
+    except Exception as e:
+        print(f"Error sending email: {str(e)}")
+        flash(f'Error sending message. Please try again later or email us directly.', 'error')
+        return redirect(url_for('contact'))
 
 @application.route('/coming-soon')
 def coming_soon():
