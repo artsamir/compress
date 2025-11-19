@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+
+{% block title %}Background Remove - Cutcompress{% endblock %}
+
+{% block content %}
+    <div class="tool-container">
+        <h1>Background Remove</h1>
+        <div id="upload-area" class="drag-drop-area">
+            <p>Drag & drop your image here or click to upload</p>
+            <input type="file" id="file-input" accept="image/*" hidden>
+        </div>
+        <div id="loader" class="loader hidden"></div>
+        <div id="result-section" class="hidden">
+            <div class="slider-container">
+                <div id="before-image" class="image-container"></div>
+                <div id="after-container">
+                    <div id="after-image" class="image-container">
+                        <div class="overlay"></div>
+                    </div>
+                </div>
+                <div class="slider"></div>
+            </div>
+            <div class="options">
+                <h3>Add Background Color</h3>
+                <input type="color" id="bg-color" value="#ffffff">
+                <h3>Add Background Image</h3>
+                <div class="predefined-bgs">
+                    <!-- Predefined backgrounds -->
+                    <div class="bg-option" style="background-image: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e');" data-url="https://images.unsplash.com/photo-1507525428034-b723cf961d3e"></div>
+                    <div class="bg-option" style="background-image: url('https://images.unsplash.com/photo-1519125323398-675f0ddb6308');" data-url="https://images.unsplash.com/photo-1519125323398-675f0ddb6308"></div>
+                </div>
+                <input type="file" id="bg-upload" accept="image/*">
+                <button id="reset-btn">Reset</button>
+                <button id="download-btn">Download</button>
+            </div>
+        </div>
+    </div>
+
+
+     <!-- Blog Section -->
+    <section class="blog-section">
+        <div class="blog-container">
+            <h1>Introduction to Background Removal</h1>
+            <p>
+                Background removal is one of the most popular image editing tasks in today’s digital world.
+                Whether you’re a content creator, designer, e-commerce seller, or casual user, the ability 
+                to remove and replace backgrounds instantly can save hours of editing.
+            </p>
+            <p>
+                Traditionally, background removal required complex software like Photoshop and manual 
+                selection tools. But with AI-powered tools like <strong>Cutcompress Background Remove</strong>, 
+                it takes only a few seconds.
+            </p>
+            <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e" alt="Background Removal Example">
+        </div>
+
+        <div class="blog-container">
+            <h1>How Background Removal Works</h1>
+            <p>
+                AI-powered background removal relies on deep learning models trained on millions of images. 
+                These models detect the subject of a photo (people, objects, animals, etc.) and separate it 
+                from the background.
+            </p>
+            <h2>Tech Behind It</h2>
+            <ul>
+                <li><strong>Segmentation Models:</strong> Divides image into subject & background.</li>
+                <li><strong>Alpha Masking:</strong> Applies transparency to remove background.</li>
+                <li><strong>Post-processing:</strong> Preserves fine edges like hair/fur.</li>
+            </ul>
+            <img src="https://images.unsplash.com/photo-1519125323398-675f0ddb6308" alt="AI Background Removal">
+        </div>
+
+        <div class="blog-container">
+            <h1>Use Cases of Background Removal</h1>
+            <ul>
+                <li><strong>E-commerce:</strong> Product photos with clean backgrounds.</li>
+                <li><strong>Social Media:</strong> Creative posts with themed backdrops.</li>
+                <li><strong>Graphic Design:</strong> Easy cutouts for posters, flyers, ads.</li>
+                <li><strong>Photography:</strong> Quick editing for portraits & ID photos.</li>
+            </ul>
+            <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e" alt="E-commerce Background Remove">
+        </div>
+
+        <div class="blog-container">
+            <h1>Step-by-Step Guide: Using Cutcompress</h1>
+            <ol>
+                <li>Open the <strong>Background Remove tool</strong>.</li>
+                <li>Upload your image (drag & drop or click to upload).</li>
+                <li>AI removes the background automatically.</li>
+                <li>Select a background (color, preset, or upload custom).</li>
+                <li>Click <strong>Download</strong> to save your new image.</li>
+            </ol>
+            <img src="https://images.unsplash.com/photo-1519125323398-675f0ddb6308" alt="Step by Step Demo">
+        </div>
+
+        <div class="blog-container">
+            <h1>Tips & Tricks for Better Results</h1>
+            <ul>
+                <li>Use high-resolution images for accuracy.</li>
+                <li>Avoid cluttered or busy backgrounds.</li>
+                <li>Ensure good lighting for portraits.</li>
+                <li>Experiment with background colors & textures.</li>
+                <li>Use transparent PNG for flexible design use.</li>
+            </ul>
+            <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e" alt="Tips for Editing">
+        </div>
+    </section>
+    
+    <script src="{{ url_for('static', filename='js/background_remove.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/background_remove.css') }}">
+{% endblock %}
