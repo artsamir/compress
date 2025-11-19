@@ -42,6 +42,10 @@ def tools():
 def about():
     return render_template('about.html')
 
+@application.route('/pricing')
+def pricing():
+    return render_template('pricing.html')
+
 @application.route('/terms')
 def terms():
     return render_template('terms.html')
