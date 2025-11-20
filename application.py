@@ -732,10 +732,6 @@ def powerpoint_to_pdf():
     return render_template('example_tool.html', tool_name='PowerPoint to PDF', form_type='file')
 
 # ----------------- Builder Tools -----------------
-@application.route('/tool/resume-maker', methods=['GET', 'POST'])
-def resume_maker():
-    return render_template('example_tool.html', tool_name='Resume Maker', form_type='form')
-
 @application.route('/tool/project-front-page-maker', methods=['GET', 'POST'])
 def project_front_page_maker():
     return render_template('example_tool.html', tool_name='Project Front Page Maker', form_type='form')
