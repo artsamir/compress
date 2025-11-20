@@ -73,6 +73,10 @@ def terms():
 def refund_policy():
     return render_template('refund_policy.html')
 
+@application.route('/resume-maker')
+def resume_maker():
+    return render_template('resume_maker.html')
+
 @application.route('/privacy-policy')
 def privacy_policy():
     return render_template('privacy_policy.html')
