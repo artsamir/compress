@@ -1,15 +1,8 @@
-// JSON Email Extractor JavaScript
-
-// Email regex pattern that matches most email formats
-const EMAIL_REGEX = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
-
-// Stricter validation for final emails
-const EMAIL_VALIDATION_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+// JSON Data Extractor JavaScript - Enhanced with Custom Fields
 
 let extractedData = {
-    emails: [],
-    duplicates: new Map(),
-    invalid: [],
+    allData: [],
+    selectedFields: [],
     jsonObject: null,
     totalItems: 0
 };
@@ -30,6 +23,9 @@ function initializeExtractor() {
     const sampleJsonBtn = document.getElementById('sample-json-btn');
     const charCount = document.getElementById('char-count');
     const tabButtons = document.querySelectorAll('.tab-btn');
+    const quickFieldButtons = document.querySelectorAll('.quick-field-btn');
+    const addCustomFieldBtn = document.getElementById('add-custom-field-btn');
+    const customFieldInput = document.getElementById('custom-field-input');
 
     // Character count
     jsonInput.addEventListener('input', function () {
@@ -37,10 +33,10 @@ function initializeExtractor() {
     });
 
     // Extract button
-    extractBtn.addEventListener('click', extractEmails);
+    extractBtn.addEventListener('click', extractData);
 
     // Copy all button
-    copyAllBtn.addEventListener('click', copyAllEmails);
+    copyAllBtn.addEventListener('click', copyAllData);
 
     // Clear buttons
     clearJsonBtn.addEventListener('click', clearJson);
@@ -61,9 +57,80 @@ function initializeExtractor() {
             switchTab(this.getAttribute('data-tab'));
         });
     });
+
+    // Quick field buttons
+    quickFieldButtons.forEach(btn => {
+        btn.addEventListener('click', function () {
+            toggleField(this.getAttribute('data-field'), this);
+        });
+    });
+
+    // Custom field input
+    addCustomFieldBtn.addEventListener('click', function () {
+        const fieldName = customFieldInput.value.trim();
+        if (fieldName) {
+            addFieldToSelected(fieldName);
+            customFieldInput.value = '';
+        }
+    });
+
+    customFieldInput.addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+            addCustomFieldBtn.click();
+        }
+    });
 }
 
-function extractEmails() {
+function toggleField(fieldName, button) {
+    if (extractedData.selectedFields.includes(fieldName)) {
+        extractedData.selectedFields = extractedData.selectedFields.filter(f => f !== fieldName);
+        button.classList.remove('active');
+    } else {
+        extractedData.selectedFields.push(fieldName);
+        button.classList.add('active');
+    }
+    updateFieldsDisplay();
+}
+
+function addFieldToSelected(fieldName) {
+    if (!extractedData.selectedFields.includes(fieldName)) {
+        extractedData.selectedFields.push(fieldName);
+        updateFieldsDisplay();
+        showToast(`✅ Added "${fieldName}" to extraction fields`, 'success');
+    } else {
+        showToast(`⚠️ "${fieldName}" is already selected`, 'info');
+    }
+}
+
+function updateFieldsDisplay() {
+    const container = document.getElementById('selected-fields-container');
+    
+    if (extractedData.selectedFields.length === 0) {
+        container.innerHTML = '<div class="empty-state"><p>No fields selected</p></div>';
+        return;
+    }
+
+    container.innerHTML = extractedData.selectedFields.map((field, index) => `
+        <div class="field-badge">
+            <span>${escapeHtml(field)}</span>
+            <span class="field-badge-remove" onclick="removeField('${escapeHtml(field)}')">×</span>
+        </div>
+    `).join('');
+}
+
+function removeField(fieldName) {
+    extractedData.selectedFields = extractedData.selectedFields.filter(f => f !== fieldName);
+    
+    // Deactivate quick button if exists
+    const quickBtn = document.querySelector(`[data-field="${fieldName}"]`);
+    if (quickBtn) {
+        quickBtn.classList.remove('active');
+    }
+    
+    updateFieldsDisplay();
+}
+
+function extractData() {
     const jsonInput = document.getElementById('json-input').value.trim();
 
     if (!jsonInput) {
@@ -71,62 +138,28 @@ function extractEmails() {
         return;
     }
 
+    if (extractedData.selectedFields.length === 0) {
+        showToast('❌ Please select at least one field to extract', 'error');
+        return;
+    }
+
     try {
         // Parse JSON
         extractedData.jsonObject = JSON.parse(jsonInput);
         
-        // Convert to string to search for emails
-        const jsonString = JSON.stringify(extractedData.jsonObject);
-        
-        // Extract all potential emails
-        const potentialEmails = jsonString.match(EMAIL_REGEX) || [];
-        
         // Count total items
         extractedData.totalItems = countJsonItems(extractedData.jsonObject);
         
-        // Process emails
-        extractedData.emails = [];
-        extractedData.duplicates.clear();
-        extractedData.invalid = [];
-        
-        const seenEmails = new Map();
-        const validEmails = [];
-        
-        potentialEmails.forEach(email => {
-            const lowercaseEmail = email.toLowerCase();
-            
-            // Validate email
-            if (EMAIL_VALIDATION_REGEX.test(email)) {
-                validEmails.push(email);
-                
-                // Track duplicates
-                if (seenEmails.has(lowercaseEmail)) {
-                    seenEmails.set(lowercaseEmail, seenEmails.get(lowercaseEmail) + 1);
-                } else {
-                    seenEmails.set(lowercaseEmail, 1);
-                }
-            } else {
-                extractedData.invalid.push(email);
-            }
-        });
-        
-        // Separate unique and duplicate emails
-        validEmails.forEach(email => {
-            const lowercaseEmail = email.toLowerCase();
-            if (seenEmails.get(lowercaseEmail) > 1) {
-                extractedData.duplicates.set(lowercaseEmail, seenEmails.get(lowercaseEmail));
-            } else {
-                extractedData.emails.push(email);
-            }
-        });
-        
-        // Sort emails
-        extractedData.emails.sort();
-        
+        // Extract data
+        extractedData.allData = extractFieldsFromJson(
+            extractedData.jsonObject,
+            extractedData.selectedFields
+        );
+
         // Update UI
         updateResults();
         
-        showToast(`✅ Found ${extractedData.emails.length} unique emails from ${extractedData.totalItems} items`, 'success');
+        showToast(`✅ Extracted ${extractedData.allData.length} records with selected fields`, 'success');
         
         // Enable buttons
         document.getElementById('copy-all-btn').disabled = false;
@@ -137,97 +170,145 @@ function extractEmails() {
     }
 }
 
+function extractFieldsFromJson(obj, fields) {
+    const results = [];
+
+    function traverse(item) {
+        if (item === null || item === undefined) return;
+
+        if (Array.isArray(item)) {
+            item.forEach(traverse);
+        } else if (typeof item === 'object') {
+            // Check if this object has any of the selected fields
+            const hasAnyField = fields.some(field => field in item);
+            
+            if (hasAnyField) {
+                const record = {};
+                fields.forEach(field => {
+                    record[field] = item[field] !== undefined ? item[field] : '';
+                });
+                results.push(record);
+            }
+
+            // Also traverse nested objects
+            Object.values(item).forEach(traverse);
+        }
+    }
+
+    traverse(obj);
+    return results;
+}
+
 function updateResults() {
-    updateEmailsList();
-    updateDuplicatesList();
-    updateInvalidList();
+    updateResultsList();
+    updateStats();
     updateCounts();
     updateJsonPreview();
 }
 
-function updateEmailsList() {
-    const emailsList = document.getElementById('emails-list');
+function updateResultsList() {
+    const resultsList = document.getElementById('results-list');
     
-    if (extractedData.emails.length === 0) {
-        emailsList.innerHTML = '<div class="empty-state"><p>🔍 No emails found</p></div>';
+    if (extractedData.allData.length === 0) {
+        resultsList.innerHTML = '<div class="empty-state"><p>📭 No data found</p></div>';
         return;
     }
     
-    emailsList.innerHTML = extractedData.emails.map((email, index) => `
-        <div class="email-item">
-            <div class="email-text">
-                <span class="email-icon">📧</span>
-                <div>
-                    <div class="email-address">${escapeHtml(email)}</div>
-                    <div class="email-meta">#${index + 1}</div>
-                </div>
-            </div>
-            <div class="email-actions">
-                <button class="copy-email-btn" onclick="copySingleEmail('${escapeHtml(email)}', this)">📋 Copy</button>
-            </div>
-        </div>
-    `).join('');
+    // Create table
+    let tableHtml = `
+        <table class="results-table">
+            <thead>
+                <tr>
+                    <th style="width: 50px; text-align: center;">No.</th>
+                    ${extractedData.selectedFields.map(field => `<th>${escapeHtml(field)}</th>`).join('')}
+                    <th style="width: 100px; text-align: center;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+    `;
+    
+    extractedData.allData.forEach((record, index) => {
+        const fieldValues = extractedData.selectedFields.map(field => `
+            <td>${escapeHtml(String(record[field] || '-'))}</td>
+        `).join('');
+        
+        tableHtml += `
+            <tr>
+                <td style="text-align: center; font-weight: 600; color: #667eea;">${index + 1}</td>
+                ${fieldValues}
+                <td style="text-align: center;">
+                    <button class="copy-result-btn" onclick="copyResultRow(${index}, this)">📋 Copy</button>
+                </td>
+            </tr>
+        `;
+    });
+    
+    tableHtml += `
+            </tbody>
+        </table>
+    `;
+    
+    resultsList.innerHTML = tableHtml;
 }
 
-function updateDuplicatesList() {
-    const duplicatesList = document.getElementById('duplicates-list');
+function copyResultRow(index, button) {
+    const record = extractedData.allData[index];
+    let text = extractedData.selectedFields.map(field => `${field}: ${record[field]}`).join('\n');
     
-    if (extractedData.duplicates.size === 0) {
-        duplicatesList.innerHTML = '<div class="empty-state"><p>✨ No duplicate emails</p></div>';
+    navigator.clipboard.writeText(text).then(() => {
+        const originalText = button.textContent;
+        button.textContent = '✅ Copied!';
+        button.classList.add('copied');
+        
+        setTimeout(() => {
+            button.textContent = originalText;
+            button.classList.remove('copied');
+        }, 2000);
+    }).catch(() => {
+        showToast('❌ Failed to copy', 'error');
+    });
+}
+
+function updateStats() {
+    const statsContent = document.getElementById('stats-content');
+    
+    if (extractedData.allData.length === 0) {
+        statsContent.innerHTML = '<div class="empty-state"><p>📊 No data to analyze</p></div>';
         return;
     }
-    
-    const duplicatesArray = Array.from(extractedData.duplicates.entries());
-    duplicatesList.innerHTML = duplicatesArray.map((item, index) => {
-        const [email, count] = item;
-        return `
-            <div class="email-item">
-                <div class="email-text">
-                    <span class="email-icon">🔄</span>
-                    <div>
-                        <div class="email-address">${escapeHtml(email)}</div>
-                        <div class="duplicate-badge">Found ${count} times</div>
-                    </div>
-                </div>
-                <div class="email-actions">
-                    <button class="copy-email-btn" onclick="copySingleEmail('${escapeHtml(email)}', this)">📋 Copy</button>
-                </div>
+
+    let statsHtml = `
+        <div class="stat-item">
+            <div class="stat-label">Total Records</div>
+            <div class="stat-value">${extractedData.allData.length}</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-label">Selected Fields</div>
+            <div class="stat-value">${extractedData.selectedFields.length}</div>
+        </div>
+    `;
+
+    // Field-specific stats
+    extractedData.selectedFields.forEach(field => {
+        const values = extractedData.allData.map(r => r[field]);
+        const nonEmpty = values.filter(v => v && v.toString().trim() !== '').length;
+        const empty = values.length - nonEmpty;
+
+        statsHtml += `
+            <div class="stat-item">
+                <div class="stat-label">Field: ${escapeHtml(field)}</div>
+                <div class="stat-detail">Filled: ${nonEmpty} | Empty: ${empty}</div>
             </div>
         `;
-    }).join('');
-}
+    });
 
-function updateInvalidList() {
-    const invalidList = document.getElementById('invalid-list');
-    const uniqueInvalid = [...new Set(extractedData.invalid)];
-    
-    if (uniqueInvalid.length === 0) {
-        invalidList.innerHTML = '<div class="empty-state"><p>✨ No invalid emails</p></div>';
-        return;
-    }
-    
-    invalidList.innerHTML = uniqueInvalid.map((email, index) => `
-        <div class="email-item">
-            <div class="email-text">
-                <span class="email-icon">⚠️</span>
-                <div>
-                    <div class="email-address">${escapeHtml(email)}</div>
-                    <div class="invalid-badge">Invalid format</div>
-                </div>
-            </div>
-            <div class="email-actions">
-                <button class="copy-email-btn" onclick="copySingleEmail('${escapeHtml(email)}', this)">📋 Copy</button>
-            </div>
-        </div>
-    `).join('');
+    statsContent.innerHTML = statsHtml;
 }
 
 function updateCounts() {
-    document.getElementById('email-count').textContent = extractedData.emails.length + ' emails found';
+    document.getElementById('results-count').textContent = extractedData.allData.length + ' items found';
     document.getElementById('total-items').textContent = extractedData.totalItems + ' items parsed';
-    document.getElementById('email-result-count').textContent = extractedData.emails.length;
-    document.getElementById('duplicate-result-count').textContent = extractedData.duplicates.size;
-    document.getElementById('invalid-result-count').textContent = [...new Set(extractedData.invalid)].length;
+    document.getElementById('result-count').textContent = extractedData.allData.length;
 }
 
 function updateJsonPreview() {
@@ -275,33 +356,30 @@ function formatJsonForDisplay(obj, depth = 0) {
     return String(obj);
 }
 
-function copyAllEmails() {
-    const allEmails = extractedData.emails.join('\n');
-    
-    if (!allEmails) {
-        showToast('❌ No emails to copy', 'error');
+function copyAllData() {
+    if (extractedData.allData.length === 0) {
+        showToast('❌ No data to copy', 'error');
         return;
     }
+
+    // Create CSV format
+    const headers = extractedData.selectedFields;
+    let csv = headers.join(',') + '\n';
     
-    navigator.clipboard.writeText(allEmails).then(() => {
-        showToast(`✅ Copied ${extractedData.emails.length} emails to clipboard`, 'success');
+    extractedData.allData.forEach(record => {
+        const row = headers.map(field => {
+            const value = record[field];
+            // Escape quotes and wrap in quotes if contains comma
+            const escaped = String(value || '').replace(/"/g, '""');
+            return escaped.includes(',') ? `"${escaped}"` : escaped;
+        });
+        csv += row.join(',') + '\n';
+    });
+
+    navigator.clipboard.writeText(csv).then(() => {
+        showToast(`✅ Copied ${extractedData.allData.length} records to clipboard`, 'success');
     }).catch(() => {
         showToast('❌ Failed to copy to clipboard', 'error');
-    });
-}
-
-function copySingleEmail(email, button) {
-    navigator.clipboard.writeText(email).then(() => {
-        const originalText = button.textContent;
-        button.textContent = '✅ Copied!';
-        button.classList.add('copied');
-        
-        setTimeout(() => {
-            button.textContent = originalText;
-            button.classList.remove('copied');
-        }, 2000);
-    }).catch(() => {
-        showToast('❌ Failed to copy email', 'error');
     });
 }
 
@@ -312,9 +390,7 @@ function clearJson() {
 }
 
 function clearResults() {
-    extractedData.emails = [];
-    extractedData.duplicates.clear();
-    extractedData.invalid = [];
+    extractedData.allData = [];
     extractedData.jsonObject = null;
     
     document.getElementById('copy-all-btn').disabled = true;
@@ -346,47 +422,59 @@ function formatJson() {
 function loadSampleJson() {
     const sampleJson = {
         "status": "success",
+        "total": 5,
         "users": [
             {
-                "id": 1,
-                "name": "John Doe",
+                "id": 1001,
+                "first_name": "John",
+                "last_name": "Doe",
                 "email": "john.doe@example.com",
-                "contact_email": "john@work.com"
+                "phone": "9876543210",
+                "organization_id": "ORG-001",
+                "password": "hashed_pwd_123",
+                "username": "johndoe"
             },
             {
-                "id": 2,
-                "name": "Jane Smith",
-                "email": "jane.smith@example.com"
+                "id": 1002,
+                "first_name": "Jane",
+                "last_name": "Smith",
+                "email": "jane.smith@example.com",
+                "phone": "9876543211",
+                "organization_id": "ORG-001",
+                "username": "janesmith"
             },
             {
-                "id": 3,
-                "name": "Bob Johnson",
-                "email": "bob@company.com",
-                "backup_email": "bob.j@mail.com"
+                "id": 1003,
+                "first_name": "Bob",
+                "last_name": "Johnson",
+                "email": "bob.j@company.com",
+                "phone": "9876543212",
+                "organization_id": "ORG-002",
+                "password": "hashed_pwd_456"
             },
             {
-                "id": 4,
-                "name": "Alice Brown",
-                "email": "alice.brown@example.com"
+                "id": 1004,
+                "first_name": "Alice",
+                "last_name": "Brown",
+                "email": "alice@example.com",
+                "phone": "9876543213",
+                "organization_id": "ORG-002"
             },
             {
-                "id": 5,
-                "name": "Charlie Wilson",
-                "email": "charlie@work.com",
-                "contact": "charlie.w@mail.com"
-            }
-        ],
-        "admins": [
-            {
-                "name": "Admin User",
-                "email": "admin@example.com"
+                "id": 1005,
+                "first_name": "Charlie",
+                "last_name": "Wilson",
+                "email": "charlie@example.com",
+                "phone": "9876543214",
+                "organization_id": "ORG-003",
+                "password": "hashed_pwd_789"
             }
         ]
     };
     
     document.getElementById('json-input').value = JSON.stringify(sampleJson, null, 2);
     document.getElementById('char-count').textContent = document.getElementById('json-input').value.length;
-    showToast('📋 Sample JSON loaded', 'success');
+    showToast('📋 Sample JSON loaded - try extracting "id", "first_name", "email", or "phone"', 'success');
 }
 
 function switchTab(tabName) {
@@ -408,38 +496,38 @@ function switchTab(tabName) {
 }
 
 function downloadAsCSV() {
-    if (extractedData.emails.length === 0) {
-        showToast('❌ No emails to download', 'error');
+    if (extractedData.allData.length === 0) {
+        showToast('❌ No data to download', 'error');
         return;
     }
     
-    // Prepare CSV content
-    let csv = 'Email,Status,Count\n';
+    // Create CSV content
+    const headers = extractedData.selectedFields;
+    let csv = headers.map(h => `"${h}"`).join(',') + '\n';
     
-    // Add unique emails
-    extractedData.emails.forEach(email => {
-        csv += `"${email}",Unique,1\n`;
+    extractedData.allData.forEach(record => {
+        const row = headers.map(field => {
+            const value = record[field];
+            const escaped = String(value || '').replace(/"/g, '""');
+            return `"${escaped}"`;
+        });
+        csv += row.join(',') + '\n';
     });
-    
-    // Add duplicate emails
-    extractedData.duplicates.forEach((count, email) => {
-        csv += `"${email}",Duplicate,${count}\n`;
-    });
-    
+
     // Create blob and download
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
     const url = URL.createObjectURL(blob);
     
     link.setAttribute('href', url);
-    link.setAttribute('download', `emails_${new Date().getTime()}.csv`);
+    link.setAttribute('download', `extracted_data_${new Date().getTime()}.csv`);
     link.style.visibility = 'hidden';
     
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
     
-    showToast(`📥 Downloaded ${extractedData.emails.length + extractedData.duplicates.size} emails as CSV`, 'success');
+    showToast(`📥 Downloaded ${extractedData.allData.length} records as CSV`, 'success');
 }
 
 function countJsonItems(obj) {

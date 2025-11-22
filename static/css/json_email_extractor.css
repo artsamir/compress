@@ -506,7 +506,78 @@
     }
 }
 
-@media (max-width: 768px) {
+/* Results Table Styling */
+.results-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.results-table thead {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+}
+
+.results-table th {
+    padding: 12px 15px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.results-table tbody tr {
+    border-bottom: 1px solid #ecf0f1;
+    transition: background-color 0.2s;
+}
+
+.results-table tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+.results-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.results-table td {
+    padding: 12px 15px;
+    font-size: 13px;
+    color: #2c3e50;
+    word-break: break-word;
+}
+
+.results-table td:first-child {
+    font-weight: 600;
+    color: #667eea;
+    width: 50px;
+}
+
+.results-table .copy-result-btn {
+    padding: 6px 10px;
+    font-size: 12px;
+    background: #667eea;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.results-table .copy-result-btn:hover {
+    background: #764ba2;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(102, 126, 234, 0.3);
+}
+
+.results-table .copy-result-btn.copied {
+    background: #27ae60;
+}
+
+@media (max-width: 1024px) {
     .extractor-header h1 {
         font-size: 1.8rem;
     }
@@ -556,3 +627,267 @@
         text-align: center;
     }
 }
+
+/* Custom Field Extractor Styles */
+.custom-extractor-section {
+    background: #f8f9fa;
+    border: 1px solid #ecf0f1;
+    border-radius: 5px;
+    padding: 15px;
+    margin-top: 20px;
+}
+
+.custom-extractor-section h3 {
+    margin: 0 0 15px 0;
+    color: #2c3e50;
+    font-size: 1.1rem;
+}
+
+.field-selector-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.field-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.field-input-group label {
+    font-weight: 600;
+    color: #2c3e50;
+    font-size: 13px;
+}
+
+.suggested-fields {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.quick-field-btn {
+    padding: 8px 12px;
+    background: white;
+    color: #667eea;
+    border: 2px solid #667eea;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 12px;
+    transition: all 0.3s;
+}
+
+.quick-field-btn:hover {
+    background: #667eea;
+    color: white;
+    transform: translateY(-2px);
+}
+
+.quick-field-btn.active {
+    background: #667eea;
+    color: white;
+}
+
+.custom-field-input {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.custom-field-input label {
+    font-weight: 600;
+    color: #2c3e50;
+    font-size: 13px;
+}
+
+.field-input {
+    padding: 8px 12px;
+    border: 1px solid #bdc3c7;
+    border-radius: 5px;
+    font-size: 13px;
+    outline: none;
+}
+
+.field-input:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 5px rgba(102, 126, 234, 0.3);
+}
+
+.selected-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.selected-fields label {
+    font-weight: 600;
+    color: #2c3e50;
+    font-size: 13px;
+}
+
+.fields-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    min-height: 30px;
+    align-items: center;
+}
+
+.field-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: #667eea;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.field-badge-remove {
+    cursor: pointer;
+    font-size: 14px;
+    transition: transform 0.3s;
+}
+
+.field-badge-remove:hover {
+    transform: scale(1.2);
+}
+
+/* Results Display Styles */
+.results-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.result-item {
+    background: white;
+    padding: 12px 15px;
+    border: 1px solid #ecf0f1;
+    border-radius: 5px;
+    transition: all 0.3s;
+}
+
+.result-item:hover {
+    background: #f8f9fa;
+    border-color: #667eea;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.1);
+}
+
+.result-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px;
+    margin-bottom: 8px;
+}
+
+.result-field {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.result-field-label {
+    font-weight: 600;
+    color: #667eea;
+    font-size: 11px;
+    text-transform: uppercase;
+}
+
+.result-field-value {
+    font-family: 'Courier New', monospace;
+    color: #2c3e50;
+    font-size: 12px;
+    word-break: break-all;
+}
+
+.result-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.copy-result-btn {
+    flex: 1;
+    background: #667eea;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+
+.copy-result-btn:hover {
+    background: #764ba2;
+    transform: scale(1.02);
+}
+
+.copy-result-btn.copied {
+    background: #27ae60;
+}
+
+/* Stats Content */
+.stats-content {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.stat-item {
+    background: white;
+    padding: 15px;
+    border: 1px solid #ecf0f1;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.stat-label {
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 5px;
+}
+
+.stat-value {
+    font-size: 24px;
+    color: #667eea;
+    font-weight: 700;
+}
+
+.stat-detail {
+    font-size: 12px;
+    color: #7f8c8d;
+    margin-top: 5px;
+}
+
+/* Mobile Responsive for Custom Fields */
+@media (max-width: 1024px) {
+    .result-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .suggested-fields {
+        gap: 6px;
+    }
+
+    .quick-field-btn {
+        padding: 6px 10px;
+        font-size: 11px;
+    }
+
+    .result-row {
+        grid-template-columns: 1fr;
+    }
+
+    .result-actions {
+        flex-direction: column;
+    }
+}
+
