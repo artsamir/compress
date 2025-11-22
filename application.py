@@ -77,6 +77,11 @@ def refund_policy():
 def resume_maker():
     return render_template('resume_maker.html')
 
+@application.route('/json-email-extractor')
+def json_email_extractor():
+    return render_template('json_email_extractor.html')
+
+
 @application.route('/privacy-policy')
 def privacy_policy():
     return render_template('privacy_policy.html')

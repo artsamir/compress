@@ -1,0 +1,558 @@
+/* JSON Email Extractor CSS */
+
+.json-extractor-container {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.extractor-header {
+    text-align: center;
+    color: white;
+    margin-bottom: 30px;
+    animation: slideDown 0.6s ease-out;
+}
+
+.extractor-header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.extractor-header p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+}
+
+.extractor-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.control-buttons {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 14px;
+}
+
+.btn-extract {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+}
+
+.btn-extract:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+.btn-copy {
+    background: #27ae60;
+    color: white;
+}
+
+.btn-copy:hover:not(:disabled) {
+    background: #229954;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(39, 174, 96, 0.3);
+}
+
+.btn-clear {
+    background: #e74c3c;
+    color: white;
+}
+
+.btn-clear:hover:not(:disabled) {
+    background: #c0392b;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
+}
+
+.btn-clear-results {
+    background: #f39c12;
+    color: white;
+}
+
+.btn-clear-results:hover:not(:disabled) {
+    background: #e67e22;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(243, 156, 18, 0.3);
+}
+
+.btn-download {
+    background: #3498db;
+    color: white;
+}
+
+.btn-download:hover:not(:disabled) {
+    background: #2980b9;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.info-box {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.count-badge {
+    background: #ecf0f1;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: 600;
+    color: #2c3e50;
+    font-size: 14px;
+}
+
+.extractor-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    max-width: 1800px;
+    margin: 0 auto;
+}
+
+.json-input-section,
+.results-section {
+    background: white;
+    border-radius: 10px;
+    padding: 25px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    height: 600px;
+}
+
+.section-header {
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #ecf0f1;
+    padding-bottom: 10px;
+}
+
+.section-header h2 {
+    font-size: 1.3rem;
+    color: #2c3e50;
+    margin: 0;
+}
+
+.helper-text {
+    color: #7f8c8d;
+    font-size: 12px;
+    font-style: italic;
+}
+
+.json-textarea {
+    flex: 1;
+    padding: 15px;
+    border: 1px solid #bdc3c7;
+    border-radius: 5px;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    resize: none;
+    margin-bottom: 10px;
+    outline: none;
+    line-height: 1.5;
+}
+
+.json-textarea:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 10px rgba(102, 126, 234, 0.2);
+}
+
+.input-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    border-top: 1px solid #ecf0f1;
+    padding-top: 10px;
+}
+
+.btn-small {
+    padding: 6px 12px;
+    background: #ecf0f1;
+    color: #2c3e50;
+    border: 1px solid #bdc3c7;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+
+.btn-small:hover {
+    background: #667eea;
+    color: white;
+    border-color: #667eea;
+}
+
+.char-count {
+    color: #7f8c8d;
+    font-size: 12px;
+}
+
+.results-tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 2px solid #ecf0f1;
+    margin-bottom: 15px;
+}
+
+.tab-btn {
+    padding: 10px 20px;
+    background: transparent;
+    border: none;
+    border-bottom: 3px solid transparent;
+    cursor: pointer;
+    font-weight: 600;
+    color: #7f8c8d;
+    transition: all 0.3s;
+}
+
+.tab-btn.active {
+    color: #667eea;
+    border-bottom-color: #667eea;
+}
+
+.tab-btn:hover {
+    color: #2c3e50;
+}
+
+.tab-content {
+    display: none;
+    flex: 1;
+    overflow-y: auto;
+}
+
+.tab-content.active {
+    display: flex;
+    flex-direction: column;
+}
+
+.preview-box,
+.results-box {
+    flex: 1;
+    border: 1px solid #ecf0f1;
+    border-radius: 5px;
+    padding: 15px;
+    background: #f8f9fa;
+    overflow-y: auto;
+}
+
+.json-tree {
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    color: #2c3e50;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.json-tree .key {
+    color: #8e44ad;
+    font-weight: 600;
+}
+
+.json-tree .string {
+    color: #27ae60;
+}
+
+.json-tree .number {
+    color: #e74c3c;
+}
+
+.json-tree .boolean {
+    color: #f39c12;
+}
+
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    color: #7f8c8d;
+    text-align: center;
+}
+
+.empty-state p {
+    font-size: 18px;
+    margin: 10px 0;
+}
+
+.empty-state small {
+    font-size: 12px;
+    color: #95a5a6;
+}
+
+.results-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #ecf0f1;
+    padding-bottom: 10px;
+}
+
+.results-header h3 {
+    margin: 0;
+    color: #2c3e50;
+}
+
+.result-count {
+    background: #667eea;
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 12px;
+}
+
+.emails-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.email-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: white;
+    padding: 12px 15px;
+    border: 1px solid #ecf0f1;
+    border-radius: 5px;
+    transition: all 0.3s;
+}
+
+.email-item:hover {
+    background: #f8f9fa;
+    border-color: #667eea;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.1);
+}
+
+.email-text {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+    min-width: 0;
+}
+
+.email-icon {
+    font-size: 16px;
+}
+
+.email-address {
+    font-family: 'Courier New', monospace;
+    color: #2c3e50;
+    word-break: break-all;
+    font-size: 13px;
+}
+
+.email-meta {
+    color: #95a5a6;
+    font-size: 11px;
+    margin-top: 3px;
+}
+
+.duplicate-badge {
+    background: #e74c3c;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-size: 11px;
+    font-weight: 600;
+    margin-top: 3px;
+}
+
+.invalid-badge {
+    background: #f39c12;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-size: 11px;
+    font-weight: 600;
+    margin-top: 3px;
+}
+
+.email-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.copy-email-btn {
+    background: #667eea;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+
+.copy-email-btn:hover {
+    background: #764ba2;
+    transform: scale(1.05);
+}
+
+.copy-email-btn.copied {
+    background: #27ae60;
+}
+
+/* Scrollbar Styling */
+.json-textarea::-webkit-scrollbar,
+.preview-box::-webkit-scrollbar,
+.results-box::-webkit-scrollbar {
+    width: 8px;
+}
+
+.json-textarea::-webkit-scrollbar-track,
+.preview-box::-webkit-scrollbar-track,
+.results-box::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.json-textarea::-webkit-scrollbar-thumb,
+.preview-box::-webkit-scrollbar-thumb,
+.results-box::-webkit-scrollbar-thumb {
+    background: #667eea;
+    border-radius: 10px;
+}
+
+.json-textarea::-webkit-scrollbar-thumb:hover,
+.preview-box::-webkit-scrollbar-thumb:hover,
+.results-box::-webkit-scrollbar-thumb:hover {
+    background: #764ba2;
+}
+
+/* Animations */
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Toast Notification */
+.toast {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #2c3e50;
+    color: white;
+    padding: 15px 20px;
+    border-radius: 5px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    animation: slideIn 0.3s ease-out;
+    z-index: 1000;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(400px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .extractor-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .json-input-section,
+    .results-section {
+        height: auto;
+        min-height: 500px;
+    }
+}
+
+@media (max-width: 768px) {
+    .extractor-header h1 {
+        font-size: 1.8rem;
+    }
+
+    .extractor-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .control-buttons {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .btn {
+        flex: 1;
+        min-width: 100px;
+    }
+
+    .info-box {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .json-input-section,
+    .results-section {
+        padding: 15px;
+    }
+
+    .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .email-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .email-actions {
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    .copy-email-btn {
+        flex: 1;
+        text-align: center;
+    }
+}
