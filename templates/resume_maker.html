@@ -1,0 +1,172 @@
+{% extends "base.html" %}
+
+{% block title %}Resume Maker - Create Professional Resume{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/resume_maker.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="resume-maker-container">
+    <div class="resume-header">
+        <h1>Professional Resume Maker</h1>
+        <p>Create a stunning resume in minutes</p>
+    </div>
+
+    <div class="controls-bar">
+        <div class="control-group">
+            <label for="job-type">Job Type:</label>
+            <select id="job-type">
+                <option value="common">Common Resume</option>
+                <option value="it">IT Company</option>
+                <option value="teaching">Teaching</option>
+            </select>
+        </div>
+
+        <div class="control-group">
+            <label for="template-style">Template:</label>
+            <select id="template-style">
+                <option value="modern">Modern</option>
+                <option value="classic">Classic</option>
+                <option value="creative">Creative</option>
+                <option value="minimal">Minimal</option>
+                <option value="professional">Professional</option>
+            </select>
+        </div>
+
+        <div class="control-group">
+            <label for="theme-color">Theme Color:</label>
+            <input type="color" id="theme-color" value="#3498db">
+        </div>
+
+        <button id="preview-btn-mobile" class="preview-btn-mobile">👁️ Preview Resume</button>
+        <button id="download-pdf-btn" class="action-btn download-btn">📥 Download PDF</button>
+        <button id="download-image-btn" class="action-btn image-btn">🖼️ Download Image</button>
+        <button id="print-btn" class="action-btn print-btn">🖨️ Print</button>
+    </div>
+
+    <div class="resume-maker-layout">
+        <!-- Left Side - Form -->
+        <div class="form-section">
+            <form id="resume-form">
+                <!-- Personal Information -->
+                <div class="form-group">
+                    <h3 class="form-title">Personal Information</h3>
+                    <input type="text" id="full-name" class="form-input" placeholder="Full Name" required>
+                    <input type="email" id="email" class="form-input" placeholder="Email Address" required>
+                    <input type="tel" id="phone" class="form-input" placeholder="Phone Number">
+                    <input type="text" id="location" class="form-input" placeholder="City, Country">
+                    <input type="text" id="job-title" class="form-input" placeholder="Professional Title">
+                    <textarea id="professional-summary" class="form-input" rows="3" placeholder="Professional Summary (2-3 lines)"></textarea>
+                </div>
+
+                <!-- Skills Section -->
+                <div class="form-group">
+                    <h3 class="form-title">
+                        Skills
+                        <button type="button" class="add-btn" id="add-skill-btn">+ Add Skill</button>
+                    </h3>
+                    <div id="skills-container">
+                        <div class="skill-input-group">
+                            <input type="text" class="skill-input" placeholder="e.g., Python, JavaScript, Leadership">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Experience Section -->
+                <div class="form-group">
+                    <h3 class="form-title">
+                        Work Experience
+                        <button type="button" class="add-btn" id="add-experience-btn">+ Add Experience</button>
+                    </h3>
+                    <div id="experience-container">
+                        <div class="experience-item">
+                            <input type="text" class="exp-job-title" placeholder="Job Title" required>
+                            <input type="text" class="exp-company" placeholder="Company Name" required>
+                            <div class="date-range">
+                                <input type="month" class="exp-start-date">
+                                <span>to</span>
+                                <input type="month" class="exp-end-date">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" class="exp-current">
+                                    <span>Currently working here</span>
+                                </label>
+                            </div>
+                            <textarea class="exp-description" rows="2" placeholder="Description of responsibilities and achievements"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Education Section -->
+                <div class="form-group">
+                    <h3 class="form-title">
+                        Education
+                        <button type="button" class="add-btn" id="add-education-btn">+ Add Education</button>
+                    </h3>
+                    <div id="education-container">
+                        <div class="education-item">
+                            <input type="text" class="edu-degree" placeholder="Degree (e.g., Bachelor of Science)">
+                            <input type="text" class="edu-field" placeholder="Field of Study (e.g., Computer Science)">
+                            <input type="text" class="edu-institution" placeholder="University/Institution Name">
+                            <div class="date-range">
+                                <input type="month" class="edu-start-date">
+                                <span>to</span>
+                                <input type="month" class="edu-end-date">
+                            </div>
+                            <input type="text" class="edu-grade" placeholder="Grade (Optional)">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Certifications Section -->
+                <div class="form-group">
+                    <h3 class="form-title">
+                        Certifications & Achievements
+                        <button type="button" class="add-btn" id="add-cert-btn">+ Add Certification</button>
+                    </h3>
+                    <div id="certifications-container">
+                        <div class="cert-item">
+                            <input type="text" class="cert-name" placeholder="Certification Name">
+                            <input type="text" class="cert-issuer" placeholder="Issuing Organization">
+                            <input type="month" class="cert-date" placeholder="Date Issued">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Additional Links (Social/Portfolio) -->
+                <div class="form-group">
+                    <h3 class="form-title">
+                        Additional Links
+                        <button type="button" class="add-btn" id="add-link-btn">+ Add Link</button>
+                    </h3>
+                    <div id="links-container">
+                        <div class="link-item">
+                            <input type="text" class="link-label" placeholder="Label (e.g., Portfolio, GitHub)">
+                            <input type="url" class="link-url" placeholder="https://example.com">
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Right Side - Preview -->
+        <div class="preview-section">
+            <div class="preview-container">
+                <div id="resume-preview" class="resume-preview modern">
+                    <!-- Resume will be rendered here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Preview Modal -->
+    <div id="preview-modal" class="preview-modal">
+        <div class="preview-modal-content">
+            <button class="close-btn">&times;</button>
+            <div class="modal-resume-preview"></div>
+        </div>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/resume_maker.js') }}"></script>
+{% endblock %}

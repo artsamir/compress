@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+
+{% block title %}JSON Email Extractor - Extract Emails from JSON Data{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/json_email_extractor.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="json-extractor-container">
+    <div class="extractor-header">
+        <h1>📧 JSON Data Extractor</h1>
+        <p>Extract emails, names, IDs, or any custom fields from JSON data</p>
+    </div>
+
+    <div class="extractor-controls">
+        <div class="control-buttons">
+            <button id="extract-btn" class="btn btn-extract">🔍 Extract</button>
+            <button id="copy-all-btn" class="btn btn-copy" disabled>📋 Copy All</button>
+            <button id="clear-json-btn" class="btn btn-clear">🗑️ Clear JSON</button>
+            <button id="clear-results-btn" class="btn btn-clear-results">🗑️ Clear Results</button>
+            <button id="download-csv-btn" class="btn btn-download" disabled>📥 Download CSV</button>
+        </div>
+        <div class="info-box">
+            <span id="results-count" class="count-badge">0 items found</span>
+            <span id="total-items" class="count-badge">0 items parsed</span>
+        </div>
+    </div>
+
+    <div class="extractor-layout">
+        <!-- Left Side - JSON Input & Settings -->
+        <div class="json-input-section">
+            <div class="section-header">
+                <h2>📄 JSON Input</h2>
+                <span class="helper-text">Paste your JSON data here</span>
+            </div>
+            <textarea id="json-input" class="json-textarea" placeholder="Paste your JSON data here...
+Example:
+{
+  &quot;users&quot;: [
+    {
+      &quot;id&quot;: 1,
+      &quot;name&quot;: &quot;John Doe&quot;,
+      &quot;email&quot;: &quot;john@example.com&quot;,
+      &quot;phone&quot;: &quot;1234567890&quot;
+    }
+  ]
+}"></textarea>
+            <div class="input-footer">
+                <button id="format-json-btn" class="btn-small">✨ Format JSON</button>
+                <button id="sample-json-btn" class="btn-small">📋 Load Sample</button>
+                <span class="char-count"><span id="char-count">0</span> characters</span>
+            </div>
+
+            <!-- Custom Field Extractor -->
+            <div class="custom-extractor-section">
+                <div class="section-header" style="margin-top: 15px;">
+                    <h3>🎯 Custom Fields</h3>
+                </div>
+                
+                <div class="field-selector-container">
+                    <div class="field-input-group">
+                        <label>Select fields to extract:</label>
+                        <div class="suggested-fields">
+                            <button type="button" class="quick-field-btn" data-field="email">📧 Email</button>
+                            <button type="button" class="quick-field-btn" data-field="name">👤 Name</button>
+                            <button type="button" class="quick-field-btn" data-field="id">🔢 ID</button>
+                            <button type="button" class="quick-field-btn" data-field="phone">📱 Phone</button>
+                            <button type="button" class="quick-field-btn" data-field="password">🔐 Password</button>
+                            <button type="button" class="quick-field-btn" data-field="username">👤 Username</button>
+                            <button type="button" class="quick-field-btn" data-field="organization_id">🏢 Org ID</button>
+                        </div>
+                    </div>
+
+                    <div class="custom-field-input">
+                        <label for="custom-field">Or enter custom field name:</label>
+                        <div style="display: flex; gap: 8px;">
+                            <input type="text" id="custom-field-input" class="field-input" placeholder="e.g., first_name, mobile_number, etc.">
+                            <button id="add-custom-field-btn" class="btn-small">➕ Add</button>
+                        </div>
+                    </div>
+
+                    <div class="selected-fields">
+                        <label>Selected Fields for Extraction:</label>
+                        <div id="selected-fields-container" class="fields-container">
+                            <div class="empty-state">
+                                <p>No fields selected</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Side - Preview & Results -->
+        <div class="results-section">
+            <div class="results-tabs">
+                <button class="tab-btn active" data-tab="preview">📊 Preview</button>
+                <button class="tab-btn" data-tab="results">📋 Results</button>
+                <button class="tab-btn" data-tab="stats">📈 Stats</button>
+            </div>
+
+            <!-- Preview Tab -->
+            <div class="tab-content active" id="preview-tab">
+                <div class="preview-box">
+                    <div id="json-preview" class="json-tree"></div>
+                    <div id="no-json" class="empty-state">
+                        <p>📭 No JSON data loaded</p>
+                        <small>Paste JSON in the left panel to see preview</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Tab -->
+            <div class="tab-content" id="results-tab">
+                <div class="results-box">
+                    <div class="results-header">
+                        <h3>Extracted Data</h3>
+                        <span class="result-count" id="result-count">0</span>
+                    </div>
+                    <div id="results-list" class="results-list">
+                        <div class="empty-state">
+                            <p>🔍 Click "Extract" to get results</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Tab -->
+            <div class="tab-content" id="stats-tab">
+                <div class="results-box">
+                    <div class="results-header">
+                        <h3>Statistics</h3>
+                    </div>
+                    <div id="stats-content" class="stats-content">
+                        <div class="empty-state">
+                            <p>📊 Stats will appear here</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/json_email_extractor.js') }}"></script>
+{% endblock %}
