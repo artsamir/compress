@@ -762,6 +762,32 @@ def email_templates():
 def application_letter_template():
     return render_template('example_tool.html', tool_name='Application Letter Template', form_type='select')
 
+# --------- SEO Files ---------
+@application.route('/sitemap.xml')
+def sitemap():
+    """Serve sitemap.xml for search engine indexing"""
+    sitemap_path = os.path.join(os.path.dirname(__file__), 'sitemap.xml')
+    return send_file(sitemap_path, mimetype='application/xml')
+
+@application.route('/robots.txt')
+def robots():
+    """Serve robots.txt for search engine crawling instructions"""
+    robots_path = os.path.join(os.path.dirname(__file__), 'robots.txt')
+    return send_file(robots_path, mimetype='text/plain')
+
+@application.route('/google3f012163ee5e721f.html')
+def google_verification():
+    """Serve Google verification file"""
+    verification_path = os.path.join(os.path.dirname(__file__), 'google3f012163ee5e721f.html')
+    return send_file(verification_path, mimetype='text/html')
+
+# Also serve it without the html extension for some verification methods
+@application.route('/google3f012163ee5e721f')
+def google_verification_alt():
+    """Serve Google verification file (alternative route)"""
+    verification_path = os.path.join(os.path.dirname(__file__), 'google3f012163ee5e721f.html')
+    return send_file(verification_path, mimetype='text/html')
+
 # ----------------- Run -----------------
 if __name__ == '__main__':
     application.run(debug=True)
