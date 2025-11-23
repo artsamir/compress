@@ -21,8 +21,18 @@ Disallow: /private/
 Disallow: /*.json$
 Disallow: /*.xml$
 
+# Disallow authentication pages (duplicate content, not for indexing)
+Disallow: /login
+Disallow: /signup
+Disallow: /thankyou
+
+# Disallow legal pages (can index via meta tag noindex instead)
+Disallow: /privacy-policy
+Disallow: /terms
+Disallow: /refund-policy
+
 # Sitemap location
-Sitemap: https://cutcompress.com/sitemap.xml
+Sitemap: https://www.cutcompress.com/sitemap.xml
 
 # Cache settings
 Request-rate: 10/1m

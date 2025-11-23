@@ -1,6 +1,25 @@
 {% extends 'base.html' %}
 
-{% block title %}Tools - Cutcompress{% endblock %}
+{% block title %}All Free Online Tools - Cutcompress{% endblock %}
+{% block description %}Browse all free online tools from Cutcompress: Image converters, PDF tools, background removers, CSV comparators, and more. No registration required.{% endblock %}
+{% block keywords %}free online tools, image tools, pdf converter, compression tools, utility tools, online toolbox{% endblock %}
+
+{% block head %}
+    <meta name="robots" content="index, follow">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        "name": "Cutcompress Tools",
+        "description": "Complete collection of free online digital tools for image conversion, compression, and document processing",
+        "url": "https://www.cutcompress.com/tools",
+        "publisher": {
+            "@type": "Organization",
+            "name": "Cutcompress"
+        }
+    }
+    </script>
+{% endblock %}
 
 {% block content %}
 <div class="tools-container">

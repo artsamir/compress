@@ -1,6 +1,25 @@
 {% extends 'base.html' %}
 
-{% block title %}About Us - Cutcompress{% endblock %}
+{% block title %}About Cutcompress - Free Online Digital Tools Platform{% endblock %}
+{% block description %}Learn about Cutcompress - a free platform offering powerful online tools for image conversion, compression, and document processing. Founded by passionate developers.{% endblock %}
+{% block keywords %}about cutcompress, digital tools platform, image conversion service, document compression, online tools company{% endblock %}
+
+{% block head %}
+    <meta name="robots" content="index, follow">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "Cutcompress",
+        "description": "Free online platform for image conversion, compression, and document processing",
+        "url": "https://www.cutcompress.com/about",
+        "sameAs": [
+            "https://twitter.com/cutcompress",
+            "https://facebook.com/cutcompress"
+        ]
+    }
+    </script>
+{% endblock %}
 
 {% block content %}
 <div class="about-container">

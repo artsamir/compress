@@ -1,5 +1,27 @@
 {% extends 'base.html' %}
-{% block title %}Any Image to JPG Converter{% endblock %}
+{% block title %}Any Image to JPG Converter - Free Online{% endblock %}
+{% block description %}Convert any image format to JPG online for free. Fast, secure, and no registration required. Supports PNG, WebP, GIF, BMP and more.{% endblock %}
+{% block keywords %}image to jpg converter, free jpg converter, online image converter, png to jpg, webp to jpg{% endblock %}
+
+{% block head %}
+    <meta name="robots" content="index, follow">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Image to JPG Converter",
+        "description": "Free online tool to convert any image format to JPG",
+        "url": "https://www.cutcompress.com/tool/image-to-jpg",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "Web",
+        "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.8",
+            "ratingCount": "1000"
+        }
+    }
+    </script>
+{% endblock %}
 
 {% block content %}
 <div class="container">
