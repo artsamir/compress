@@ -1,6 +1,67 @@
 {% extends 'base.html' %}
 
-{% block title %}Home - Cutcompress{% endblock %}
+{% block title %}Cutcompress - Free Image & Document Conversion Tools{% endblock %}
+
+{% block description %}Convert, compress, and process images, PDFs, and documents for free. Image to JPG, PNG, PDF converter, background remover, CSV comparator, and more.{% endblock %}
+
+{% block keywords %}image converter, PDF converter, free image compression, online tools, image to jpg, image to pdf, background remover, merge images, csv comparator{% endblock %}
+
+{% block og_title %}Cutcompress - Transform Your Digital Content{% endblock %}
+{% block og_description %}Free online tools to convert images to JPG, PNG, PDF, compress files, remove backgrounds, merge images, compare CSV files, and more.{% endblock %}
+
+{% block canonical %}https://cutcompress.com/{% endblock %}
+
+{% block head %}
+    <!-- Index Schema Markup -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Cutcompress",
+        "url": "https://cutcompress.com",
+        "potentialAction": {
+            "@type": "SearchAction",
+            "target": {
+                "@type": "EntryPoint",
+                "urlTemplate": "https://cutcompress.com/search?q={search_term_string}"
+            }
+        }
+    }
+    </script>
+    
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "Is Cutcompress free to use?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes, Cutcompress is 100% free. No sign-up required, no hidden charges."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Is my data secure on Cutcompress?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes, your files are processed securely and deleted automatically after processing."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "What file formats does Cutcompress support?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Cutcompress supports JPG, PNG, PDF, WEBP, GIF, BMP, and more image formats, plus CSV, JSON, and document conversions."
+                }
+            }
+        ]
+    }
+    </script>
+{% endblock %}
 
 {% block content %}
     <!-- Floating Tools Section (Mobile Only) -->
