@@ -30,11 +30,9 @@
                 
                 <!-- Column Selection for File 1 -->
                 <div id="file1-columns-section" class="columns-section" style="display: none;">
-                    <label class="section-label">Select Column to Compare:</label>
-                    <select id="file1-column" class="column-select">
-                        <option value="">-- Choose Column --</option>
-                    </select>
-                    <small class="helper-text">This column will be compared against File 2</small>
+                    <label class="section-label">Select Columns to Compare (Select multiple):</label>
+                    <div id="file1-column-select" class="column-checkboxes" style="border: 1px solid #ddd; padding: 8px; border-radius: 5px; max-height: 120px; overflow-y: auto; background: white;"></div>
+                    <small class="helper-text">Hold Ctrl/Cmd to select multiple columns. These will be compared against File 2</small>
                 </div>
             </div>
         </div>
@@ -50,11 +48,13 @@
                         <option value="rowwise">Option 1: Exact Row-wise (Same Row Position)</option>
                         <option value="lookup">Option 2: Lookup/Search (Search Across All Rows)</option>
                         <option value="multifield">Option 3: Multi-field (Email + DateTime)</option>
+                        <option value="multicolumn">Option 4: Multi-column (Compare Multiple Columns)</option>
                     </select>
                     <small class="helper-text">
                         Row-wise: Compare same row positions<br>
                         Lookup: File 1 values search in File 2<br>
-                        Multi-field: Match by Email + DateTime combination
+                        Multi-field: Match by Email + DateTime combination<br>
+                        Multi-column: Compare multiple columns simultaneously
                     </small>
                 </div>
 
@@ -88,6 +88,23 @@
                         <select id="file2-datetime-col" class="setting-select">
                             <option value="">-- Choose DateTime Column --</option>
                         </select>
+                    </div>
+                </div>
+
+                <!-- Multi-column Comparison Settings (Hidden by default) -->
+                <div id="multicolumn-settings" style="display: none; border: 2px solid #10b981; padding: 15px; border-radius: 8px; background: #f0fdf4;">
+                    <h4 style="margin-bottom: 12px; color: #10b981;">📋 Multi-column Configuration</h4>
+                    
+                    <div class="setting-item">
+                        <label>File 1 - Columns to Compare (Select multiple):</label>
+                        <div id="file1-multicolumn-select" class="multicolumn-checkboxes" style="border: 1px solid #d1d5db; padding: 10px; border-radius: 5px; max-height: 150px; overflow-y: auto; background: white;"></div>
+                        <small class="helper-text">Hold Ctrl/Cmd to select multiple columns</small>
+                    </div>
+
+                    <div class="setting-item">
+                        <label>File 2 - Columns to Compare (In same order):</label>
+                        <div id="file2-multicolumn-select" class="multicolumn-checkboxes" style="border: 1px solid #d1d5db; padding: 10px; border-radius: 5px; max-height: 150px; overflow-y: auto; background: white;"></div>
+                        <small class="helper-text">Select columns in the same order as File 1</small>
                     </div>
                 </div>
 
@@ -139,11 +156,9 @@
                 
                 <!-- Column Selection for File 2 -->
                 <div id="file2-columns-section" class="columns-section" style="display: none;">
-                    <label class="section-label">Select Column to Compare:</label>
-                    <select id="file2-column" class="column-select">
-                        <option value="">-- Choose Column --</option>
-                    </select>
-                    <small class="helper-text">Will be compared with File 1</small>
+                    <label class="section-label">Select Columns to Compare (Select multiple):</label>
+                    <div id="file2-column-select" class="column-checkboxes" style="border: 1px solid #ddd; padding: 8px; border-radius: 5px; max-height: 120px; overflow-y: auto; background: white;"></div>
+                    <small class="helper-text">Select in the same order as File 1. These will be compared with File 1</small>
                 </div>
             </div>
         </div>
@@ -164,6 +179,27 @@
         <div id="loading-spinner" class="loading-spinner" style="display: none;">
             <div class="spinner"></div>
             <p>Comparing files...</p>
+        </div>
+
+        <!-- File Preview Section -->
+        <div id="preview-section" class="preview-section" style="display: none; margin-bottom: 30px;">
+            <h3>📊 File Preview</h3>
+            <div class="preview-container">
+                <div class="preview-file">
+                    <div class="preview-search-box">
+                        <input type="text" id="file1-search" class="preview-search-input" placeholder="🔍 Search File 1...">
+                    </div>
+                    <h4>File 1 Preview</h4>
+                    <div id="file1-preview" class="preview-table" style="max-height: 250px; overflow-y: auto;"></div>
+                </div>
+                <div class="preview-file">
+                    <div class="preview-search-box">
+                        <input type="text" id="file2-search" class="preview-search-input" placeholder="🔍 Search File 2...">
+                    </div>
+                    <h4>File 2 Preview</h4>
+                    <div id="file2-preview" class="preview-table" style="max-height: 250px; overflow-y: auto;"></div>
+                </div>
+            </div>
         </div>
 
         <!-- Comparison Stats -->
@@ -188,6 +224,15 @@
 
         <!-- Results Table -->
         <div class="results-table-container">
+            <!-- Filter Buttons -->
+            <div class="filter-buttons" style="margin-bottom: 15px; display: flex; gap: 10px; align-items: center;">
+                <span style="font-weight: 600; color: #2c3e50;">Filter:</span>
+                <button class="filter-btn active" data-filter="all">📊 All</button>
+                <button class="filter-btn" data-filter="match">✅ Match</button>
+                <button class="filter-btn" data-filter="mismatch">❌ Mismatch</button>
+                <button class="filter-btn" data-filter="notfound">❓ Not Found</button>
+            </div>
+
             <table class="results-table" id="comparison-table">
                 <thead>
                     <tr>
