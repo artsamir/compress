@@ -81,6 +81,10 @@ def resume_maker():
 def json_email_extractor():
     return render_template('json_email_extractor.html')
 
+@application.route('/csv-comparator')
+def csv_comparator():
+    return render_template('csv_comparator.html')
+
 
 @application.route('/privacy-policy')
 def privacy_policy():
