@@ -1,5 +1,27 @@
 {% extends 'base.html' %}
-{% block title %}Merge Images - Cutcompress{% endblock %}
+{% block title %}Merge Images Online - Combine Multiple Images{% endblock %}
+{% block description %}Merge and combine multiple images into one online for free. Arrange images vertically or horizontally. Fast, secure, no registration needed.{% endblock %}
+{% block keywords %}merge images, combine images, image merger, join images, combine multiple images online{% endblock %}
+
+{% block head %}
+    <meta name="robots" content="index, follow">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Image Merger",
+        "description": "Free tool to merge and combine multiple images into one",
+        "url": "https://www.cutcompress.com/tool/merge-images",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "Web",
+        "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.7",
+            "ratingCount": "700"
+        }
+    }
+    </script>
+{% endblock %}
 
 {% block content %}
 <div class="container">

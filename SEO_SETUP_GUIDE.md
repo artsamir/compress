@@ -12,22 +12,22 @@
 | `nginx-config.conf` | `/etc/nginx/sites-available/` | Server optimization (Nginx) |
 
 **Access URLs:**
-- https://cutcompress.com/google3f012163ee5e721f.html ✅
-- https://cutcompress.com/sitemap.xml ✅
-- https://cutcompress.com/robots.txt ✅
+- https://www.cutcompress.com/google3f012163ee5e721f.html ✅
+- https://www.cutcompress.com/sitemap.xml ✅
+- https://www.cutcompress.com/robots.txt ✅
 
 ---
 
 ## Files Created & Where to Upload Them
 
 ### 1. **sitemap.xml**
-**Location:** Root directory of your domain (https://cutcompress.com/sitemap.xml)
+**Location:** Root directory of your domain (https://www.cutcompress.com/sitemap.xml)
 **Upload to:** Server root (same level as index.html or application.py)
 **Purpose:** Helps search engines discover and index all your pages
 **Already created:** ✅ `/sitemap.xml`
 
 ### 2. **robots.txt**
-**Location:** Root directory (https://cutcompress.com/robots.txt)
+**Location:** Root directory (https://www.cutcompress.com/robots.txt)
 **Upload to:** Server root 
 **Purpose:** Instructs search engine crawlers which pages to crawl
 **Already created:** ✅ `/robots.txt`
@@ -57,11 +57,11 @@ If you're having issues with the HTML file method, use the **DNS TXT record meth
 #### Method 1: HTML File Verification (RECOMMENDED)
 1. Go to: https://search.google.com/search-console/
 2. Click "Add Property"
-3. Enter: https://cutcompress.com
+3. Enter: https://www.cutcompress.com
 4. Choose "HTML file" verification method
 5. **Download the file:** `google3f012163ee5e721f.html`
 6. **Upload to server root:** 
-   - File should be at: `https://cutcompress.com/google3f012163ee5e721f.html`
+   - File should be at: `https://www.cutcompress.com/google3f012163ee5e721f.html`
    - Location in your project: `/google3f012163ee5e721f.html` ✅ (Already created)
 7. Click "Verify"
 
@@ -70,7 +70,7 @@ If you're having issues with the HTML file method, use the **DNS TXT record meth
 
 1. Go to: https://search.google.com/search-console/
 2. Click "Add Property"
-3. Enter: https://cutcompress.com
+3. Enter: https://www.cutcompress.com
 4. **Choose "DNS record" verification method**
 5. Copy the TXT record provided (looks like):
    ```
@@ -111,18 +111,18 @@ Add to `<head>` in base.html:
 
 #### After Verification - Submit Sitemap
 1. Go to Sitemaps section in Google Search Console
-2. Enter: `https://cutcompress.com/sitemap.xml`
+2. Enter: `https://www.cutcompress.com/sitemap.xml`
 3. Click Submit
 4. Monitor for crawl errors
 
 ### Bing Webmaster Tools
 1. Go to: https://www.bing.com/webmasters/
 2. Sign in with Microsoft account
-3. Add your site: https://cutcompress.com
+3. Add your site: https://www.cutcompress.com
 4. Choose verification method (XML file, meta tag, or CNAME)
 5. Submit sitemap:
    - Go to Sitemaps
-   - Add: `https://cutcompress.com/sitemap.xml`
+   - Add: `https://www.cutcompress.com/sitemap.xml`
 
 ---
 
@@ -136,7 +136,7 @@ Add to `base.html` in `<head>` section (after favicon, before closing `</head>`)
 **Step 1: Get Your Google Analytics ID**
 1. Go to: https://analytics.google.com/
 2. Sign in with Google account
-3. Create new property for: https://cutcompress.com
+3. Create new property for: https://www.cutcompress.com
 4. Copy your Measurement ID (looks like: G-XXXXXXXXXX)
 
 **Step 2: Add to base.html**
@@ -197,7 +197,7 @@ Add to `<head>`:
 
 ### Step 1: Upload Files to Server Root
 ```
-Your Domain Root (https://cutcompress.com/)
+Your Domain Root (https://www.cutcompress.com/)
 ├── sitemap.xml ✅
 ├── robots.txt ✅
 ├── .htaccess ✅
@@ -206,10 +206,10 @@ Your Domain Root (https://cutcompress.com/)
 ```
 
 ### Step 2: Verify Google Verification File Accessibility
-- Check: https://cutcompress.com/google3f012163ee5e721f.html
+- Check: https://www.cutcompress.com/google3f012163ee5e721f.html
 - Should show: `google-site-verification: google3f012163ee5e721f.html`
-- Check: https://cutcompress.com/sitemap.xml
-- Check: https://cutcompress.com/robots.txt
+- Check: https://www.cutcompress.com/sitemap.xml
+- Check: https://www.cutcompress.com/robots.txt
 
 ### Step 3: Add Google Meta Tag (Optional - Additional Layer)
 In `base.html` `<head>` section, add:
@@ -221,20 +221,20 @@ In `base.html` `<head>` section, add:
 ### Step 4: Submit to Google Search Console
 1. Visit: https://search.google.com/search-console/
 2. Click "Add Property"
-3. Enter: https://cutcompress.com
+3. Enter: https://www.cutcompress.com
 4. Choose "HTML file" verification
 5. Download & place: `google3f012163ee5e721f.html` in root
 6. Click "Verify"
 7. Go to Sitemaps section
-8. Submit: `https://cutcompress.com/sitemap.xml`
+8. Submit: `https://www.cutcompress.com/sitemap.xml`
 9. Monitor crawl errors
 
 ### Step 5: Submit to Bing Webmaster Tools
 1. Visit: https://www.bing.com/webmasters/
-2. Add your site: https://cutcompress.com
+2. Add your site: https://www.cutcompress.com
 3. Verify ownership
 4. Go to Sitemaps
-5. Add: `https://cutcompress.com/sitemap.xml`
+5. Add: `https://www.cutcompress.com/sitemap.xml`
 6. Check indexing status
 
 ---

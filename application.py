@@ -39,14 +39,24 @@ mail = Mail(application)
 application.register_blueprint(image_to_jpg_api_bp)
 application.register_blueprint(image_convert_bp)
 
-# ---------------- Force HTTPS ----------------
+# ---------------- Force HTTPS & WWW ----------------
 @application.before_request
-def enforce_https():
+def enforce_https_and_www():
+    # Production environment checks
     if os.environ.get("RAILWAY_ENV") == "production":
+        # 1. Force HTTPS
         if request.headers.get("X-Forwarded-Proto", "http") != "https":
             url = request.url.replace("http://", "https://", 1)
             return redirect(url, code=301)
-# --------------------------------------------
+        
+        # 2. Force www subdomain
+        host = request.host.lower()
+        if host == "cutcompress.com" or host == "www.cutcompress.com:443":
+            # Redirect non-www to www
+            if not host.startswith("www."):
+                url = request.url.replace("cutcompress.com", "www.cutcompress.com", 1)
+                return redirect(url, code=301)
+# -----------------------------------------------
 
 # ----------------- Basic Routes -----------------
 @application.route('/')
@@ -787,6 +797,12 @@ def google_verification_alt():
     """Serve Google verification file (alternative route)"""
     verification_path = os.path.join(os.path.dirname(__file__), 'google3f012163ee5e721f.html')
     return send_file(verification_path, mimetype='text/html')
+
+@application.route('/BingSiteAuth.xml')
+def bing_verification():
+    """Serve Bing verification file"""
+    bing_path = os.path.join(os.path.dirname(__file__), 'BingSiteAuth.xml')
+    return send_file(bing_path, mimetype='application/xml')
 
 # ----------------- Run -----------------
 if __name__ == '__main__':

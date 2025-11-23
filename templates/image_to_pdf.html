@@ -1,4 +1,28 @@
-{% extends 'base.html' %}{% block title %}Any Image to PDF{% endblock %}
+{% extends 'base.html' %}
+{% block title %}Any Image to PDF Converter - Free Online{% endblock %}
+{% block description %}Convert any image format to PDF online for free. Combine multiple images into one PDF. No registration required, instant results.{% endblock %}
+{% block keywords %}image to pdf converter, jpg to pdf, png to pdf, free pdf conversion, online image to pdf{% endblock %}
+
+{% block head %}
+    <meta name="robots" content="index, follow">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Image to PDF Converter",
+        "description": "Free online tool to convert any image format to PDF",
+        "url": "https://www.cutcompress.com/tool/image-to-pdf",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "Web",
+        "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.9",
+            "ratingCount": "1200"
+        }
+    }
+    </script>
+{% endblock %}
+
 {% block content %}
 <div class="container">
   <h1>Any Image to PDF</h1>

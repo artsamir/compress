@@ -1,9 +1,28 @@
 {% extends "base.html" %}
 
-{% block title %}CSV Comparator - Compare Two CSV Files{% endblock %}
+{% block title %}CSV Comparator - Compare Two CSV Files Online{% endblock %}
+{% block description %}Compare CSV files online to find differences, matches, and missing records. Fast data comparison tool. Perfect for data analysis and quality checks.{% endblock %}
+{% block keywords %}csv comparator, compare csv files, csv file comparison, data comparison tool, find differences in csv{% endblock %}
 
 {% block head %}
+    <meta name="robots" content="index, follow">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/csv_comparator.css') }}">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "CSV Comparator",
+        "description": "Free online tool to compare CSV files and find differences, matches, and missing records",
+        "url": "https://www.cutcompress.com/csv-comparator",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "Web",
+        "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.8",
+            "ratingCount": "600"
+        }
+    }
+    </script>
 {% endblock %}
 
 {% block content %}

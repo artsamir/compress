@@ -1,6 +1,25 @@
 {% extends 'base.html' %}
 
-{% block title %}Blog - Cutcompress{% endblock %}
+{% block title %}Blog - Tips for Image Conversion, Compression & Digital Tools{% endblock %}
+{% block description %}Read our blog for tutorials, guides, and tips on image conversion, compression, PDF tools, and digital solutions. Stay updated with latest web tools.{% endblock %}
+{% block keywords %}blog, image conversion tips, compression guides, digital tools tutorial, web tools blog{% endblock %}
+
+{% block head %}
+    <meta name="robots" content="index, follow">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Cutcompress Blog",
+        "description": "Tips, tutorials, and guides for image conversion, compression, and digital tools",
+        "url": "https://www.cutcompress.com/blog",
+        "publisher": {
+            "@type": "Organization",
+            "name": "Cutcompress"
+        }
+    }
+    </script>
+{% endblock %}
 
 {% block content %}
 <div class="blog-main">
