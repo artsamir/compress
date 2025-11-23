@@ -1,0 +1,28 @@
+# Robots.txt for Cutcompress - SEO Optimization
+
+# Allow all bots
+User-agent: *
+Allow: /
+
+# Specific rules for Google
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0
+
+# Specific rules for Bing
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+# Disallow private/admin areas
+Disallow: /admin/
+Disallow: /api/
+Disallow: /private/
+Disallow: /*.json$
+Disallow: /*.xml$
+
+# Sitemap location
+Sitemap: https://cutcompress.com/sitemap.xml
+
+# Cache settings
+Request-rate: 10/1m
