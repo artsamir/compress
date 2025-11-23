@@ -3,86 +3,278 @@
 {% block title %}Home - Cutcompress{% endblock %}
 
 {% block content %}
-    <!-- Hero Section -->
-    <section class="hero">
-        <h1>Welcome to Cutcompress</h1>
-        <p>Your one-stop solution for image, text, and document tools. Fast, simple, and free!</p>
-        <a href="{{ url_for('tools') }}" class="cta-button">Explore Tools</a>
-    </section>
-
-    <!-- Tool Boxes Section -->
-    <section id="tools" class="tool-boxes">
-        <div class="tool-box" style="--i: 1;">
-            <div class="tool-box-header">
+    <!-- Enhanced Hero Section -->
+    <section class="hero-new">
+        <div class="hero-content">
+            <span class="hero-badge">✨ All-in-One Digital Tools</span>
+            <h1 class="hero-title">Transform Your Digital Content</h1>
+            <p class="hero-subtitle">Convert, compress, and process images, documents, and more. Fast, secure, and completely free.</p>
+            <div class="hero-buttons">
+                <a href="{{ url_for('tools') }}" class="btn btn-primary">Get Started Now</a>
+                <a href="{{ url_for('blog') }}" class="btn btn-secondary">Learn More</a>
+            </div>
+        </div>
+        <div class="hero-animation">
+            <div class="floating-card card-1">
                 <i class="fas fa-image"></i>
-                <h2>Image Converter</h2>
+                <span>Images</span>
             </div>
-            <ul>
-                <li><a href="/tool/reduce-image-size"><i class="fas fa-compress-alt" aria-hidden="true"></i> Reduce Image Size</a></li>
-                <!-- <li><a href="http://cutcompress-app1.s3-website-us-east-1.amazonaws.com/"><i class="fas fa-compress-alt" aria-hidden="true"></i> Reduce Image Size</a></li> -->
-                <li><a href="/tool/image-to-jpg"><i class="fas fa-file-image"></i> Any Image to JPG</a></li>
-                <li><a href="/tool/image-to-png"><i class="fas fa-file-image" aria-hidden="true"></i> Any Image to PNG</a></li>
-                <li><a href="/tool/image-to-webp"><i class="fas fa-file-image" aria-hidden="true"></i> Any Image to WEBP</a></li>
-                <li><a href="/tool/image-to-pdf"><i class="fas fa-file-pdf" aria-hidden="true"></i> Image to PDF</a></li>
-            </ul>
-        </div>
-
-        <div class="tool-box" style="--i: 2;">
-            <div class="tool-box-header">
-                <i class="fas fa-crop-alt"></i>
-                <h2>Image Processing</h2>
+            <div class="floating-card card-2">
+                <i class="fas fa-file-pdf"></i>
+                <span>Documents</span>
             </div>
-            <ul>
-                <li><a href="/tool/background-remove"><i class="fas fa-eraser" aria-hidden="true"></i> Background Remove</a></li>
-                <li><a href="{{ url_for('coming_soon') }}"><i class="fas fa-id-card" aria-hidden="true"></i> Passport Maker</a></li>
-                <li><a href="/tool/merge-images"><i class="fas fa-layer-group" aria-hidden="true"></i> Merge Two Images</a></li>
-            </ul>
-        </div>
-
-        <div class="tool-box" style="--i: 3;">
-            <div class="tool-box-header">
-                <i class="fas fa-file-alt"></i>
-                <h2>Text Converter</h2>
+            <div class="floating-card card-3">
+                <i class="fas fa-compress-alt"></i>
+                <span>Compress</span>
             </div>
-            <ul>
-                <li><a href="{{ url_for('coming_soon') }}"><i class="fas fa-hashtag" aria-hidden="true"></i> Word to Hashtag</a></li>
-                <li><a href="{{ url_for('coming_soon') }}"><i class="fas fa-file-pdf" aria-hidden="true"></i> Word to PDF</a></li>
-                <li><a href="{{ url_for('coming_soon') }}"><i class="fas fa-file-excel" aria-hidden="true"></i> Excel to PDF</a></li>
-                <li><a href="{{ url_for('coming_soon') }}"><i class="fas fa-file-powerpoint" aria-hidden="true"></i> PowerPoint to PDF</a></li>
-            </ul>
-        </div>
-
-        <div class="tool-box" style="--i: 4;">
-            <div class="tool-box-header">
-                <i class="fas fa-tools"></i>
-                <h2>Builder</h2>
-            </div>
-            <ul>
-                <li><a href="{{ url_for('coming_soon') }}"><i class="fas fa-user-tie" aria-hidden="true"></i> Resume Maker</a></li>
-                <li><a href="{{ url_for('coming_soon') }}"><i class="fas fa-file-contract" aria-hidden="true"></i> Project Front Page Maker</a></li>
-                <li><a href="{{ url_for('coming_soon') }}"><i class="fas fa-id-badge" aria-hidden="true"></i> ID Card Maker</a></li>
-                <li><a href="{{ url_for('coming_soon') }}"><i class="fas fa-award" aria-hidden="true"></i> Certificate Maker</a></li>
-            </ul>
-        </div>
-
-        <div class="tool-box" style="--i: 5;">
-            <div class="tool-box-header">
-                <i class="fas fa-envelope"></i>
-                <h2>Other Tools</h2>
-            </div>
-            <ul>
-                <li><a href="{{ url_for('coming_soon') }}"><i class="fas fa-envelope-open" aria-hidden="true"></i> Email Templates</a></li>
-                <li><a href="{{ url_for('coming_soon') }}"><i class="fas fa-file-signature" aria-hidden="true"></i> Application Letter Template</a></li>
-            </ul>
         </div>
     </section>
 
-    <!-- Blog Section -->
+    <!-- Features Section -->
+    <section class="features-section">
+        <div class="features-container">
+            <h2 class="section-title">Why Choose Cutcompress?</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3>Lightning Fast</h3>
+                    <p>Process your files in seconds with our optimized tools</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>100% Secure</h3>
+                    <p>Your files are processed privately and deleted automatically</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-free"></i>
+                    </div>
+                    <h3>Completely Free</h3>
+                    <p>No registration, no hidden charges, no limitations</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3>Works Everywhere</h3>
+                    <p>Use on desktop, tablet, or mobile - no software needed</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tools Grid Section -->
+    <section id="tools" class="tools-grid-section">
+        <div class="tools-grid-container">
+            <div class="tools-header">
+                <h2 class="section-title">Our Tools</h2>
+                <p class="section-subtitle">Choose from our collection of powerful utilities</p>
+            </div>
+
+            <div class="tools-grid">
+                <!-- Image Converter -->
+                <div class="tool-category">
+                    <div class="category-header">
+                        <i class="fas fa-image"></i>
+                        <h3>Image Tools</h3>
+                    </div>
+                    <div class="tools-list">
+                        <a href="/tool/image-to-jpg" class="tool-item">
+                            <span class="tool-icon">🖼️</span>
+                            <div class="tool-info">
+                                <h4>Image to JPG</h4>
+                                <p>Convert any image format to JPG</p>
+                            </div>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                        <a href="/tool/image-to-png" class="tool-item">
+                            <span class="tool-icon">🎨</span>
+                            <div class="tool-info">
+                                <h4>Image to PNG</h4>
+                                <p>Convert to PNG with transparency</p>
+                            </div>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                        <a href="/tool/image-to-webp" class="tool-item">
+                            <span class="tool-icon">⚡</span>
+                            <div class="tool-info">
+                                <h4>Image to WEBP</h4>
+                                <p>Modern format for web optimization</p>
+                            </div>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                        <a href="/tool/image-to-pdf" class="tool-item">
+                            <span class="tool-icon">📄</span>
+                            <div class="tool-info">
+                                <h4>Image to PDF</h4>
+                                <p>Combine images into one PDF</p>
+                            </div>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Image Processing -->
+                <div class="tool-category">
+                    <div class="category-header">
+                        <i class="fas fa-crop-alt"></i>
+                        <h3>Processing</h3>
+                    </div>
+                    <div class="tools-list">
+                        <a href="/tool/background-remove" class="tool-item">
+                            <span class="tool-icon">✂️</span>
+                            <div class="tool-info">
+                                <h4>Background Remove</h4>
+                                <p>Remove backgrounds instantly</p>
+                            </div>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                        <a href="/tool/merge-images" class="tool-item">
+                            <span class="tool-icon">🔗</span>
+                            <div class="tool-info">
+                                <h4>Merge Images</h4>
+                                <p>Combine multiple images</p>
+                            </div>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                        <a href="{{ url_for('coming_soon') }}" class="tool-item">
+                            <span class="tool-icon">📸</span>
+                            <div class="tool-info">
+                                <h4>Passport Maker</h4>
+                                <p>Create passport-sized photos</p>
+                            </div>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                        <a href="{{ url_for('csv_comparator') }}" class="tool-item">
+                            <span class="tool-icon">📊</span>
+                            <div class="tool-info">
+                                <h4>CSV Comparator</h4>
+                                <p>Compare CSV files easily</p>
+                            </div>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Text & Documents -->
+                <div class="tool-category">
+                    <div class="category-header">
+                        <i class="fas fa-file-alt"></i>
+                        <h3>Documents</h3>
+                    </div>
+                    <div class="tools-list">
+                        <a href="{{ url_for('coming_soon') }}" class="tool-item">
+                            <span class="tool-icon">📝</span>
+                            <div class="tool-info">
+                                <h4>Word to PDF</h4>
+                                <p>Convert Word to PDF format</p>
+                            </div>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                        <a href="{{ url_for('coming_soon') }}" class="tool-item">
+                            <span class="tool-icon">📊</span>
+                            <div class="tool-info">
+                                <h4>Excel to PDF</h4>
+                                <p>Convert Excel sheets to PDF</p>
+                            </div>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                        <a href="{{ url_for('coming_soon') }}" class="tool-item">
+                            <span class="tool-icon">🎯</span>
+                            <div class="tool-info">
+                                <h4>PowerPoint to PDF</h4>
+                                <p>Convert presentations to PDF</p>
+                            </div>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                        <a href="{{ url_for('coming_soon') }}" class="tool-item">
+                            <span class="tool-icon">#️⃣</span>
+                            <div class="tool-info">
+                                <h4>Hashtag Generator</h4>
+                                <p>Create hashtags from text</p>
+                            </div>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Builders -->
+                <div class="tool-category">
+                    <div class="category-header">
+                        <i class="fas fa-tools"></i>
+                        <h3>Builders</h3>
+                    </div>
+                    <div class="tools-list">
+                        <a href="{{ url_for('coming_soon') }}" class="tool-item">
+                            <span class="tool-icon">👔</span>
+                            <div class="tool-info">
+                                <h4>Resume Maker</h4>
+                                <p>Create professional resumes</p>
+                            </div>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                        <a href="{{ url_for('coming_soon') }}" class="tool-item">
+                            <span class="tool-icon">📋</span>
+                            <div class="tool-info">
+                                <h4>Certificate Maker</h4>
+                                <p>Design certificates easily</p>
+                            </div>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                        <a href="{{ url_for('coming_soon') }}" class="tool-item">
+                            <span class="tool-icon">🎫</span>
+                            <div class="tool-info">
+                                <h4>ID Card Maker</h4>
+                                <p>Create custom ID cards</p>
+                            </div>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                        <a href="{{ url_for('coming_soon') }}" class="tool-item">
+                            <span class="tool-icon">📑</span>
+                            <div class="tool-info">
+                                <h4>Cover Page Maker</h4>
+                                <p>Design project cover pages</p>
+                            </div>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats-section">
+        <div class="stats-container">
+            <div class="stat-card">
+                <h4 class="stat-number">10K+</h4>
+                <p class="stat-label">Active Users</p>
+            </div>
+            <div class="stat-card">
+                <h4 class="stat-number">50K+</h4>
+                <p class="stat-label">Files Processed</p>
+            </div>
+            <div class="stat-card">
+                <h4 class="stat-number">20+</h4>
+                <p class="stat-label">Amazing Tools</p>
+            </div>
+            <div class="stat-card">
+                <h4 class="stat-number">99.9%</h4>
+                <p class="stat-label">Uptime</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Blog Section (Updated) -->
     <section class="blog-section">
         <div class="blog-container">
             <div class="blog-header">
-                <h2>Learn & Understand</h2>
-                <p>Helpful guides and tips for managing your digital content</p>
+                <h2>Latest Articles</h2>
+                <p>Learn useful tips and tricks to make the most of our tools</p>
             </div>
 
             <div class="blog-grid">
@@ -91,7 +283,7 @@
                     <div class="blog-content">
                         <span class="blog-category">Images</span>
                         <h3>Why You Should Compress Your Images</h3>
-                        <p>Large image files can slow down your projects and websites. When you compress images, you reduce their file size without losing important visual information. This is especially useful for presentations, assignments, and online portfolios. Smaller files load faster and take less storage space on your devices.</p>
+                        <p>Large image files can slow down your projects and websites. When you compress images, you reduce their file size without losing important visual information.</p>
                         <a href="{{ url_for('blog') }}" class="read-more">Read More →</a>
                     </div>
                 </article>
@@ -101,7 +293,7 @@
                     <div class="blog-content">
                         <span class="blog-category">Documents</span>
                         <h3>Converting Documents: A Student's Guide</h3>
-                        <p>Converting documents from one format to another is a practical skill. Whether you need to change Word files to PDF or presentations to images, understanding these conversions helps you complete assignments properly. Different formats have different advantages - PDFs are great for sharing because they look the same on every device, while Word documents are easy to edit.</p>
+                        <p>Converting documents from one format to another is a practical skill. Whether you need to change Word files to PDF or presentations to images.</p>
                         <a href="{{ url_for('blog') }}" class="read-more">Read More →</a>
                     </div>
                 </article>
@@ -111,60 +303,381 @@
                     <div class="blog-content">
                         <span class="blog-category">Tips & Tricks</span>
                         <h3>Quick Tips for Better Digital Projects</h3>
-                        <p>Creating digital projects is becoming an important part of school work. Before submitting your project, make sure all images are properly formatted and file sizes are reasonable. Remove unnecessary backgrounds or elements to make your work cleaner. Always keep backups of your important files. These small steps can significantly improve the quality of your presentations and assignments.</p>
-                        <a href="{{ url_for('blog') }}" class="read-more">Read More →</a>
-                    </div>
-                </article>
-
-                <article class="blog-card">
-                    <div class="blog-image" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);"></div>
-                    <div class="blog-content">
-                        <span class="blog-category">Career</span>
-                        <h3>Digital Skills That Matter for Your Future</h3>
-                        <p>Learning to work with digital tools is essential in today's world. Whether you're interested in design, content creation, or business, knowing how to handle images and documents efficiently gives you an advantage. These are practical skills that many employers look for. Starting to learn these skills now, while you're in school, prepares you for better opportunities ahead.</p>
-                        <a href="{{ url_for('blog') }}" class="read-more">Read More →</a>
-                    </div>
-                </article>
-
-                <article class="blog-card">
-                    <div class="blog-image" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);"></div>
-                    <div class="blog-content">
-                        <span class="blog-category">Technology</span>
-                        <h3>Understanding File Formats and When to Use Them</h3>
-                        <p>Different file formats serve different purposes. JPG files are good for photographs because they compress well. PNG files are better for graphics with transparent areas. PDF files are universal - they maintain their appearance on any device. Understanding which format to use for each situation helps you make better choices when working on projects or creating content for social media.</p>
-                        <a href="{{ url_for('blog') }}" class="read-more">Read More →</a>
-                    </div>
-                </article>
-
-                <article class="blog-card">
-                    <div class="blog-image" style="background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);"></div>
-                    <div class="blog-content">
-                        <span class="blog-category">Productivity</span>
-                        <h3>Organize Your Files Like a Professional</h3>
-                        <p>Good file organization saves you time and reduces stress. Create clear folder structures with meaningful names. Keep your project files, images, and documents sorted logically. Use naming conventions that help you find things quickly. This skill is important not just for school projects, but also for your future workplace. Employers appreciate people who can manage their work efficiently and keep things organized.</p>
+                        <p>Creating digital projects is becoming an important part of school work. Make sure all images are properly formatted and file sizes are reasonable.</p>
                         <a href="{{ url_for('blog') }}" class="read-more">Read More →</a>
                     </div>
                 </article>
             </div>
 
             <div class="blog-cta">
-                <h3>Want to read more helpful articles?</h3>
-                <p>Check out our blog section for detailed guides, tutorials, and tips</p>
-                <a href="{{ url_for('blog') }}" class="cta-button-secondary">Visit Blog</a>
+                <h3>Want to read more?</h3>
+                <a href="{{ url_for('blog') }}" class="cta-button-secondary">Visit Our Blog</a>
             </div>
         </div>
     </section>
 
+    <!-- CTA Section -->
+    <section class="final-cta">
+        <div class="cta-content">
+            <h2>Ready to Transform Your Files?</h2>
+            <p>Start using our free tools today. No sign-up required.</p>
+            <a href="{{ url_for('tools') }}" class="btn btn-primary">Explore All Tools</a>
+        </div>
+    </section>
+
     <style>
-        .blog-section {
-            background: #f8f9fa;
-            padding: 4rem 2rem;
-            margin-top: 3rem;
+        /* Enhanced Hero Section */
+        .hero-new {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            gap: 3rem;
+            padding: 5rem 2rem;
+            background: linear-gradient(135deg, #f8fafc 0%, #e0e7ff 100%);
+            min-height: 600px;
         }
 
-        .blog-container {
+        .hero-badge {
+            display: inline-block;
+            background: #667eea20;
+            color: #667eea;
+            padding: 0.6rem 1.2rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            border: 1px solid #667eea40;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: #1f2937;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            color: #6b7280;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+            max-width: 600px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.9rem 2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-block;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 25px rgba(102, 126, 234, 0.5);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-secondary:hover {
+            background: #667eea10;
+        }
+
+        /* Hero Animation */
+        .hero-animation {
+            position: relative;
+            height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .floating-card {
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            background: white;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .floating-card i {
+            font-size: 2rem;
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+
+        .floating-card span {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .card-1 {
+            animation-delay: 0s;
+            top: 20px;
+            left: 20px;
+        }
+
+        .card-2 {
+            animation-delay: 1s;
+            top: 50%;
+            transform: translateY(-50%);
+            right: 20px;
+        }
+
+        .card-3 {
+            animation-delay: 2s;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        /* Features Section */
+        .features-section {
+            padding: 4rem 2rem;
+            background: white;
+        }
+
+        .features-container {
             max-width: 1200px;
             margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: #1f2937;
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-subtitle {
+            font-size: 1.1rem;
+            color: #6b7280;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: #f9fafb;
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid #e5e7eb;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border-color: #667eea;
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 1.8rem;
+            color: white;
+        }
+
+        .feature-card h3 {
+            font-size: 1.3rem;
+            color: #1f2937;
+            margin-bottom: 0.75rem;
+        }
+
+        .feature-card p {
+            color: #6b7280;
+            line-height: 1.6;
+        }
+
+        /* Tools Grid Section */
+        .tools-grid-section {
+            padding: 4rem 2rem;
+            background: #f9fafb;
+        }
+
+        .tools-grid-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .tools-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .tool-category {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .tool-category:hover {
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        }
+
+        .category-header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .category-header i {
+            font-size: 1.8rem;
+        }
+
+        .category-header h3 {
+            font-size: 1.3rem;
+            margin: 0;
+        }
+
+        .tools-list {
+            padding: 1rem;
+        }
+
+        .tool-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            text-decoration: none;
+            color: #1f2937;
+            transition: all 0.3s ease;
+            margin-bottom: 0.5rem;
+        }
+
+        .tool-item:hover {
+            background: #f3f4f6;
+            transform: translateX(8px);
+        }
+
+        .tool-icon {
+            font-size: 1.8rem;
+            flex-shrink: 0;
+        }
+
+        .tool-info {
+            flex: 1;
+        }
+
+        .tool-info h4 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 0.25rem;
+        }
+
+        .tool-info p {
+            font-size: 0.85rem;
+            color: #6b7280;
+        }
+
+        .tool-item i:last-child {
+            font-size: 0.9rem;
+            color: #d1d5db;
+            transition: all 0.3s ease;
+        }
+
+        .tool-item:hover i:last-child {
+            color: #667eea;
+            transform: translateX(4px);
+        }
+
+        /* Stats Section */
+        .stats-section {
+            padding: 3rem 2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .stats-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+
+        .stat-card {
+            text-align: center;
+            color: white;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        /* Blog Section */
+        .blog-section {
+            padding: 4rem 2rem;
+            background: white;
         }
 
         .blog-header {
@@ -174,13 +687,14 @@
 
         .blog-header h2 {
             font-size: 2.5rem;
-            color: #2c3e50;
-            margin-bottom: 0.5rem;
+            font-weight: 800;
+            color: #1f2937;
+            margin-bottom: 0.75rem;
         }
 
         .blog-header p {
             font-size: 1.1rem;
-            color: #7f8c8d;
+            color: #6b7280;
         }
 
         .blog-grid {
@@ -198,6 +712,7 @@
             transition: all 0.3s ease;
             display: flex;
             flex-direction: column;
+            border: 1px solid #e5e7eb;
         }
 
         .blog-card:hover {
@@ -206,7 +721,7 @@
         }
 
         .blog-image {
-            height: 200px;
+            height: 180px;
             background-size: cover;
             background-position: center;
         }
@@ -231,14 +746,14 @@
         }
 
         .blog-card h3 {
-            color: #2c3e50;
-            font-size: 1.3rem;
+            color: #1f2937;
+            font-size: 1.2rem;
             margin-bottom: 0.75rem;
             line-height: 1.4;
         }
 
         .blog-card p {
-            color: #555;
+            color: #6b7280;
             font-size: 0.95rem;
             line-height: 1.6;
             margin-bottom: 1rem;
@@ -258,21 +773,16 @@
         }
 
         .blog-cta {
-            background: linear-gradient(135deg, #667eea08 0%, #764ba208 100%);
+            background: #f9fafb;
             padding: 2.5rem;
             border-radius: 12px;
             text-align: center;
-            border: 2px solid #667eea20;
+            border: 1px solid #e5e7eb;
         }
 
         .blog-cta h3 {
-            color: #2c3e50;
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .blog-cta p {
-            color: #7f8c8d;
+            color: #1f2937;
+            font-size: 1.4rem;
             margin-bottom: 1.5rem;
         }
 
@@ -281,37 +791,101 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             padding: 0.75rem 2rem;
-            border-radius: 6px;
+            border-radius: 8px;
             text-decoration: none;
             font-weight: 600;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(103, 126, 234, 0.3);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
         }
 
         .cta-button-secondary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(103, 126, 234, 0.4);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Final CTA Section */
+        .final-cta {
+            padding: 4rem 2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            text-align: center;
+        }
+
+        .cta-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .cta-content h2 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 1rem;
+        }
+
+        .cta-content p {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 2rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .hero-new {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+                padding: 3rem 2rem;
+                min-height: auto;
+            }
+
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .hero-animation {
+                display: none;
+            }
         }
 
         @media (max-width: 768px) {
-            .blog-section {
-                padding: 2rem 1rem;
+            .hero-title {
+                font-size: 2rem;
             }
 
-            .blog-header h2 {
-                font-size: 1.8rem;
+            .hero-subtitle {
+                font-size: 1rem;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                text-align: center;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tools-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-container {
+                grid-template-columns: repeat(2, 1fr);
             }
 
             .blog-grid {
                 grid-template-columns: 1fr;
             }
 
-            .blog-cta {
-                padding: 1.5rem;
-            }
-
-            .blog-cta h3 {
-                font-size: 1.2rem;
+            .cta-content h2 {
+                font-size: 1.8rem;
             }
         }
     </style>
