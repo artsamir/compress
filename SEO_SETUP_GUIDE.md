@@ -43,6 +43,15 @@
 
 ## Submit to Search Engines
 
+### ⭐ Quick Tip: Use DNS TXT Method (Easiest & Most Reliable)
+If you're having issues with the HTML file method, use the **DNS TXT record method**:
+- No file uploads needed
+- Works even if your server is down
+- Permanent verification
+- Same authority level as HTML file
+
+---
+
 ### Google Search Console - Verification Methods
 
 #### Method 1: HTML File Verification (RECOMMENDED)
@@ -56,14 +65,45 @@
    - Location in your project: `/google3f012163ee5e721f.html` ✅ (Already created)
 7. Click "Verify"
 
-#### Method 2: DNS Verification
-1. Add TXT record to your domain DNS:
-   ```
-   google-site-verification=YOUR_VERIFICATION_CODE
-   ```
-2. Can take 24-48 hours to verify
+#### Method 2: DNS TXT Record Verification (RECOMMENDED - If HTML file fails)
+**BEST FOR YOUR SITUATION - Follow these steps:**
 
-#### Method 3: Meta Tag Verification
+1. Go to: https://search.google.com/search-console/
+2. Click "Add Property"
+3. Enter: https://cutcompress.com
+4. **Choose "DNS record" verification method**
+5. Copy the TXT record provided (looks like):
+   ```
+   google-site-verification=PpAV0C9ZlbKm07NBPTCXjtMDqGMoNdsm
+   ```
+6. **Sign in to your domain registrar** (where you bought cutcompress.com):
+   - GoDaddy, Namecheap, Google Domains, etc.
+7. **Find DNS settings** and add a TXT record:
+   - Name/Host: `@` (or leave blank)
+   - Type: `TXT`
+   - Value: `google-site-verification=PpAV0C9ZlbKm07NBPTCXjtMDqGMoNdsm`
+   - TTL: 3600 (default)
+8. **Save the DNS record**
+9. **Wait 5-48 hours** for DNS propagation
+10. Return to Google Search Console and click **"Verify"**
+
+**Common DNS Registrars:**
+- **GoDaddy:** Settings → DNS → Add DNS record
+- **Namecheap:** Domain List → Manage → Advanced DNS → Add new record
+- **Google Domains:** DNS → Custom records → Create new record
+- **Cloudflare:** DNS tab → Add record
+
+#### Method 3: CNAME Verification
+1. Go to Google Search Console
+2. Choose "CNAME record" verification method
+3. Copy the CNAME record provided
+4. Add to your domain's DNS settings:
+   - Name/Host: `[provided-prefix]`
+   - Type: `CNAME`
+   - Value: `[provided-value]`
+5. Wait for DNS propagation and verify
+
+#### Method 4: Meta Tag Verification
 Add to `<head>` in base.html:
 ```html
 <meta name="google-site-verification" content="YOUR_VERIFICATION_CODE">
