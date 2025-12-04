@@ -511,16 +511,36 @@
             <h2>🔑 Your API Key</h2>
             <p>Generate your unique API key to start using the CutCompress Chatbot API</p>
             
-            <button class="btn-primary" onclick="generateAPIKey()">Generate New API Key</button>
-            
-            <div id="keyDisplay" style="display:none;">
-                <h4>Your API Key:</h4>
-                <div class="api-key-display">
-                    <div class="api-key-value" id="apiKeyValue">Loading...</div>
-                    <button class="copy-btn" onclick="copyToClipboard()">📋 Copy Key</button>
+            {% if session.user_id %}
+                <!-- User is logged in - Show generate button -->
+                <button class="btn-primary" onclick="generateAPIKey()">Generate New API Key</button>
+                
+                <div id="keyDisplay" style="display:none;">
+                    <h4>Your API Key:</h4>
+                    <div class="api-key-display">
+                        <div class="api-key-value" id="apiKeyValue">Loading...</div>
+                        <button class="copy-btn" onclick="copyToClipboard()">📋 Copy Key</button>
+                    </div>
+                    <p style="color: #666; font-size: 0.9rem;">⚠️ Keep this key secret! Don't share it publicly.</p>
                 </div>
-                <p style="color: #666; font-size: 0.9rem;">⚠️ Keep this key secret! Don't share it publicly.</p>
-            </div>
+            {% else %}
+                <!-- User is NOT logged in - Show login prompt -->
+                <div style="background: #fff3cd; border: 2px solid #ffc107; border-radius: 10px; padding: 20px; margin: 20px 0;">
+                    <h4 style="color: #856404; margin-bottom: 10px;">🔒 Login Required</h4>
+                    <p style="color: #856404; margin-bottom: 15px;">
+                        You need to be logged in to generate and manage API keys. 
+                        Please sign up or login to get started.
+                    </p>
+                    <div style="display: flex; gap: 10px;">
+                        <a href="{{ url_for('auth.signup') }}" class="btn-primary" style="text-decoration: none; display: inline-block;">
+                            🚀 Sign Up
+                        </a>
+                        <a href="{{ url_for('auth.login') }}" class="btn-secondary" style="text-decoration: none; display: inline-block;">
+                            Login
+                        </a>
+                    </div>
+                </div>
+            {% endif %}
         </div>
 
         <!-- Endpoints Section -->
@@ -701,7 +721,11 @@ fetch("https://cutcompress.com/api/public-chatbot/ask", {
         <!-- CTA -->
         <div style="text-align: center; margin-top: 50px; margin-bottom: 50px;">
             <h2 style="color: white; font-size: 2rem; margin-bottom: 20px;">Ready to integrate?</h2>
-            <button class="btn-primary" onclick="document.getElementById('generateAPIKey').click()">Get Your API Key Now</button>
+            {% if session.user_id %}
+                <button class="btn-primary" onclick="generateAPIKey()">Get Your API Key Now</button>
+            {% else %}
+                <a href="{{ url_for('auth.signup') }}" class="btn-primary" style="text-decoration: none; display: inline-block; padding: 12px 30px; border-radius: 25px; font-size: 1rem; font-weight: 600;">Sign Up to Get API Key</a>
+            {% endif %}
             <p style="color: white; margin-top: 20px;">Or email us for enterprise solutions: smartsamir0205@gmail.com</p>
         </div>
     </div>
@@ -742,6 +766,15 @@ fetch("https://cutcompress.com/api/public-chatbot/ask", {
 
 <script>
 function generateAPIKey() {
+    // Check if user is logged in
+    // If logged in, open modal; if not, redirect to login
+    const isLoggedIn = {{ 'true' if session.user_id else 'false' }};
+    
+    if (!isLoggedIn) {
+        window.location.href = '{{ url_for("auth.login") }}';
+        return;
+    }
+    
     document.getElementById('apiModal').classList.add('active');
 }
 

@@ -60,6 +60,12 @@ application.register_blueprint(chatbot_bp)
 application.register_blueprint(public_chatbot_bp)
 application.register_blueprint(api_dashboard_bp)
 
+# Context processor - make session available in all templates
+@application.context_processor
+def inject_session():
+    from flask import session
+    return {'session': session}
+
 # Create database tables
 with application.app_context():
     db.create_all()
@@ -205,10 +211,7 @@ smartsamir0205@gmail.com
 
 @application.route('/api-service')
 def api_service():
-    """API Service dashboard page - requires login"""
-    if 'user_id' not in session:
-        flash('Please login to access API service', 'warning')
-        return redirect(url_for('auth.login'))
+    """API Service dashboard page - shows docs to all, generate only for logged-in"""
     return render_template('api_service.html')
 
 @application.route('/coming-soon')
