@@ -11,6 +11,7 @@ import base64
 # from auth import auth_bp
 from blueprints.image_to_jpg_api import bp as image_to_jpg_api_bp
 from blueprints.image_convert_api import bp as image_convert_bp
+from blueprints.chatbot_api import bp as chatbot_bp
 
 # Load environment variables from .env file
 load_dotenv()
@@ -38,6 +39,7 @@ mail = Mail(application)
 # Register blueprints AFTER creating `application`
 application.register_blueprint(image_to_jpg_api_bp)
 application.register_blueprint(image_convert_bp)
+application.register_blueprint(chatbot_bp)
 
 # ---------------- Force HTTPS & WWW ----------------
 @application.before_request
