@@ -79,13 +79,39 @@
             <li><a href="{{ url_for('blog') }}">Blog</a></li>
             <li><a href="{{ url_for('about') }}">About</a></li>
             <!-- Auth button will show here in mobile view -->
+            {% if session.user_id %}
             <li class="auth-button mobile-only">
-                <a href="{{ url_for('signup') }}">Sign Up</a>
+                <div class="user-dropdown">
+                    <button class="user-button">
+                        <i class="fas fa-user-circle"></i> {{ session.user_name }}
+                    </button>
+                    <div class="dropdown-menu">
+                        <a href="{{ url_for('auth.profile') }}">Profile</a>
+                        <a href="{{ url_for('auth.logout') }}">Logout</a>
+                    </div>
+                </div>
             </li>
+            {% else %}
+            <li class="auth-button mobile-only">
+                <a href="{{ url_for('auth.signup') }}">Sign Up</a>
+            </li>
+            {% endif %}
         </ul>
         <!-- Auth button for desktop view -->
         <div class="auth-button desktop-only">
-            <a href="{{ url_for('signup') }}">Sign Up</a>
+            {% if session.user_id %}
+            <div class="user-dropdown">
+                <button class="user-button">
+                    <i class="fas fa-user-circle"></i> {{ session.user_name }}
+                </button>
+                <div class="dropdown-menu">
+                    <a href="{{ url_for('auth.profile') }}">Profile</a>
+                    <a href="{{ url_for('auth.logout') }}">Logout</a>
+                </div>
+            </div>
+            {% else %}
+            <a href="{{ url_for('auth.signup') }}">Sign Up</a>
+            {% endif %}
         </div>
         <button class="nav-toggle">
             <span class="hamburger"></span>
@@ -141,6 +167,7 @@
                 <h4>Support</h4>
                 <ul>
                     <li><a href="{{ url_for('contact') }}">Contact Us</a></li>
+                    <li><a href="{{ url_for('api_service') }}">🔌 API Service</a></li>
                     <li><a href="mailto:smartsamir0205@gmail.com">Email Support</a></li>
                 </ul>
             </div>

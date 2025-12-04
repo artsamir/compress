@@ -7,11 +7,14 @@ from rembg import remove
 from docx2pdf import convert
 import io
 import base64
+from models_api import db, APIKey, APIUsage
 # from models import db
-# from auth import auth_bp
+from blueprints.auth import bp as auth_bp
 from blueprints.image_to_jpg_api import bp as image_to_jpg_api_bp
 from blueprints.image_convert_api import bp as image_convert_bp
 from blueprints.chatbot_api import bp as chatbot_bp
+from blueprints.chatbot_public_api import bp as public_chatbot_bp
+from blueprints.api_dashboard import bp as api_dashboard_bp
 
 # Load environment variables from .env file
 load_dotenv()
@@ -19,12 +22,25 @@ load_dotenv()
 # Create the single Flask application instance
 application = Flask(__name__)
 
+# Get absolute path for database
+db_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'chatbot_api.db')
+
 # Secret Key Configuration (required for sessions and flash messages)
 application.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'dev-secret-key-change-in-production')
+
+# Database Configuration (using absolute path)
+application.config['SQLALCHEMY_DATABASE_URI'] = os.getenv(
+    'DATABASE_URL', 
+    f'sqlite:///{db_path}'
+)
+application.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 application.config['UPLOAD_FOLDER'] = '/tmp/uploads/'  # Safer in EB
 application.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16 MB limit
 os.makedirs(application.config['UPLOAD_FOLDER'], exist_ok=True)
+
+# Initialize Database
+db.init_app(application)
 
 # Flask-Mail Configuration for Gmail
 application.config['MAIL_SERVER'] = 'smtp.gmail.com'
@@ -37,9 +53,16 @@ application.config['MAIL_DEFAULT_SENDER'] = 'smartsamir0205@gmail.com'
 mail = Mail(application)
 
 # Register blueprints AFTER creating `application`
+application.register_blueprint(auth_bp)
 application.register_blueprint(image_to_jpg_api_bp)
 application.register_blueprint(image_convert_bp)
 application.register_blueprint(chatbot_bp)
+application.register_blueprint(public_chatbot_bp)
+application.register_blueprint(api_dashboard_bp)
+
+# Create database tables
+with application.app_context():
+    db.create_all()
 
 # ---------------- Force HTTPS & WWW ----------------
 @application.before_request
@@ -179,6 +202,14 @@ smartsamir0205@gmail.com
         print(f"Error sending email: {str(e)}")
         flash(f'Error sending message. Please try again later or email us directly.', 'error')
         return redirect(url_for('contact'))
+
+@application.route('/api-service')
+def api_service():
+    """API Service dashboard page - requires login"""
+    if 'user_id' not in session:
+        flash('Please login to access API service', 'warning')
+        return redirect(url_for('auth.login'))
+    return render_template('api_service.html')
 
 @application.route('/coming-soon')
 def coming_soon():
