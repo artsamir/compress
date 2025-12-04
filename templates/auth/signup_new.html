@@ -1,0 +1,264 @@
+{% extends "base.html" %}
+
+{% block title %}Sign Up - CutCompress{% endblock %}
+{% block description %}Create your CutCompress account to access API services and tools{% endblock %}
+
+{% block content %}
+<style>
+    .auth-page {
+        min-height: calc(100vh - 200px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 40px 20px;
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+    }
+
+    .auth-container {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+        width: 100%;
+        max-width: 450px;
+        padding: 40px;
+    }
+
+    .auth-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .auth-header h1 {
+        color: #333;
+        font-size: 28px;
+        margin-bottom: 10px;
+        font-weight: 700;
+    }
+
+    .auth-header p {
+        color: #666;
+        font-size: 14px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        color: #333;
+        font-weight: 600;
+        margin-bottom: 8px;
+        font-size: 14px;
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid #e0e0e0;
+        border-radius: 6px;
+        font-size: 14px;
+        transition: border-color 0.3s;
+        font-family: inherit;
+    }
+
+    .form-group input:focus {
+        outline: none;
+        border-color: #667eea;
+    }
+
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+    }
+
+    .btn-signup {
+        width: 100%;
+        padding: 12px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-weight: 600;
+        font-size: 16px;
+        cursor: pointer;
+        margin-top: 10px;
+        transition: transform 0.2s;
+    }
+
+    .btn-signup:hover {
+        transform: translateY(-2px);
+    }
+
+    .btn-signup:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+
+    .auth-footer {
+        text-align: center;
+        margin-top: 20px;
+        color: #666;
+        font-size: 14px;
+    }
+
+    .auth-footer a {
+        color: #667eea;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .auth-footer a:hover {
+        text-decoration: underline;
+    }
+
+    .error-message {
+        background: #fee;
+        color: #c33;
+        padding: 12px;
+        border-radius: 6px;
+        margin-bottom: 20px;
+        font-size: 14px;
+        display: none;
+    }
+
+    .error-message.show {
+        display: block;
+    }
+
+    .loading {
+        display: none;
+        text-align: center;
+        color: #667eea;
+    }
+
+    @media (max-width: 480px) {
+        .auth-container {
+            padding: 25px;
+        }
+
+        .form-row {
+            grid-template-columns: 1fr;
+        }
+
+        .auth-header h1 {
+            font-size: 24px;
+        }
+    }
+</style>
+
+<div class="auth-page">
+    <div class="auth-container">
+        <div class="auth-header">
+            <h1>🚀 Create Account</h1>
+            <p>Join CutCompress Community</p>
+        </div>
+
+        <div class="error-message" id="errorMessage"></div>
+
+        <form id="signupForm">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" name="name" placeholder="John Doe" required>
+                </div>
+                <div class="form-group">
+                    <label for="company">Company</label>
+                    <input type="text" id="company" name="company" placeholder="Optional">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" placeholder="your@email.com" required>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="••••••" required>
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" placeholder="••••••" required>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-signup" id="submitBtn">Create Account</button>
+
+            <div class="loading" id="loading">
+                <p>Creating account...</p>
+            </div>
+        </form>
+
+        <div class="auth-footer">
+            Already have an account? <a href="{{ url_for('auth.login') }}">Login here</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    const form = document.getElementById('signupForm');
+    const errorDiv = document.getElementById('errorMessage');
+    const submitBtn = document.getElementById('submitBtn');
+    const loading = document.getElementById('loading');
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        errorDiv.classList.remove('show');
+
+        const name = document.getElementById('name').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value.trim();
+        const confirmPassword = document.getElementById('confirmPassword').value.trim();
+        const company = document.getElementById('company').value.trim();
+
+        if (!name || !email || !password || !confirmPassword) {
+            showError('Please fill all required fields');
+            return;
+        }
+
+        if (password !== confirmPassword) {
+            showError('Passwords do not match');
+            return;
+        }
+
+        if (password.length < 6) {
+            showError('Password must be at least 6 characters');
+            return;
+        }
+
+        submitBtn.disabled = true;
+        loading.style.display = 'block';
+
+        try {
+            const response = await fetch('{{ url_for("auth.signup") }}', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ name, email, password, confirm_password: confirmPassword, company })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                // Show success message and redirect
+                alert('✅ Account created successfully! Redirecting to login...');
+                window.location.href = data.redirect;
+            } else {
+                showError(data.error || 'Signup failed');
+            }
+        } catch (error) {
+            showError('Network error. Please try again.');
+        } finally {
+            submitBtn.disabled = false;
+            loading.style.display = 'none';
+        }
+    });
+
+    function showError(message) {
+        errorDiv.textContent = message;
+        errorDiv.classList.add('show');
+    }
+</script>
+{% endblock %}

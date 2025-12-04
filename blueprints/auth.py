@@ -75,7 +75,7 @@ def signup():
             db.session.rollback()
             return jsonify({'success': False, 'error': str(e)}), 500
     
-    return render_template('auth/signup.html')
+    return render_template('auth/signup_new.html')
 
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
@@ -112,7 +112,7 @@ def login():
         except Exception as e:
             return jsonify({'success': False, 'error': str(e)}), 500
     
-    return render_template('auth/login.html')
+    return render_template('auth/login_new.html')
 
 @bp.route('/logout', methods=['GET'])
 def logout():
