@@ -1,0 +1,449 @@
+{% extends 'base.html' %}
+{% block title %}Application Letter Templates - Professional Job Application Letters{% endblock %}
+{% block description %}Create professional job application letters with our free templates. Cover letters, formal applications, internship letters and more. Download as PDF or Word.{% endblock %}
+{% block keywords %}application letter template, cover letter, job application letter, formal letter, professional letter{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/tools_common.css') }}">
+<script src="{{ url_for('static', filename='js/tools_common.js') }}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="tool-page">
+    <!-- Theme Toggle -->
+    <button class="theme-toggle" onclick="toggleTheme()">
+        <span class="icon-sun">☀️</span>
+        <span class="icon-moon">🌙</span>
+    </button>
+
+    <div class="tool-container">
+        <!-- Header -->
+        <div class="tool-header">
+            <div class="emoji-icon">📝</div>
+            <h1>Application Letter Templates</h1>
+            <p>Create professional application letters that stand out! ✨</p>
+        </div>
+
+        <!-- Instructions -->
+        <div class="instructions-card">
+            <h3>📋 How to Use</h3>
+            <ol>
+                <li><strong>Select</strong> the type of application letter you need</li>
+                <li><strong>Fill in</strong> your personal and professional details</li>
+                <li><strong>Customize</strong> the content to match your experience</li>
+                <li><strong>Preview</strong> your formatted letter</li>
+                <li><strong>Download</strong> as PDF or copy the text!</li>
+            </ol>
+        </div>
+
+        <!-- Main Tool Card -->
+        <div class="tool-card">
+            <!-- Letter Type Selection -->
+            <div class="form-group">
+                <label><i class="fas fa-file-alt"></i> Select Letter Type</label>
+                <div class="options-grid" style="grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));">
+                    <div class="option-card selected" data-type="job" onclick="selectLetterType(this)">
+                        <div class="option-icon">💼</div>
+                        <div class="option-label">Job Application</div>
+                    </div>
+                    <div class="option-card" data-type="internship" onclick="selectLetterType(this)">
+                        <div class="option-icon">🎓</div>
+                        <div class="option-label">Internship</div>
+                    </div>
+                    <div class="option-card" data-type="cover" onclick="selectLetterType(this)">
+                        <div class="option-icon">📄</div>
+                        <div class="option-label">Cover Letter</div>
+                    </div>
+                    <div class="option-card" data-type="promotion" onclick="selectLetterType(this)">
+                        <div class="option-icon">📈</div>
+                        <div class="option-label">Promotion</div>
+                    </div>
+                    <div class="option-card" data-type="transfer" onclick="selectLetterType(this)">
+                        <div class="option-icon">🔄</div>
+                        <div class="option-label">Transfer</div>
+                    </div>
+                    <div class="option-card" data-type="reference" onclick="selectLetterType(this)">
+                        <div class="option-icon">🤝</div>
+                        <div class="option-label">Reference Request</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form Sections -->
+            <div id="letterForm">
+                <!-- Personal Information -->
+                <div style="margin-top: 2rem;">
+                    <h3 style="color: var(--text-primary); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                        👤 Your Information
+                    </h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Full Name *</label>
+                            <input type="text" id="fullName" placeholder="John Doe" oninput="updateLetter()">
+                        </div>
+                        <div class="form-group">
+                            <label>Email *</label>
+                            <input type="email" id="email" placeholder="john.doe@email.com" oninput="updateLetter()">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Phone Number</label>
+                            <input type="tel" id="phone" placeholder="+1 234 567 890" oninput="updateLetter()">
+                        </div>
+                        <div class="form-group">
+                            <label>Address</label>
+                            <input type="text" id="address" placeholder="123 Main St, City, State" oninput="updateLetter()">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>LinkedIn Profile (Optional)</label>
+                        <input type="url" id="linkedin" placeholder="linkedin.com/in/yourprofile" oninput="updateLetter()">
+                    </div>
+                </div>
+
+                <!-- Recipient Information -->
+                <div style="margin-top: 2rem;">
+                    <h3 style="color: var(--text-primary); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                        🏢 Recipient Information
+                    </h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Hiring Manager / Recipient Name</label>
+                            <input type="text" id="recipientName" placeholder="Ms. Jane Smith" oninput="updateLetter()">
+                        </div>
+                        <div class="form-group">
+                            <label>Recipient Title</label>
+                            <input type="text" id="recipientTitle" placeholder="Human Resources Manager" oninput="updateLetter()">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Company Name *</label>
+                            <input type="text" id="companyName" placeholder="ABC Corporation" oninput="updateLetter()">
+                        </div>
+                        <div class="form-group">
+                            <label>Company Address</label>
+                            <input type="text" id="companyAddress" placeholder="456 Business Ave, City, State" oninput="updateLetter()">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Position Details -->
+                <div style="margin-top: 2rem;">
+                    <h3 style="color: var(--text-primary); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                        🎯 Position Details
+                    </h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Position Applied For *</label>
+                            <input type="text" id="position" placeholder="Software Developer" oninput="updateLetter()">
+                        </div>
+                        <div class="form-group">
+                            <label>Where You Found the Job</label>
+                            <input type="text" id="jobSource" placeholder="LinkedIn, Company Website, etc." oninput="updateLetter()">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Professional Details -->
+                <div style="margin-top: 2rem;">
+                    <h3 style="color: var(--text-primary); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                        💼 Professional Details
+                    </h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Years of Experience</label>
+                            <input type="text" id="experience" placeholder="5+ years" oninput="updateLetter()">
+                        </div>
+                        <div class="form-group">
+                            <label>Current/Previous Position</label>
+                            <input type="text" id="currentPosition" placeholder="Junior Developer at XYZ" oninput="updateLetter()">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Key Skills (comma separated)</label>
+                        <input type="text" id="skills" placeholder="Python, JavaScript, Project Management, Communication" oninput="updateLetter()">
+                    </div>
+                    <div class="form-group">
+                        <label>Notable Achievement</label>
+                        <textarea id="achievement" placeholder="Led a team of 5 developers to deliver a project 2 weeks ahead of schedule, resulting in a 15% cost saving." oninput="updateLetter()"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Why This Company? (What attracts you)</label>
+                        <textarea id="whyCompany" placeholder="I am impressed by your company's innovative approach to sustainability and your commitment to employee growth..." oninput="updateLetter()"></textarea>
+                    </div>
+                </div>
+
+                <!-- Date -->
+                <div class="form-group" style="margin-top: 2rem;">
+                    <label>Date</label>
+                    <input type="date" id="letterDate" oninput="updateLetter()">
+                </div>
+            </div>
+
+            <!-- Letter Preview -->
+            <div class="preview-area" style="margin-top: 2rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 1rem;">
+                    <h3>📄 Letter Preview</h3>
+                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                        <button class="copy-btn" onclick="copyLetter()">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
+                    </div>
+                </div>
+                <div id="letterPreview" style="background: white; padding: 2rem; border-radius: 8px; font-family: 'Times New Roman', serif; color: #333; line-height: 1.8; box-shadow: var(--shadow-sm);"></div>
+            </div>
+
+            <!-- Loading -->
+            <div class="loading-spinner" id="loadingSpinner">
+                <div class="spinner"></div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="btn-group">
+                <button class="btn btn-secondary" onclick="resetForm()">
+                    <i class="fas fa-redo"></i> Reset Form
+                </button>
+                <button class="btn btn-primary" onclick="copyLetter()">
+                    <i class="fas fa-copy"></i> Copy Letter
+                </button>
+                <button class="btn btn-download" onclick="downloadAsPDF()">
+                    <i class="fas fa-file-pdf"></i> Download PDF
+                </button>
+                <button class="btn btn-download" onclick="downloadAsWord()" style="background: linear-gradient(135deg, #2b5797 0%, #1e3a5f 100%);">
+                    <i class="fas fa-file-word"></i> Download Word
+                </button>
+            </div>
+        </div>
+
+        <!-- Tips -->
+        <div class="instructions-card" style="margin-top: 2rem;">
+            <h3>💡 Pro Tips for Application Letters</h3>
+            <ol>
+                <li><strong>Personalize:</strong> Always address the letter to a specific person if possible</li>
+                <li><strong>Be specific:</strong> Mention the exact position and where you found it</li>
+                <li><strong>Show value:</strong> Focus on what you can contribute, not just what you want</li>
+                <li><strong>Quantify achievements:</strong> Use numbers to demonstrate your impact</li>
+                <li><strong>Proofread:</strong> Check for spelling and grammar errors before sending</li>
+                <li><strong>Keep it concise:</strong> Aim for 3-4 paragraphs, one page maximum</li>
+            </ol>
+        </div>
+    </div>
+</div>
+
+<script>
+let letterType = 'job';
+
+const letterTemplates = {
+    job: {
+        opening: "I am writing to express my strong interest in the {position} position at {company}, as advertised on {source}.",
+        body: "With {experience} of experience in the field, I have developed strong skills in {skills}. In my current/previous role as {currentPosition}, {achievement}",
+        whyCompany: "{whyCompany}",
+        closing: "I am confident that my skills and enthusiasm would make me a valuable addition to your team. I would welcome the opportunity to discuss how my experience and qualifications align with your needs."
+    },
+    internship: {
+        opening: "I am writing to apply for an internship opportunity at {company} in the {position} department.",
+        body: "As a dedicated student/recent graduate, I am eager to apply my academic knowledge in a practical setting. I have developed skills in {skills} through my coursework and projects.",
+        whyCompany: "{whyCompany}",
+        closing: "I am excited about the possibility of contributing to {company} while gaining valuable industry experience. I am available to start immediately and can commit to the full duration of the internship."
+    },
+    cover: {
+        opening: "I am excited to submit my application for the {position} role at {company}. {source}",
+        body: "Throughout my {experience} career, I have honed my expertise in {skills}. {achievement}",
+        whyCompany: "{whyCompany}",
+        closing: "I am eager to bring my unique blend of skills and experience to {company}. I look forward to the opportunity to discuss how I can contribute to your team's continued success."
+    },
+    promotion: {
+        opening: "I am writing to formally express my interest in the {position} position within {company}.",
+        body: "Having been a dedicated member of {company} as {currentPosition}, I have consistently demonstrated my commitment to excellence. During my tenure, {achievement}",
+        whyCompany: "I am deeply invested in {company}'s mission and vision, and I believe this promotion would allow me to contribute even more significantly to our shared goals.",
+        closing: "I am confident that my proven track record and deep understanding of our company's values make me an ideal candidate for this advancement. I would appreciate the opportunity to discuss my qualifications further."
+    },
+    transfer: {
+        opening: "I am writing to request a transfer to the {position} position in the {company} department/location.",
+        body: "In my current role as {currentPosition}, I have developed strong skills in {skills}. {achievement}",
+        whyCompany: "{whyCompany}",
+        closing: "I believe this transfer would benefit both my professional development and the organization. I am committed to ensuring a smooth transition and maintaining the same level of dedication in my new role."
+    },
+    reference: {
+        opening: "I am reaching out to kindly request a professional reference for my application to {position} at {company}.",
+        body: "During our time working together, I had the opportunity to demonstrate my skills in {skills}. {achievement}",
+        whyCompany: "{whyCompany}",
+        closing: "Your endorsement would mean a great deal to me and would significantly strengthen my application. Please let me know if you need any additional information about the position or my qualifications."
+    }
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Set default date to today
+    document.getElementById('letterDate').value = new Date().toISOString().split('T')[0];
+    updateLetter();
+});
+
+function selectLetterType(element) {
+    document.querySelectorAll('.option-card[data-type]').forEach(el => el.classList.remove('selected'));
+    element.classList.add('selected');
+    letterType = element.dataset.type;
+    updateLetter();
+}
+
+function formatDate(dateStr) {
+    if (!dateStr) return new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+    return new Date(dateStr).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+}
+
+function updateLetter() {
+    const template = letterTemplates[letterType];
+    
+    // Get form values
+    const data = {
+        fullName: document.getElementById('fullName').value || '[Your Name]',
+        email: document.getElementById('email').value || '[Your Email]',
+        phone: document.getElementById('phone').value || '[Your Phone]',
+        address: document.getElementById('address').value || '[Your Address]',
+        linkedin: document.getElementById('linkedin').value,
+        recipientName: document.getElementById('recipientName').value || 'Hiring Manager',
+        recipientTitle: document.getElementById('recipientTitle').value,
+        company: document.getElementById('companyName').value || '[Company Name]',
+        companyAddress: document.getElementById('companyAddress').value,
+        position: document.getElementById('position').value || '[Position]',
+        source: document.getElementById('jobSource').value ? `I discovered this opportunity through ${document.getElementById('jobSource').value}.` : '',
+        experience: document.getElementById('experience').value || '[X years]',
+        currentPosition: document.getElementById('currentPosition').value || '[Current Position]',
+        skills: document.getElementById('skills').value || '[relevant skills]',
+        achievement: document.getElementById('achievement').value || 'I have consistently delivered results that exceed expectations.',
+        whyCompany: document.getElementById('whyCompany').value || `I am particularly drawn to ${document.getElementById('companyName').value || '[Company Name]'}'s commitment to excellence and innovation.`,
+        date: formatDate(document.getElementById('letterDate').value)
+    };
+
+    // Build the letter
+    let letter = `<div style="text-align: right; margin-bottom: 2rem;">
+        <strong>${data.fullName}</strong><br>
+        ${data.address}<br>
+        ${data.phone}<br>
+        ${data.email}${data.linkedin ? '<br>' + data.linkedin : ''}<br><br>
+        ${data.date}
+    </div>`;
+
+    letter += `<div style="margin-bottom: 2rem;">
+        ${data.recipientName}${data.recipientTitle ? '<br>' + data.recipientTitle : ''}<br>
+        ${data.company}${data.companyAddress ? '<br>' + data.companyAddress : ''}
+    </div>`;
+
+    letter += `<div style="margin-bottom: 1rem;">Dear ${data.recipientName},</div>`;
+
+    // Opening paragraph
+    let opening = template.opening
+        .replace('{position}', data.position)
+        .replace('{company}', data.company)
+        .replace('{source}', data.source);
+    letter += `<p style="margin-bottom: 1rem; text-indent: 2em;">${opening}</p>`;
+
+    // Body paragraph
+    let body = template.body
+        .replace('{experience}', data.experience)
+        .replace('{skills}', data.skills)
+        .replace('{currentPosition}', data.currentPosition)
+        .replace('{company}', data.company)
+        .replace('{achievement}', data.achievement);
+    letter += `<p style="margin-bottom: 1rem; text-indent: 2em;">${body}</p>`;
+
+    // Why company paragraph
+    if (template.whyCompany) {
+        let whyCompany = template.whyCompany
+            .replace('{whyCompany}', data.whyCompany)
+            .replace('{company}', data.company);
+        letter += `<p style="margin-bottom: 1rem; text-indent: 2em;">${whyCompany}</p>`;
+    }
+
+    // Closing paragraph
+    let closing = template.closing.replace('{company}', data.company);
+    letter += `<p style="margin-bottom: 1rem; text-indent: 2em;">${closing}</p>`;
+
+    letter += `<p style="margin-bottom: 0.5rem;">Thank you for considering my application. I look forward to hearing from you.</p>`;
+
+    letter += `<div style="margin-top: 2rem;">
+        Sincerely,<br><br><br>
+        <strong>${data.fullName}</strong>
+    </div>`;
+
+    document.getElementById('letterPreview').innerHTML = letter;
+}
+
+function copyLetter() {
+    const letterPreview = document.getElementById('letterPreview');
+    const textContent = letterPreview.innerText;
+    CutcompressTools.copyToClipboard(textContent, document.querySelector('.copy-btn'));
+}
+
+function downloadAsPDF() {
+    CutcompressTools.showLoading();
+    
+    setTimeout(() => {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF({
+            orientation: 'portrait',
+            unit: 'mm',
+            format: 'a4'
+        });
+
+        const letterPreview = document.getElementById('letterPreview');
+        const text = letterPreview.innerText;
+        
+        // Split text into lines
+        const lines = doc.splitTextToSize(text, 170);
+        
+        doc.setFont('times', 'normal');
+        doc.setFontSize(12);
+        doc.text(lines, 20, 20);
+        
+        const fileName = `Application_Letter_${document.getElementById('position').value || 'Position'}.pdf`;
+        doc.save(fileName);
+        
+        CutcompressTools.hideLoading();
+        CutcompressTools.showAlert('PDF downloaded successfully!', 'success');
+    }, 500);
+}
+
+function downloadAsWord() {
+    const letterPreview = document.getElementById('letterPreview');
+    const content = letterPreview.innerText;
+    
+    // Create a simple HTML document for Word
+    const html = `
+        <html xmlns:o="urn:schemas-microsoft-com:office:office" 
+              xmlns:w="urn:schemas-microsoft-com:office:word">
+        <head>
+            <meta charset="utf-8">
+            <style>
+                body { font-family: 'Times New Roman', Times, serif; font-size: 12pt; line-height: 1.5; }
+            </style>
+        </head>
+        <body>
+            ${letterPreview.innerHTML}
+        </body>
+        </html>
+    `;
+    
+    const blob = new Blob([html], { type: 'application/msword' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `Application_Letter_${document.getElementById('position').value || 'Position'}.doc`;
+    a.click();
+    URL.revokeObjectURL(url);
+    
+    CutcompressTools.showAlert('Word document downloaded!', 'success');
+}
+
+function resetForm() {
+    document.querySelectorAll('#letterForm input, #letterForm textarea').forEach(el => {
+        if (el.type !== 'date') el.value = '';
+    });
+    document.getElementById('letterDate').value = new Date().toISOString().split('T')[0];
+    updateLetter();
+    CutcompressTools.showAlert('Form reset!', 'info');
+}
+</script>
+{% endblock %}

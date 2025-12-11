@@ -1,0 +1,464 @@
+{% extends 'base.html' %}
+{% block title %}Certificate Maker - Create Beautiful Certificates Online Free{% endblock %}
+{% block description %}Create professional certificates online for free. Design awards, completion certificates, appreciation certificates with beautiful templates. Instant download.{% endblock %}
+{% block keywords %}certificate maker, certificate generator, award certificate, completion certificate, appreciation certificate{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/tools_common.css') }}">
+<script src="{{ url_for('static', filename='js/tools_common.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="tool-page">
+    <!-- Theme Toggle -->
+    <button class="theme-toggle" onclick="toggleTheme()">
+        <span class="icon-sun">☀️</span>
+        <span class="icon-moon">🌙</span>
+    </button>
+
+    <div class="tool-container">
+        <!-- Header -->
+        <div class="tool-header">
+            <div class="emoji-icon">🏆</div>
+            <h1>Certificate Maker</h1>
+            <p>Create beautiful certificates for achievements, awards, and appreciation! 🎖️</p>
+        </div>
+
+        <!-- Instructions -->
+        <div class="instructions-card">
+            <h3>📋 How to Use</h3>
+            <ol>
+                <li><strong>Choose</strong> a certificate template</li>
+                <li><strong>Enter</strong> recipient name and certificate details</li>
+                <li><strong>Customize</strong> colors, fonts, and styling</li>
+                <li><strong>Preview</strong> your certificate in real-time</li>
+                <li><strong>Download</strong> as high-quality image or PDF!</li>
+            </ol>
+        </div>
+
+        <!-- Main Tool Card -->
+        <div class="tool-card">
+            <!-- Template Selection -->
+            <div class="form-group">
+                <label><i class="fas fa-certificate"></i> Choose Template</label>
+                <div class="options-grid" style="grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));">
+                    <div class="option-card selected" data-template="achievement" onclick="selectTemplate(this)">
+                        <div class="option-icon">🏆</div>
+                        <div class="option-label">Achievement</div>
+                    </div>
+                    <div class="option-card" data-template="completion" onclick="selectTemplate(this)">
+                        <div class="option-icon">✅</div>
+                        <div class="option-label">Completion</div>
+                    </div>
+                    <div class="option-card" data-template="appreciation" onclick="selectTemplate(this)">
+                        <div class="option-icon">🌟</div>
+                        <div class="option-label">Appreciation</div>
+                    </div>
+                    <div class="option-card" data-template="excellence" onclick="selectTemplate(this)">
+                        <div class="option-icon">👑</div>
+                        <div class="option-label">Excellence</div>
+                    </div>
+                    <div class="option-card" data-template="participation" onclick="selectTemplate(this)">
+                        <div class="option-icon">🤝</div>
+                        <div class="option-label">Participation</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Certificate Details -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label>🎯 Certificate Title</label>
+                    <input type="text" id="certTitle" placeholder="Certificate of Achievement" value="Certificate of Achievement" oninput="updatePreview()">
+                </div>
+                <div class="form-group">
+                    <label>📝 Subtitle (Optional)</label>
+                    <input type="text" id="certSubtitle" placeholder="This is to certify that" value="This is to certify that" oninput="updatePreview()">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>👤 Recipient Name *</label>
+                <input type="text" id="recipientName" placeholder="Enter recipient's full name" oninput="updatePreview()" style="font-size: 1.2rem;">
+            </div>
+
+            <div class="form-group">
+                <label>📜 Achievement/Reason</label>
+                <textarea id="achievement" placeholder="has successfully completed the Advanced Web Development Course with distinction." oninput="updatePreview()">has successfully completed the Advanced Web Development Course with distinction.</textarea>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>🏢 Organization Name</label>
+                    <input type="text" id="orgName" placeholder="Your Organization" oninput="updatePreview()">
+                </div>
+                <div class="form-group">
+                    <label>📅 Date</label>
+                    <input type="date" id="certDate" oninput="updatePreview()">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>✍️ Signature Name</label>
+                    <input type="text" id="signatureName" placeholder="John Smith" oninput="updatePreview()">
+                </div>
+                <div class="form-group">
+                    <label>💼 Signature Title</label>
+                    <input type="text" id="signatureTitle" placeholder="Director" oninput="updatePreview()">
+                </div>
+            </div>
+
+            <!-- Design Options -->
+            <div class="form-group" style="margin-top: 1.5rem;">
+                <label><i class="fas fa-palette"></i> Design Options</label>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Primary Color</label>
+                        <div class="color-picker-group">
+                            <input type="color" id="primaryColor" value="#1a365d" onchange="updatePreview()">
+                            <span id="primaryHex">#1a365d</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Accent Color</label>
+                        <div class="color-picker-group">
+                            <input type="color" id="accentColor" value="#c6a961" onchange="updatePreview()">
+                            <span id="accentHex">#c6a961</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Border Style</label>
+                        <select id="borderStyle" onchange="updatePreview()">
+                            <option value="classic">Classic Gold</option>
+                            <option value="modern">Modern Simple</option>
+                            <option value="ornate">Ornate Decorative</option>
+                            <option value="minimal">Minimal</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Certificate Preview -->
+            <div class="preview-area" style="margin-top: 2rem;">
+                <h3>👁️ Live Preview</h3>
+                <div class="canvas-container" style="background: #f0f0f0; padding: 20px; border-radius: 10px;">
+                    <canvas id="certCanvas" width="800" height="600"></canvas>
+                </div>
+            </div>
+
+            <!-- Loading -->
+            <div class="loading-spinner" id="loadingSpinner">
+                <div class="spinner"></div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="btn-group">
+                <button class="btn btn-secondary" onclick="resetCertificate()">
+                    <i class="fas fa-redo"></i> Reset
+                </button>
+                <button class="btn btn-primary" onclick="generateCertificate()">
+                    <i class="fas fa-magic"></i> Generate
+                </button>
+                <button class="btn btn-download" onclick="downloadCertificate('png')">
+                    <i class="fas fa-image"></i> Download PNG
+                </button>
+                <button class="btn btn-download" onclick="downloadCertificate('pdf')" style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);">
+                    <i class="fas fa-file-pdf"></i> Download PDF
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+let selectedTemplate = 'achievement';
+
+const templateConfig = {
+    achievement: { title: 'Certificate of Achievement', icon: '🏆', color: '#1a365d' },
+    completion: { title: 'Certificate of Completion', icon: '✅', color: '#065f46' },
+    appreciation: { title: 'Certificate of Appreciation', icon: '🌟', color: '#7c2d12' },
+    excellence: { title: 'Certificate of Excellence', icon: '👑', color: '#4c1d95' },
+    participation: { title: 'Certificate of Participation', icon: '🤝', color: '#1e40af' }
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Set default date to today
+    document.getElementById('certDate').value = new Date().toISOString().split('T')[0];
+    
+    // Color picker listeners
+    document.getElementById('primaryColor').addEventListener('input', (e) => {
+        document.getElementById('primaryHex').textContent = e.target.value;
+    });
+    document.getElementById('accentColor').addEventListener('input', (e) => {
+        document.getElementById('accentHex').textContent = e.target.value;
+    });
+    
+    updatePreview();
+});
+
+function selectTemplate(element) {
+    document.querySelectorAll('.option-card[data-template]').forEach(el => el.classList.remove('selected'));
+    element.classList.add('selected');
+    selectedTemplate = element.dataset.template;
+    
+    const config = templateConfig[selectedTemplate];
+    document.getElementById('certTitle').value = config.title;
+    document.getElementById('primaryColor').value = config.color;
+    document.getElementById('primaryHex').textContent = config.color;
+    
+    updatePreview();
+}
+
+function updatePreview() {
+    const canvas = document.getElementById('certCanvas');
+    const ctx = canvas.getContext('2d');
+    
+    const width = 800;
+    const height = 600;
+    
+    // Clear
+    ctx.clearRect(0, 0, width, height);
+    
+    // Colors
+    const primaryColor = document.getElementById('primaryColor').value;
+    const accentColor = document.getElementById('accentColor').value;
+    const borderStyle = document.getElementById('borderStyle').value;
+    
+    // Background
+    ctx.fillStyle = '#fffef7';
+    ctx.fillRect(0, 0, width, height);
+    
+    // Border based on style
+    drawBorder(ctx, width, height, primaryColor, accentColor, borderStyle);
+    
+    // Icon
+    const config = templateConfig[selectedTemplate];
+    ctx.font = '48px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText(config.icon, width / 2, 80);
+    
+    // Title
+    ctx.fillStyle = primaryColor;
+    ctx.font = 'bold 36px Georgia, serif';
+    ctx.fillText(document.getElementById('certTitle').value || 'Certificate', width / 2, 130);
+    
+    // Decorative line
+    ctx.strokeStyle = accentColor;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(200, 150);
+    ctx.lineTo(600, 150);
+    ctx.stroke();
+    
+    // Subtitle
+    ctx.fillStyle = '#666';
+    ctx.font = 'italic 18px Georgia, serif';
+    ctx.fillText(document.getElementById('certSubtitle').value || '', width / 2, 190);
+    
+    // Recipient Name
+    ctx.fillStyle = primaryColor;
+    ctx.font = 'bold 42px "Brush Script MT", cursive';
+    const recipientName = document.getElementById('recipientName').value || 'Recipient Name';
+    ctx.fillText(recipientName, width / 2, 250);
+    
+    // Underline for name
+    const nameWidth = ctx.measureText(recipientName).width;
+    ctx.strokeStyle = accentColor;
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo((width - nameWidth) / 2 - 20, 260);
+    ctx.lineTo((width + nameWidth) / 2 + 20, 260);
+    ctx.stroke();
+    
+    // Achievement text
+    ctx.fillStyle = '#333';
+    ctx.font = '16px Georgia, serif';
+    const achievement = document.getElementById('achievement').value || '';
+    wrapText(ctx, achievement, width / 2, 310, 600, 24);
+    
+    // Organization
+    const orgName = document.getElementById('orgName').value;
+    if (orgName) {
+        ctx.fillStyle = primaryColor;
+        ctx.font = 'bold 18px Georgia, serif';
+        ctx.fillText(orgName, width / 2, 420);
+    }
+    
+    // Date
+    const dateVal = document.getElementById('certDate').value;
+    if (dateVal) {
+        ctx.fillStyle = '#666';
+        ctx.font = '14px Georgia, serif';
+        const formattedDate = new Date(dateVal).toLocaleDateString('en-US', { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric' 
+        });
+        ctx.fillText(formattedDate, width / 2, 450);
+    }
+    
+    // Signature
+    ctx.strokeStyle = '#333';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(300, 520);
+    ctx.lineTo(500, 520);
+    ctx.stroke();
+    
+    const sigName = document.getElementById('signatureName').value;
+    const sigTitle = document.getElementById('signatureTitle').value;
+    
+    ctx.fillStyle = '#333';
+    ctx.font = 'italic 16px Georgia, serif';
+    ctx.fillText(sigName || 'Authorized Signature', width / 2, 540);
+    
+    ctx.font = '12px Georgia, serif';
+    ctx.fillStyle = '#666';
+    ctx.fillText(sigTitle || '', width / 2, 560);
+    
+    // Seal/stamp
+    ctx.beginPath();
+    ctx.arc(680, 500, 40, 0, Math.PI * 2);
+    ctx.strokeStyle = accentColor;
+    ctx.lineWidth = 3;
+    ctx.stroke();
+    ctx.font = 'bold 12px Arial';
+    ctx.fillStyle = accentColor;
+    ctx.fillText('CERTIFIED', 680, 495);
+    ctx.font = '24px Arial';
+    ctx.fillText('✓', 680, 520);
+}
+
+function drawBorder(ctx, width, height, primary, accent, style) {
+    const margin = 20;
+    
+    switch(style) {
+        case 'classic':
+            // Outer border
+            ctx.strokeStyle = accent;
+            ctx.lineWidth = 8;
+            ctx.strokeRect(margin, margin, width - margin * 2, height - margin * 2);
+            // Inner border
+            ctx.strokeStyle = primary;
+            ctx.lineWidth = 2;
+            ctx.strokeRect(margin + 15, margin + 15, width - margin * 2 - 30, height - margin * 2 - 30);
+            // Corner decorations
+            drawCornerOrnament(ctx, margin + 10, margin + 10, accent);
+            drawCornerOrnament(ctx, width - margin - 10, margin + 10, accent);
+            drawCornerOrnament(ctx, margin + 10, height - margin - 10, accent);
+            drawCornerOrnament(ctx, width - margin - 10, height - margin - 10, accent);
+            break;
+            
+        case 'modern':
+            ctx.strokeStyle = primary;
+            ctx.lineWidth = 4;
+            ctx.strokeRect(margin, margin, width - margin * 2, height - margin * 2);
+            // Accent corners
+            ctx.fillStyle = accent;
+            ctx.fillRect(margin, margin, 60, 4);
+            ctx.fillRect(margin, margin, 4, 60);
+            ctx.fillRect(width - margin - 60, margin, 60, 4);
+            ctx.fillRect(width - margin - 4, margin, 4, 60);
+            ctx.fillRect(margin, height - margin - 4, 60, 4);
+            ctx.fillRect(margin, height - margin - 60, 4, 60);
+            ctx.fillRect(width - margin - 60, height - margin - 4, 60, 4);
+            ctx.fillRect(width - margin - 4, height - margin - 60, 4, 60);
+            break;
+            
+        case 'ornate':
+            // Double border with pattern
+            ctx.strokeStyle = accent;
+            ctx.lineWidth = 3;
+            ctx.strokeRect(margin, margin, width - margin * 2, height - margin * 2);
+            ctx.strokeRect(margin + 10, margin + 10, width - margin * 2 - 20, height - margin * 2 - 20);
+            
+            // Decorative pattern along top
+            for (let i = 0; i < 20; i++) {
+                ctx.fillStyle = accent;
+                ctx.beginPath();
+                ctx.arc(60 + i * 35, 30, 5, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            break;
+            
+        case 'minimal':
+            ctx.strokeStyle = primary;
+            ctx.lineWidth = 1;
+            ctx.strokeRect(margin + 10, margin + 10, width - margin * 2 - 20, height - margin * 2 - 20);
+            break;
+    }
+}
+
+function drawCornerOrnament(ctx, x, y, color) {
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.arc(x, y, 8, 0, Math.PI * 2);
+    ctx.fill();
+}
+
+function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+    const words = text.split(' ');
+    let line = '';
+    let testLine, metrics, testWidth;
+    
+    for (let n = 0; n < words.length; n++) {
+        testLine = line + words[n] + ' ';
+        metrics = ctx.measureText(testLine);
+        testWidth = metrics.width;
+        
+        if (testWidth > maxWidth && n > 0) {
+            ctx.fillText(line, x, y);
+            line = words[n] + ' ';
+            y += lineHeight;
+        } else {
+            line = testLine;
+        }
+    }
+    ctx.fillText(line, x, y);
+}
+
+function generateCertificate() {
+    CutcompressTools.showLoading();
+    setTimeout(() => {
+        updatePreview();
+        CutcompressTools.hideLoading();
+        CutcompressTools.showAlert('Certificate generated!', 'success');
+    }, 500);
+}
+
+function downloadCertificate(format) {
+    const canvas = document.getElementById('certCanvas');
+    
+    if (format === 'png') {
+        CutcompressTools.downloadCanvas(canvas, 'certificate.png', 'png');
+        CutcompressTools.showAlert('Certificate downloaded as PNG!', 'success');
+    } else if (format === 'pdf') {
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF({
+            orientation: 'landscape',
+            unit: 'px',
+            format: [canvas.width, canvas.height]
+        });
+        
+        const imgData = canvas.toDataURL('image/png');
+        pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
+        pdf.save('certificate.pdf');
+        CutcompressTools.showAlert('Certificate downloaded as PDF!', 'success');
+    }
+}
+
+function resetCertificate() {
+    document.getElementById('certTitle').value = 'Certificate of Achievement';
+    document.getElementById('certSubtitle').value = 'This is to certify that';
+    document.getElementById('recipientName').value = '';
+    document.getElementById('achievement').value = 'has successfully completed the Advanced Web Development Course with distinction.';
+    document.getElementById('orgName').value = '';
+    document.getElementById('signatureName').value = '';
+    document.getElementById('signatureTitle').value = '';
+    document.getElementById('certDate').value = new Date().toISOString().split('T')[0];
+    updatePreview();
+}
+</script>
+{% endblock %}

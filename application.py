@@ -127,6 +127,49 @@ def csv_comparator():
     return render_template('csv_comparator.html')
 
 
+# ----------------- New Tools Routes -----------------
+@application.route('/passport-maker')
+def passport_maker():
+    return render_template('passport_maker.html')
+
+@application.route('/word-to-hashtag')
+def word_to_hashtag():
+    return render_template('word_to_hashtag.html')
+
+@application.route('/word-to-pdf')
+def word_to_pdf():
+    return render_template('word_to_pdf.html')
+
+@application.route('/excel-to-pdf')
+def excel_to_pdf():
+    return render_template('excel_to_pdf.html')
+
+@application.route('/ppt-to-pdf')
+def ppt_to_pdf():
+    return render_template('ppt_to_pdf.html')
+
+@application.route('/id-card-maker')
+def id_card_maker():
+    return render_template('id_card_maker.html')
+
+@application.route('/certificate-maker')
+def certificate_maker():
+    return render_template('certificate_maker.html')
+
+@application.route('/email-templates')
+def email_templates():
+    return render_template('email_templates.html')
+
+@application.route('/application-letter')
+def application_letter():
+    return render_template('application_letter.html')
+
+@application.route('/project-front-page')
+def project_front_page():
+    return render_template('project_front_page.html')
+
+# -----------------------------------------------
+
 @application.route('/privacy-policy')
 def privacy_policy():
     return render_template('privacy_policy.html')
@@ -726,12 +769,6 @@ def background_remove():
     return render_template('background_remove.html', tool_name='Background Remove')
 
 
-@application.route('/tool/passport-maker', methods=['GET', 'POST'])
-def passport_maker():
-    return render_template('example_tool.html', tool_name='Passport Maker', form_type='image')
-
-
-
 @application.route('/tool/merge-images', methods=['GET', 'POST'])
 def merge_images():
     return render_template('merge_images.html', tool_name='Merge Images')
@@ -756,57 +793,6 @@ def api_merge_remove():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
     
-
-# ----------------- Text Tools -----------------
-@application.route('/tool/word-to-hashtag', methods=['GET', 'POST'])
-def word_to_hashtag():
-    if request.method == 'POST':
-        text = request.form.get('text', '')
-        hashtags = ' '.join(['#' + word for word in text.split()])
-        return hashtags
-    return render_template('example_tool.html', tool_name='Word to Hashtag', form_type='text')
-
-@application.route('/tool/word-to-pdf', methods=['GET', 'POST'])
-def word_to_pdf():
-    if request.method == 'POST':
-        file = request.files.get('file')
-        if file:
-            filepath = os.path.join(application.config['UPLOAD_FOLDER'], file.filename)
-            file.save(filepath)
-            output_path = os.path.join(application.config['UPLOAD_FOLDER'], 'converted.pdf')
-            convert(filepath, output_path)
-            return send_file(output_path, as_attachment=True)
-    return render_template('example_tool.html', tool_name='Word to PDF', form_type='file')
-
-@application.route('/tool/excel-to-pdf', methods=['GET', 'POST'])
-def excel_to_pdf():
-    return render_template('example_tool.html', tool_name='Excel to PDF', form_type='file')
-
-@application.route('/tool/powerpoint-to-pdf', methods=['GET', 'POST'])
-def powerpoint_to_pdf():
-    return render_template('example_tool.html', tool_name='PowerPoint to PDF', form_type='file')
-
-# ----------------- Builder Tools -----------------
-@application.route('/tool/project-front-page-maker', methods=['GET', 'POST'])
-def project_front_page_maker():
-    return render_template('example_tool.html', tool_name='Project Front Page Maker', form_type='form')
-
-@application.route('/tool/id-card-maker', methods=['GET', 'POST'])
-def id_card_maker():
-    return render_template('example_tool.html', tool_name='ID Card Maker', form_type='form')
-
-@application.route('/tool/certificate-maker', methods=['GET', 'POST'])
-def certificate_maker():
-    return render_template('example_tool.html', tool_name='Certificate Maker', form_type='form')
-
-# ----------------- Other Tools -----------------
-@application.route('/tool/email-templates', methods=['GET', 'POST'])
-def email_templates():
-    return render_template('example_tool.html', tool_name='Email Templates', form_type='select')
-
-@application.route('/tool/application-letter-template', methods=['GET', 'POST'])
-def application_letter_template():
-    return render_template('example_tool.html', tool_name='Application Letter Template', form_type='select')
 
 # --------- SEO Files ---------
 @application.route('/sitemap.xml')

@@ -1,0 +1,489 @@
+{% extends 'base.html' %}
+{% block title %}ID Card Maker - Create Professional ID Cards Online Free{% endblock %}
+{% block description %}Create professional ID cards online for free. Design employee IDs, student cards, membership cards with photos. Download high-quality printable cards.{% endblock %}
+{% block keywords %}id card maker, id card generator, employee id card, student id card, membership card maker{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/tools_common.css') }}">
+<script src="{{ url_for('static', filename='js/tools_common.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="tool-page">
+    <!-- Theme Toggle -->
+    <button class="theme-toggle" onclick="toggleTheme()">
+        <span class="icon-sun">☀️</span>
+        <span class="icon-moon">🌙</span>
+    </button>
+
+    <div class="tool-container">
+        <!-- Header -->
+        <div class="tool-header">
+            <div class="emoji-icon">🪪</div>
+            <h1>ID Card Maker</h1>
+            <p>Create professional ID cards for employees, students, and organizations! 🎫</p>
+        </div>
+
+        <!-- Instructions -->
+        <div class="instructions-card">
+            <h3>📋 How to Use</h3>
+            <ol>
+                <li><strong>Select</strong> a card template that fits your needs</li>
+                <li><strong>Upload</strong> a photo (face clearly visible)</li>
+                <li><strong>Fill in</strong> the required information (name, ID, etc.)</li>
+                <li><strong>Customize</strong> colors and styling</li>
+                <li><strong>Download</strong> your high-quality ID card!</li>
+            </ol>
+        </div>
+
+        <!-- Main Tool Card -->
+        <div class="tool-card">
+            <!-- Template Selection -->
+            <div class="form-group">
+                <label><i class="fas fa-palette"></i> Choose Template</label>
+                <div class="template-grid" id="templateGrid">
+                    <div class="template-card selected" data-template="corporate" onclick="selectTemplate(this)">
+                        <div class="template-preview" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center;">
+                            <span style="font-size: 3rem;">🏢</span>
+                        </div>
+                        <div class="template-info">
+                            <h4>Corporate</h4>
+                            <p>Professional business ID</p>
+                        </div>
+                    </div>
+                    <div class="template-card" data-template="student" onclick="selectTemplate(this)">
+                        <div class="template-preview" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); display: flex; align-items: center; justify-content: center;">
+                            <span style="font-size: 3rem;">🎓</span>
+                        </div>
+                        <div class="template-info">
+                            <h4>Student</h4>
+                            <p>School/University ID</p>
+                        </div>
+                    </div>
+                    <div class="template-card" data-template="medical" onclick="selectTemplate(this)">
+                        <div class="template-preview" style="background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%); display: flex; align-items: center; justify-content: center;">
+                            <span style="font-size: 3rem;">🏥</span>
+                        </div>
+                        <div class="template-info">
+                            <h4>Medical</h4>
+                            <p>Healthcare staff ID</p>
+                        </div>
+                    </div>
+                    <div class="template-card" data-template="event" onclick="selectTemplate(this)">
+                        <div class="template-preview" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); display: flex; align-items: center; justify-content: center;">
+                            <span style="font-size: 3rem;">🎪</span>
+                        </div>
+                        <div class="template-info">
+                            <h4>Event Pass</h4>
+                            <p>Conference/Event badge</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabs for different sections -->
+            <div class="tabs" id="cardTabs">
+                <button class="tab active" data-tab="personalInfo">👤 Personal Info</button>
+                <button class="tab" data-tab="photoUpload">📷 Photo</button>
+                <button class="tab" data-tab="designOptions">🎨 Design</button>
+            </div>
+
+            <!-- Personal Info Tab -->
+            <div class="tab-content active" id="personalInfo">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Full Name *</label>
+                        <input type="text" id="fullName" placeholder="John Doe" oninput="updatePreview()">
+                    </div>
+                    <div class="form-group">
+                        <label>ID Number *</label>
+                        <input type="text" id="idNumber" placeholder="EMP-001234" oninput="updatePreview()">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Designation/Role</label>
+                        <input type="text" id="designation" placeholder="Software Engineer" oninput="updatePreview()">
+                    </div>
+                    <div class="form-group">
+                        <label>Department</label>
+                        <input type="text" id="department" placeholder="IT Department" oninput="updatePreview()">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Organization Name</label>
+                        <input type="text" id="organization" placeholder="Company/School Name" oninput="updatePreview()">
+                    </div>
+                    <div class="form-group">
+                        <label>Valid Until</label>
+                        <input type="date" id="validUntil" oninput="updatePreview()">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Blood Group (Optional)</label>
+                    <select id="bloodGroup" onchange="updatePreview()">
+                        <option value="">Not Specified</option>
+                        <option value="A+">A+</option>
+                        <option value="A-">A-</option>
+                        <option value="B+">B+</option>
+                        <option value="B-">B-</option>
+                        <option value="AB+">AB+</option>
+                        <option value="AB-">AB-</option>
+                        <option value="O+">O+</option>
+                        <option value="O-">O-</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Photo Upload Tab -->
+            <div class="tab-content" id="photoUpload">
+                <div class="upload-area" id="photoUploadArea" style="margin-bottom: 1rem;">
+                    <input type="file" id="photoInput" accept="image/*" hidden>
+                    <div class="upload-icon">📷</div>
+                    <h3>Upload Your Photo</h3>
+                    <p>Passport-style photo works best</p>
+                    <button class="browse-btn" type="button">
+                        <i class="fas fa-folder-open"></i> Choose Photo
+                    </button>
+                </div>
+                <div id="photoPreviewContainer" style="display: none; text-align: center;">
+                    <img id="photoPreview" src="" alt="Photo Preview" style="max-width: 150px; border-radius: 10px; margin-bottom: 1rem;">
+                    <br>
+                    <button class="btn btn-secondary" onclick="removePhoto()">
+                        <i class="fas fa-trash"></i> Remove Photo
+                    </button>
+                </div>
+            </div>
+
+            <!-- Design Options Tab -->
+            <div class="tab-content" id="designOptions">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Primary Color</label>
+                        <div class="color-picker-group">
+                            <input type="color" id="primaryColor" value="#667eea" onchange="updatePreview()">
+                            <span id="primaryColorHex">#667eea</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Secondary Color</label>
+                        <div class="color-picker-group">
+                            <input type="color" id="secondaryColor" value="#764ba2" onchange="updatePreview()">
+                            <span id="secondaryColorHex">#764ba2</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Text Color</label>
+                        <div class="color-picker-group">
+                            <input type="color" id="textColor" value="#ffffff" onchange="updatePreview()">
+                            <span id="textColorHex">#ffffff</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Card Size</label>
+                        <select id="cardSize" onchange="updatePreview()">
+                            <option value="standard">Standard (85.6 × 54mm)</option>
+                            <option value="large">Large (100 × 70mm)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="showQR" checked onchange="updatePreview()" style="width: auto; margin-right: 0.5rem;">
+                        Show QR Code
+                    </label>
+                </div>
+            </div>
+
+            <!-- Card Preview -->
+            <div class="preview-area" style="margin-top: 2rem;">
+                <h3>👁️ Live Preview</h3>
+                <div class="canvas-container">
+                    <canvas id="cardCanvas" width="428" height="270"></canvas>
+                </div>
+            </div>
+
+            <!-- Loading -->
+            <div class="loading-spinner" id="loadingSpinner">
+                <div class="spinner"></div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="btn-group">
+                <button class="btn btn-secondary" onclick="resetCard()">
+                    <i class="fas fa-redo"></i> Reset
+                </button>
+                <button class="btn btn-primary" onclick="generateCard()">
+                    <i class="fas fa-magic"></i> Generate Card
+                </button>
+                <button class="btn btn-download" id="downloadBtn" onclick="downloadCard()">
+                    <i class="fas fa-download"></i> Download Card
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let selectedTemplate = 'corporate';
+let uploadedPhoto = null;
+
+// Template colors
+const templates = {
+    corporate: { primary: '#667eea', secondary: '#764ba2', icon: '🏢' },
+    student: { primary: '#11998e', secondary: '#38ef7d', icon: '🎓' },
+    medical: { primary: '#eb3349', secondary: '#f45c43', icon: '⚕️' },
+    event: { primary: '#f093fb', secondary: '#f5576c', icon: '🎪' }
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+    CutcompressTools.setupTabs(document.getElementById('cardTabs'));
+    
+    const photoUploadArea = document.getElementById('photoUploadArea');
+    const photoInput = document.getElementById('photoInput');
+    CutcompressTools.setupDragAndDrop(photoUploadArea, photoInput, handlePhotoSelect);
+    
+    // Color picker hex display
+    document.getElementById('primaryColor').addEventListener('input', (e) => {
+        document.getElementById('primaryColorHex').textContent = e.target.value;
+    });
+    document.getElementById('secondaryColor').addEventListener('input', (e) => {
+        document.getElementById('secondaryColorHex').textContent = e.target.value;
+    });
+    document.getElementById('textColor').addEventListener('input', (e) => {
+        document.getElementById('textColorHex').textContent = e.target.value;
+    });
+    
+    // Initial preview
+    updatePreview();
+});
+
+function selectTemplate(element) {
+    document.querySelectorAll('.template-card').forEach(el => el.classList.remove('selected'));
+    element.classList.add('selected');
+    selectedTemplate = element.dataset.template;
+    
+    // Update colors
+    const template = templates[selectedTemplate];
+    document.getElementById('primaryColor').value = template.primary;
+    document.getElementById('secondaryColor').value = template.secondary;
+    document.getElementById('primaryColorHex').textContent = template.primary;
+    document.getElementById('secondaryColorHex').textContent = template.secondary;
+    
+    updatePreview();
+}
+
+function handlePhotoSelect(files) {
+    const file = files[0];
+    if (!file || !file.type.startsWith('image/')) {
+        CutcompressTools.showAlert('Please select a valid image file', 'error');
+        return;
+    }
+    
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+            uploadedPhoto = img;
+            document.getElementById('photoPreview').src = e.target.result;
+            document.getElementById('photoUploadArea').style.display = 'none';
+            document.getElementById('photoPreviewContainer').style.display = 'block';
+            updatePreview();
+            CutcompressTools.showAlert('Photo uploaded!', 'success');
+        };
+        img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+}
+
+function removePhoto() {
+    uploadedPhoto = null;
+    document.getElementById('photoInput').value = '';
+    document.getElementById('photoUploadArea').style.display = 'block';
+    document.getElementById('photoPreviewContainer').style.display = 'none';
+    updatePreview();
+}
+
+function updatePreview() {
+    const canvas = document.getElementById('cardCanvas');
+    const ctx = canvas.getContext('2d');
+    
+    const primaryColor = document.getElementById('primaryColor').value;
+    const secondaryColor = document.getElementById('secondaryColor').value;
+    const textColor = document.getElementById('textColor').value;
+    
+    // Card dimensions (standard credit card size scaled)
+    const width = 428;
+    const height = 270;
+    
+    // Clear canvas
+    ctx.clearRect(0, 0, width, height);
+    
+    // Background gradient
+    const gradient = ctx.createLinearGradient(0, 0, width, height);
+    gradient.addColorStop(0, primaryColor);
+    gradient.addColorStop(1, secondaryColor);
+    ctx.fillStyle = gradient;
+    ctx.roundRect(0, 0, width, height, 15);
+    ctx.fill();
+    
+    // Header stripe
+    ctx.fillStyle = 'rgba(255,255,255,0.1)';
+    ctx.fillRect(0, 0, width, 60);
+    
+    // Organization name
+    ctx.fillStyle = textColor;
+    ctx.font = 'bold 18px Poppins, sans-serif';
+    const org = document.getElementById('organization').value || 'Organization Name';
+    ctx.fillText(org, 20, 38);
+    
+    // Photo placeholder or actual photo
+    const photoX = 20;
+    const photoY = 75;
+    const photoSize = 90;
+    
+    ctx.fillStyle = 'rgba(255,255,255,0.2)';
+    ctx.fillRect(photoX, photoY, photoSize, photoSize);
+    
+    if (uploadedPhoto) {
+        // Draw photo
+        ctx.save();
+        ctx.beginPath();
+        ctx.rect(photoX, photoY, photoSize, photoSize);
+        ctx.clip();
+        
+        // Calculate aspect ratio
+        const imgAspect = uploadedPhoto.width / uploadedPhoto.height;
+        let drawWidth, drawHeight, drawX, drawY;
+        
+        if (imgAspect > 1) {
+            drawHeight = photoSize;
+            drawWidth = photoSize * imgAspect;
+            drawX = photoX - (drawWidth - photoSize) / 2;
+            drawY = photoY;
+        } else {
+            drawWidth = photoSize;
+            drawHeight = photoSize / imgAspect;
+            drawX = photoX;
+            drawY = photoY - (drawHeight - photoSize) / 2;
+        }
+        
+        ctx.drawImage(uploadedPhoto, drawX, drawY, drawWidth, drawHeight);
+        ctx.restore();
+    } else {
+        // Placeholder icon
+        ctx.fillStyle = 'rgba(255,255,255,0.5)';
+        ctx.font = '40px Arial';
+        ctx.fillText('👤', photoX + 25, photoY + 60);
+    }
+    
+    // Personal info
+    const infoX = 130;
+    let infoY = 90;
+    
+    ctx.fillStyle = textColor;
+    
+    // Name
+    ctx.font = 'bold 20px Poppins, sans-serif';
+    const name = document.getElementById('fullName').value || 'Full Name';
+    ctx.fillText(name, infoX, infoY);
+    
+    // Designation
+    infoY += 25;
+    ctx.font = '14px Poppins, sans-serif';
+    const designation = document.getElementById('designation').value || 'Designation';
+    ctx.fillText(designation, infoX, infoY);
+    
+    // Department
+    infoY += 20;
+    ctx.font = '12px Poppins, sans-serif';
+    ctx.fillStyle = 'rgba(255,255,255,0.8)';
+    const department = document.getElementById('department').value || 'Department';
+    ctx.fillText(department, infoX, infoY);
+    
+    // ID Number
+    infoY += 25;
+    ctx.fillStyle = textColor;
+    ctx.font = 'bold 14px Poppins, sans-serif';
+    const idNumber = document.getElementById('idNumber').value || 'ID-000000';
+    ctx.fillText('ID: ' + idNumber, infoX, infoY);
+    
+    // Footer area
+    ctx.fillStyle = 'rgba(0,0,0,0.2)';
+    ctx.fillRect(0, height - 50, width, 50);
+    
+    // Valid until
+    ctx.fillStyle = 'rgba(255,255,255,0.9)';
+    ctx.font = '11px Poppins, sans-serif';
+    const validDate = document.getElementById('validUntil').value;
+    const validText = validDate ? `Valid Until: ${new Date(validDate).toLocaleDateString()}` : 'Valid Until: --/--/----';
+    ctx.fillText(validText, 20, height - 20);
+    
+    // Blood group
+    const bloodGroup = document.getElementById('bloodGroup').value;
+    if (bloodGroup) {
+        ctx.fillText('Blood: ' + bloodGroup, 20, height - 35);
+    }
+    
+    // QR Code placeholder
+    if (document.getElementById('showQR').checked) {
+        ctx.fillStyle = '#fff';
+        ctx.fillRect(width - 60, height - 45, 40, 40);
+        ctx.fillStyle = '#000';
+        ctx.font = '8px Arial';
+        ctx.fillText('QR', width - 48, height - 20);
+    }
+    
+    // Template icon
+    ctx.font = '24px Arial';
+    ctx.fillText(templates[selectedTemplate].icon, width - 45, 38);
+}
+
+function generateCard() {
+    CutcompressTools.showLoading();
+    
+    setTimeout(() => {
+        updatePreview();
+        CutcompressTools.hideLoading();
+        CutcompressTools.showAlert('ID Card generated successfully!', 'success');
+    }, 500);
+}
+
+function downloadCard() {
+    const canvas = document.getElementById('cardCanvas');
+    CutcompressTools.downloadCanvas(canvas, 'id_card.png', 'png');
+    CutcompressTools.showAlert('ID Card downloaded!', 'success');
+}
+
+function resetCard() {
+    document.getElementById('fullName').value = '';
+    document.getElementById('idNumber').value = '';
+    document.getElementById('designation').value = '';
+    document.getElementById('department').value = '';
+    document.getElementById('organization').value = '';
+    document.getElementById('validUntil').value = '';
+    document.getElementById('bloodGroup').value = '';
+    removePhoto();
+    updatePreview();
+}
+
+// Polyfill for roundRect
+if (!CanvasRenderingContext2D.prototype.roundRect) {
+    CanvasRenderingContext2D.prototype.roundRect = function(x, y, w, h, r) {
+        if (w < 2 * r) r = w / 2;
+        if (h < 2 * r) r = h / 2;
+        this.beginPath();
+        this.moveTo(x + r, y);
+        this.arcTo(x + w, y, x + w, y + h, r);
+        this.arcTo(x + w, y + h, x, y + h, r);
+        this.arcTo(x, y + h, x, y, r);
+        this.arcTo(x, y, x + w, y, r);
+        this.closePath();
+        return this;
+    };
+}
+</script>
+{% endblock %}

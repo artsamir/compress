@@ -1,0 +1,382 @@
+{% extends 'base.html' %}
+{% block title %}Passport Photo Maker - Create Professional Passport Photos Online{% endblock %}
+{% block description %}Create professional passport photos online for free. Resize, crop and format photos for passports, visas, and IDs. Supports all country sizes.{% endblock %}
+{% block keywords %}passport photo maker, passport photo online, visa photo, ID photo, photo resizer{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/tools_common.css') }}">
+<script src="{{ url_for('static', filename='js/tools_common.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="tool-page">
+    <!-- Theme Toggle -->
+    <button class="theme-toggle" onclick="toggleTheme()">
+        <span class="icon-sun">☀️</span>
+        <span class="icon-moon">🌙</span>
+    </button>
+
+    <div class="tool-container">
+        <!-- Header -->
+        <div class="tool-header">
+            <div class="emoji-icon">📸</div>
+            <h1>Passport Photo Maker</h1>
+            <p>Create professional passport & visa photos in seconds. Supports all country sizes!</p>
+        </div>
+
+        <!-- Instructions -->
+        <div class="instructions-card">
+            <h3>📋 How to Use</h3>
+            <ol>
+                <li><strong>Upload</strong> your photo (face clearly visible, neutral background preferred)</li>
+                <li><strong>Select</strong> the country/document type for correct size</li>
+                <li><strong>Adjust</strong> the crop area to center your face properly</li>
+                <li><strong>Choose</strong> background color (white or blue for most countries)</li>
+                <li><strong>Download</strong> your professional passport photo!</li>
+            </ol>
+        </div>
+
+        <!-- Main Tool Card -->
+        <div class="tool-card">
+            <!-- Upload Area -->
+            <div class="upload-area" id="uploadArea">
+                <input type="file" id="photoInput" accept="image/*" hidden>
+                <div class="upload-icon">📷</div>
+                <h3>Upload Your Photo</h3>
+                <p>Drag & drop or click to browse</p>
+                <button class="browse-btn" type="button">
+                    <i class="fas fa-folder-open"></i> Choose Photo
+                </button>
+                <p style="margin-top: 1rem; font-size: 0.85rem; color: var(--text-muted);">
+                    💡 Tip: Use a photo with good lighting and plain background
+                </p>
+            </div>
+
+            <!-- Settings Panel (hidden until photo uploaded) -->
+            <div id="settingsPanel" style="display: none;">
+                <!-- Country/Size Selection -->
+                <div class="form-group">
+                    <label><i class="fas fa-globe"></i> Select Country / Document Type</label>
+                    <select id="sizeSelect">
+                        <optgroup label="🌎 Popular Sizes">
+                            <option value="35x45" data-width="35" data-height="45">USA Passport (35×45 mm)</option>
+                            <option value="35x45" data-width="35" data-height="45">UK Passport (35×45 mm)</option>
+                            <option value="35x45" data-width="35" data-height="45">India Passport (35×45 mm)</option>
+                            <option value="35x45" data-width="35" data-height="45">Canada Passport (35×45 mm)</option>
+                            <option value="33x48" data-width="33" data-height="48">Bangladesh Passport (33×48 mm)</option>
+                        </optgroup>
+                        <optgroup label="🌏 Asia">
+                            <option value="35x45" data-width="35" data-height="45">China Passport (35×45 mm)</option>
+                            <option value="35x45" data-width="35" data-height="45">Japan Passport (35×45 mm)</option>
+                            <option value="35x45" data-width="35" data-height="45">South Korea Passport (35×45 mm)</option>
+                            <option value="25x35" data-width="25" data-height="35">Thailand Passport (25×35 mm)</option>
+                        </optgroup>
+                        <optgroup label="🌍 Europe">
+                            <option value="35x45" data-width="35" data-height="45">Germany Passport (35×45 mm)</option>
+                            <option value="35x45" data-width="35" data-height="45">France Passport (35×45 mm)</option>
+                            <option value="35x45" data-width="35" data-height="45">Italy Passport (35×45 mm)</option>
+                            <option value="35x45" data-width="35" data-height="45">Schengen Visa (35×45 mm)</option>
+                        </optgroup>
+                        <optgroup label="📄 Other Documents">
+                            <option value="51x51" data-width="51" data-height="51">US Visa (51×51 mm / 2×2 inch)</option>
+                            <option value="35x35" data-width="35" data-height="35">Square Format (35×35 mm)</option>
+                            <option value="25x30" data-width="25" data-height="30">Stamp Size (25×30 mm)</option>
+                        </optgroup>
+                    </select>
+                </div>
+
+                <!-- Background Color -->
+                <div class="form-group">
+                    <label><i class="fas fa-palette"></i> Background Color</label>
+                    <div class="options-grid">
+                        <div class="option-card selected" data-bg="#ffffff" onclick="selectBackground(this)">
+                            <div class="option-icon" style="background: #ffffff; width: 40px; height: 40px; border-radius: 50%; margin: 0 auto; border: 2px solid #ddd;"></div>
+                            <div class="option-label">White</div>
+                        </div>
+                        <div class="option-card" data-bg="#e6f3ff" onclick="selectBackground(this)">
+                            <div class="option-icon" style="background: #e6f3ff; width: 40px; height: 40px; border-radius: 50%; margin: 0 auto; border: 2px solid #ddd;"></div>
+                            <div class="option-label">Light Blue</div>
+                        </div>
+                        <div class="option-card" data-bg="#f5f5f5" onclick="selectBackground(this)">
+                            <div class="option-icon" style="background: #f5f5f5; width: 40px; height: 40px; border-radius: 50%; margin: 0 auto; border: 2px solid #ddd;"></div>
+                            <div class="option-label">Light Gray</div>
+                        </div>
+                        <div class="option-card" data-bg="transparent" onclick="selectBackground(this)">
+                            <div class="option-icon" style="background: linear-gradient(45deg, #ccc 25%, transparent 25%), linear-gradient(-45deg, #ccc 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #ccc 75%), linear-gradient(-45deg, transparent 75%, #ccc 75%); background-size: 10px 10px; background-position: 0 0, 0 5px, 5px -5px, -5px 0px; width: 40px; height: 40px; border-radius: 50%; margin: 0 auto; border: 2px solid #ddd;"></div>
+                            <div class="option-label">Transparent</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Print Format -->
+                <div class="form-group">
+                    <label><i class="fas fa-print"></i> Print Format (Photos per Sheet)</label>
+                    <div class="options-grid">
+                        <div class="option-card selected" data-count="1" onclick="selectPrintFormat(this)">
+                            <div class="option-icon">1️⃣</div>
+                            <div class="option-label">Single Photo</div>
+                        </div>
+                        <div class="option-card" data-count="4" onclick="selectPrintFormat(this)">
+                            <div class="option-icon">4️⃣</div>
+                            <div class="option-label">4 Photos (2×2)</div>
+                        </div>
+                        <div class="option-card" data-count="6" onclick="selectPrintFormat(this)">
+                            <div class="option-icon">6️⃣</div>
+                            <div class="option-label">6 Photos (3×2)</div>
+                        </div>
+                        <div class="option-card" data-count="8" onclick="selectPrintFormat(this)">
+                            <div class="option-icon">8️⃣</div>
+                            <div class="option-label">8 Photos (4×2)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Brightness/Contrast -->
+                <div class="form-row">
+                    <div class="range-group">
+                        <label>
+                            <span>☀️ Brightness</span>
+                            <span id="brightnessValue">100%</span>
+                        </label>
+                        <input type="range" id="brightness" min="50" max="150" value="100" oninput="updatePreview()">
+                    </div>
+                    <div class="range-group">
+                        <label>
+                            <span>🎨 Contrast</span>
+                            <span id="contrastValue">100%</span>
+                        </label>
+                        <input type="range" id="contrast" min="50" max="150" value="100" oninput="updatePreview()">
+                    </div>
+                </div>
+
+                <!-- Canvas Preview -->
+                <div class="preview-area">
+                    <h3>👁️ Preview</h3>
+                    <div class="canvas-container">
+                        <canvas id="previewCanvas"></canvas>
+                    </div>
+                </div>
+
+                <!-- Loading -->
+                <div class="loading-spinner" id="loadingSpinner">
+                    <div class="spinner"></div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="btn-group">
+                    <button class="btn btn-secondary" onclick="resetPhoto()">
+                        <i class="fas fa-redo"></i> Reset
+                    </button>
+                    <button class="btn btn-primary" onclick="generatePhoto()">
+                        <i class="fas fa-magic"></i> Generate Photo
+                    </button>
+                    <button class="btn btn-download" id="downloadBtn" onclick="downloadPhoto()" disabled>
+                        <i class="fas fa-download"></i> Download
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tips Section -->
+        <div class="instructions-card" style="margin-top: 2rem;">
+            <h3>💡 Tips for Best Results</h3>
+            <ol>
+                <li>Use a recent photo with neutral expression</li>
+                <li>Ensure even lighting on your face (no harsh shadows)</li>
+                <li>Face the camera directly with both ears visible</li>
+                <li>Remove glasses if possible (unless required for medical reasons)</li>
+                <li>Keep mouth closed with a natural expression</li>
+                <li>Use a plain, light-colored background</li>
+            </ol>
+        </div>
+    </div>
+</div>
+
+<script>
+let originalImage = null;
+let selectedBackground = '#ffffff';
+let printCount = 1;
+let cropX = 0, cropY = 0, cropWidth = 0, cropHeight = 0;
+
+// Setup upload
+document.addEventListener('DOMContentLoaded', () => {
+    const uploadArea = document.getElementById('uploadArea');
+    const photoInput = document.getElementById('photoInput');
+    
+    CutcompressTools.setupDragAndDrop(uploadArea, photoInput, handleFileSelect);
+});
+
+function handleFileSelect(files) {
+    const file = files[0];
+    if (!file || !file.type.startsWith('image/')) {
+        CutcompressTools.showAlert('Please select a valid image file', 'error');
+        return;
+    }
+    
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+            originalImage = img;
+            document.getElementById('uploadArea').style.display = 'none';
+            document.getElementById('settingsPanel').style.display = 'block';
+            initCrop();
+            updatePreview();
+        };
+        img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+}
+
+function initCrop() {
+    if (!originalImage) return;
+    
+    // Calculate initial crop (center, with aspect ratio based on selected size)
+    const select = document.getElementById('sizeSelect');
+    const option = select.options[select.selectedIndex];
+    const targetWidth = parseInt(option.dataset.width);
+    const targetHeight = parseInt(option.dataset.height);
+    const aspectRatio = targetWidth / targetHeight;
+    
+    if (originalImage.width / originalImage.height > aspectRatio) {
+        cropHeight = originalImage.height;
+        cropWidth = cropHeight * aspectRatio;
+        cropX = (originalImage.width - cropWidth) / 2;
+        cropY = 0;
+    } else {
+        cropWidth = originalImage.width;
+        cropHeight = cropWidth / aspectRatio;
+        cropX = 0;
+        cropY = (originalImage.height - cropHeight) / 2;
+    }
+}
+
+function updatePreview() {
+    if (!originalImage) return;
+    
+    const canvas = document.getElementById('previewCanvas');
+    const ctx = canvas.getContext('2d');
+    
+    const select = document.getElementById('sizeSelect');
+    const option = select.options[select.selectedIndex];
+    const targetWidth = parseInt(option.dataset.width);
+    const targetHeight = parseInt(option.dataset.height);
+    
+    // Set canvas size (scaled for preview)
+    const scale = 8; // pixels per mm
+    canvas.width = targetWidth * scale;
+    canvas.height = targetHeight * scale;
+    
+    // Clear and draw background
+    if (selectedBackground === 'transparent') {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    } else {
+        ctx.fillStyle = selectedBackground;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
+    
+    // Apply filters
+    const brightness = document.getElementById('brightness').value;
+    const contrast = document.getElementById('contrast').value;
+    ctx.filter = `brightness(${brightness}%) contrast(${contrast}%)`;
+    
+    document.getElementById('brightnessValue').textContent = brightness + '%';
+    document.getElementById('contrastValue').textContent = contrast + '%';
+    
+    // Draw cropped image
+    initCrop(); // Recalculate crop for new aspect ratio
+    ctx.drawImage(originalImage, cropX, cropY, cropWidth, cropHeight, 0, 0, canvas.width, canvas.height);
+    
+    // Reset filter
+    ctx.filter = 'none';
+}
+
+function selectBackground(element) {
+    document.querySelectorAll('.option-card[data-bg]').forEach(el => el.classList.remove('selected'));
+    element.classList.add('selected');
+    selectedBackground = element.dataset.bg;
+    updatePreview();
+}
+
+function selectPrintFormat(element) {
+    document.querySelectorAll('.option-card[data-count]').forEach(el => el.classList.remove('selected'));
+    element.classList.add('selected');
+    printCount = parseInt(element.dataset.count);
+}
+
+document.getElementById('sizeSelect').addEventListener('change', updatePreview);
+
+function resetPhoto() {
+    originalImage = null;
+    document.getElementById('uploadArea').style.display = 'block';
+    document.getElementById('settingsPanel').style.display = 'none';
+    document.getElementById('photoInput').value = '';
+    document.getElementById('brightness').value = 100;
+    document.getElementById('contrast').value = 100;
+    document.getElementById('downloadBtn').disabled = true;
+}
+
+function generatePhoto() {
+    if (!originalImage) {
+        CutcompressTools.showAlert('Please upload a photo first', 'error');
+        return;
+    }
+    
+    CutcompressTools.showLoading();
+    
+    setTimeout(() => {
+        updatePreview();
+        document.getElementById('downloadBtn').disabled = false;
+        CutcompressTools.hideLoading();
+        CutcompressTools.showAlert('Passport photo generated successfully!', 'success');
+    }, 500);
+}
+
+function downloadPhoto() {
+    const sourceCanvas = document.getElementById('previewCanvas');
+    
+    if (printCount === 1) {
+        // Single photo download
+        CutcompressTools.downloadCanvas(sourceCanvas, 'passport_photo.png', 'png');
+    } else {
+        // Create sheet with multiple photos
+        const sheetCanvas = document.createElement('canvas');
+        const ctx = sheetCanvas.getContext('2d');
+        
+        // 4x6 inch at 300 DPI
+        const sheetWidth = 1200;
+        const sheetHeight = 1800;
+        sheetCanvas.width = sheetWidth;
+        sheetCanvas.height = sheetHeight;
+        
+        // White background
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, sheetWidth, sheetHeight);
+        
+        // Calculate layout
+        let cols, rows;
+        if (printCount === 4) { cols = 2; rows = 2; }
+        else if (printCount === 6) { cols = 3; rows = 2; }
+        else { cols = 4; rows = 2; }
+        
+        const photoWidth = sourceCanvas.width * 2.5;
+        const photoHeight = sourceCanvas.height * 2.5;
+        const gapX = (sheetWidth - (cols * photoWidth)) / (cols + 1);
+        const gapY = (sheetHeight - (rows * photoHeight)) / (rows + 1);
+        
+        for (let row = 0; row < rows; row++) {
+            for (let col = 0; col < cols; col++) {
+                if (row * cols + col >= printCount) break;
+                const x = gapX + col * (photoWidth + gapX);
+                const y = gapY + row * (photoHeight + gapY);
+                ctx.drawImage(sourceCanvas, x, y, photoWidth, photoHeight);
+            }
+        }
+        
+        CutcompressTools.downloadCanvas(sheetCanvas, `passport_photos_${printCount}x.png`, 'png');
+    }
+    
+    CutcompressTools.showAlert('Photo downloaded successfully!', 'success');
+}
+</script>
+{% endblock %}

@@ -1,0 +1,708 @@
+{% extends 'base.html' %}
+{% block title %}Email Templates - Professional Email Templates for Every Occasion{% endblock %}
+{% block description %}Get professional email templates for business, job applications, follow-ups, and more. Copy and customize ready-to-use email templates instantly.{% endblock %}
+{% block keywords %}email templates, professional email, business email template, email format, email writing{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/tools_common.css') }}">
+<script src="{{ url_for('static', filename='js/tools_common.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="tool-page">
+    <!-- Theme Toggle -->
+    <button class="theme-toggle" onclick="toggleTheme()">
+        <span class="icon-sun">☀️</span>
+        <span class="icon-moon">🌙</span>
+    </button>
+
+    <div class="tool-container">
+        <!-- Header -->
+        <div class="tool-header">
+            <div class="emoji-icon">📧</div>
+            <h1>Email Templates</h1>
+            <p>Professional email templates for every occasion. Copy, customize & send! ✉️</p>
+        </div>
+
+        <!-- Instructions -->
+        <div class="instructions-card">
+            <h3>📋 How to Use</h3>
+            <ol>
+                <li><strong>Browse</strong> categories and select a template</li>
+                <li><strong>Fill in</strong> your personal details in the form</li>
+                <li><strong>Preview</strong> your customized email</li>
+                <li><strong>Copy</strong> to clipboard with one click</li>
+                <li><strong>Paste</strong> into your email client and send!</li>
+            </ol>
+        </div>
+
+        <!-- Main Tool Card -->
+        <div class="tool-card">
+            <!-- Category Tabs -->
+            <div class="tabs" id="categoryTabs">
+                <button class="tab active" data-tab="business">💼 Business</button>
+                <button class="tab" data-tab="job">🎯 Job Search</button>
+                <button class="tab" data-tab="followup">🔄 Follow-Up</button>
+                <button class="tab" data-tab="apology">🙏 Apology</button>
+                <button class="tab" data-tab="thankyou">🙌 Thank You</button>
+                <button class="tab" data-tab="inquiry">❓ Inquiry</button>
+            </div>
+
+            <!-- Business Templates -->
+            <div class="tab-content active" id="business">
+                <div class="template-grid">
+                    <div class="template-card" onclick="selectEmailTemplate('business_intro')">
+                        <div class="template-preview" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center;">
+                            <span style="font-size: 2.5rem;">🤝</span>
+                        </div>
+                        <div class="template-info">
+                            <h4>Business Introduction</h4>
+                            <p>Introduce yourself or company</p>
+                        </div>
+                    </div>
+                    <div class="template-card" onclick="selectEmailTemplate('meeting_request')">
+                        <div class="template-preview" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); display: flex; align-items: center; justify-content: center;">
+                            <span style="font-size: 2.5rem;">📅</span>
+                        </div>
+                        <div class="template-info">
+                            <h4>Meeting Request</h4>
+                            <p>Request a business meeting</p>
+                        </div>
+                    </div>
+                    <div class="template-card" onclick="selectEmailTemplate('proposal')">
+                        <div class="template-preview" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); display: flex; align-items: center; justify-content: center;">
+                            <span style="font-size: 2.5rem;">📋</span>
+                        </div>
+                        <div class="template-info">
+                            <h4>Business Proposal</h4>
+                            <p>Send a business proposal</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Job Search Templates -->
+            <div class="tab-content" id="job">
+                <div class="template-grid">
+                    <div class="template-card" onclick="selectEmailTemplate('job_application')">
+                        <div class="template-preview" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); display: flex; align-items: center; justify-content: center;">
+                            <span style="font-size: 2.5rem;">📄</span>
+                        </div>
+                        <div class="template-info">
+                            <h4>Job Application</h4>
+                            <p>Apply for a job position</p>
+                        </div>
+                    </div>
+                    <div class="template-card" onclick="selectEmailTemplate('internship')">
+                        <div class="template-preview" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); display: flex; align-items: center; justify-content: center;">
+                            <span style="font-size: 2.5rem;">🎓</span>
+                        </div>
+                        <div class="template-info">
+                            <h4>Internship Request</h4>
+                            <p>Apply for internship</p>
+                        </div>
+                    </div>
+                    <div class="template-card" onclick="selectEmailTemplate('networking')">
+                        <div class="template-preview" style="background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%); display: flex; align-items: center; justify-content: center;">
+                            <span style="font-size: 2.5rem;">🌐</span>
+                        </div>
+                        <div class="template-info">
+                            <h4>Networking Email</h4>
+                            <p>Connect with professionals</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Follow-Up Templates -->
+            <div class="tab-content" id="followup">
+                <div class="template-grid">
+                    <div class="template-card" onclick="selectEmailTemplate('interview_followup')">
+                        <div class="template-preview" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center;">
+                            <span style="font-size: 2.5rem;">🎤</span>
+                        </div>
+                        <div class="template-info">
+                            <h4>Interview Follow-Up</h4>
+                            <p>After job interview</p>
+                        </div>
+                    </div>
+                    <div class="template-card" onclick="selectEmailTemplate('meeting_followup')">
+                        <div class="template-preview" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); display: flex; align-items: center; justify-content: center;">
+                            <span style="font-size: 2.5rem;">📝</span>
+                        </div>
+                        <div class="template-info">
+                            <h4>Meeting Follow-Up</h4>
+                            <p>After business meeting</p>
+                        </div>
+                    </div>
+                    <div class="template-card" onclick="selectEmailTemplate('no_response')">
+                        <div class="template-preview" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); display: flex; align-items: center; justify-content: center;">
+                            <span style="font-size: 2.5rem;">⏰</span>
+                        </div>
+                        <div class="template-info">
+                            <h4>No Response Follow-Up</h4>
+                            <p>Gentle reminder email</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Apology Templates -->
+            <div class="tab-content" id="apology">
+                <div class="template-grid">
+                    <div class="template-card" onclick="selectEmailTemplate('late_response')">
+                        <div class="template-preview" style="background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%); display: flex; align-items: center; justify-content: center;">
+                            <span style="font-size: 2.5rem;">⏱️</span>
+                        </div>
+                        <div class="template-info">
+                            <h4>Late Response</h4>
+                            <p>Apologize for delayed reply</p>
+                        </div>
+                    </div>
+                    <div class="template-card" onclick="selectEmailTemplate('missed_deadline')">
+                        <div class="template-preview" style="background: linear-gradient(135deg, #ff6b6b 0%, #feca57 100%); display: flex; align-items: center; justify-content: center;">
+                            <span style="font-size: 2.5rem;">📅</span>
+                        </div>
+                        <div class="template-info">
+                            <h4>Missed Deadline</h4>
+                            <p>Apologize for missing deadline</p>
+                        </div>
+                    </div>
+                    <div class="template-card" onclick="selectEmailTemplate('mistake')">
+                        <div class="template-preview" style="background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%); display: flex; align-items: center; justify-content: center;">
+                            <span style="font-size: 2.5rem;">😔</span>
+                        </div>
+                        <div class="template-info">
+                            <h4>General Apology</h4>
+                            <p>Apologize for a mistake</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Thank You Templates -->
+            <div class="tab-content" id="thankyou">
+                <div class="template-grid">
+                    <div class="template-card" onclick="selectEmailTemplate('thankyou_interview')">
+                        <div class="template-preview" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); display: flex; align-items: center; justify-content: center;">
+                            <span style="font-size: 2.5rem;">🙏</span>
+                        </div>
+                        <div class="template-info">
+                            <h4>Thank You - Interview</h4>
+                            <p>After job interview</p>
+                        </div>
+                    </div>
+                    <div class="template-card" onclick="selectEmailTemplate('thankyou_help')">
+                        <div class="template-preview" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center;">
+                            <span style="font-size: 2.5rem;">💝</span>
+                        </div>
+                        <div class="template-info">
+                            <h4>Thank You - Help</h4>
+                            <p>Thank someone for help</p>
+                        </div>
+                    </div>
+                    <div class="template-card" onclick="selectEmailTemplate('thankyou_referral')">
+                        <div class="template-preview" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); display: flex; align-items: center; justify-content: center;">
+                            <span style="font-size: 2.5rem;">🌟</span>
+                        </div>
+                        <div class="template-info">
+                            <h4>Thank You - Referral</h4>
+                            <p>Thank for a referral</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Inquiry Templates -->
+            <div class="tab-content" id="inquiry">
+                <div class="template-grid">
+                    <div class="template-card" onclick="selectEmailTemplate('product_inquiry')">
+                        <div class="template-preview" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); display: flex; align-items: center; justify-content: center;">
+                            <span style="font-size: 2.5rem;">🛍️</span>
+                        </div>
+                        <div class="template-info">
+                            <h4>Product Inquiry</h4>
+                            <p>Ask about a product</p>
+                        </div>
+                    </div>
+                    <div class="template-card" onclick="selectEmailTemplate('service_inquiry')">
+                        <div class="template-preview" style="background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%); display: flex; align-items: center; justify-content: center;">
+                            <span style="font-size: 2.5rem;">🔧</span>
+                        </div>
+                        <div class="template-info">
+                            <h4>Service Inquiry</h4>
+                            <p>Ask about a service</p>
+                        </div>
+                    </div>
+                    <div class="template-card" onclick="selectEmailTemplate('info_request')">
+                        <div class="template-preview" style="background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); display: flex; align-items: center; justify-content: center;">
+                            <span style="font-size: 2.5rem;">ℹ️</span>
+                        </div>
+                        <div class="template-info">
+                            <h4>Information Request</h4>
+                            <p>Request information</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Email Customization Form (shown after template selection) -->
+            <div id="customizationForm" style="display: none; margin-top: 2rem;">
+                <h3 style="color: var(--text-primary); margin-bottom: 1rem;">✏️ Customize Your Email</h3>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Your Name</label>
+                        <input type="text" id="senderName" placeholder="John Doe" oninput="updateEmailPreview()">
+                    </div>
+                    <div class="form-group">
+                        <label>Recipient Name</label>
+                        <input type="text" id="recipientName" placeholder="Mr./Ms. Smith" oninput="updateEmailPreview()">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Company/Organization</label>
+                        <input type="text" id="companyName" placeholder="Company Name" oninput="updateEmailPreview()">
+                    </div>
+                    <div class="form-group">
+                        <label>Position/Role</label>
+                        <input type="text" id="position" placeholder="Your Position" oninput="updateEmailPreview()">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Subject Line</label>
+                    <input type="text" id="subjectLine" placeholder="Email Subject" oninput="updateEmailPreview()">
+                </div>
+
+                <div class="form-group">
+                    <label>Additional Details (optional)</label>
+                    <textarea id="additionalDetails" placeholder="Add any specific details..." oninput="updateEmailPreview()"></textarea>
+                </div>
+
+                <!-- Email Preview -->
+                <div class="output-area" style="margin-top: 1.5rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <h3>📨 Email Preview</h3>
+                        <button class="copy-btn" onclick="copyEmail()">
+                            <i class="fas fa-copy"></i> Copy Email
+                        </button>
+                    </div>
+                    <div id="emailPreview" class="output-text" style="white-space: pre-wrap;"></div>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn btn-secondary" onclick="goBackToTemplates()">
+                        <i class="fas fa-arrow-left"></i> Choose Another Template
+                    </button>
+                    <button class="btn btn-primary" onclick="copyEmail()">
+                        <i class="fas fa-copy"></i> Copy to Clipboard
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let currentTemplate = null;
+
+const emailTemplates = {
+    business_intro: {
+        subject: "Introduction - [Your Company]",
+        body: `Dear [Recipient Name],
+
+I hope this email finds you well. My name is [Your Name], and I am the [Position] at [Company Name].
+
+I am reaching out to introduce our company and explore potential opportunities for collaboration. [Company Name] specializes in [briefly describe your services/products].
+
+I would love the opportunity to discuss how we might work together. Would you be available for a brief call this week?
+
+Looking forward to hearing from you.
+
+Best regards,
+[Your Name]
+[Position]
+[Company Name]`
+    },
+    meeting_request: {
+        subject: "Meeting Request - [Topic]",
+        body: `Dear [Recipient Name],
+
+I hope you're doing well. I am writing to request a meeting to discuss [topic/project].
+
+I believe a conversation would be beneficial for both parties, and I would appreciate the opportunity to share some ideas with you.
+
+Would you be available for a 30-minute meeting this week? I am flexible with timing and can adjust to your schedule.
+
+Please let me know your availability, and I will send a calendar invite.
+
+Thank you for considering my request.
+
+Best regards,
+[Your Name]
+[Position]
+[Company Name]`
+    },
+    proposal: {
+        subject: "Business Proposal - [Project/Service]",
+        body: `Dear [Recipient Name],
+
+I hope this message finds you well. Following our recent discussion, I am pleased to submit our proposal for [project/service].
+
+Our proposal includes:
+• [Key point 1]
+• [Key point 2]
+• [Key point 3]
+
+We are confident that our solution will meet your requirements and deliver excellent results.
+
+I have attached the detailed proposal for your review. Please don't hesitate to reach out if you have any questions.
+
+I look forward to the opportunity to work with you.
+
+Best regards,
+[Your Name]
+[Position]
+[Company Name]`
+    },
+    job_application: {
+        subject: "Application for [Position] - [Your Name]",
+        body: `Dear [Recipient Name],
+
+I am writing to express my strong interest in the [Position] role at [Company Name], as advertised on [source].
+
+With [X years] of experience in [field/industry], I have developed expertise in [relevant skills]. My background includes [brief achievement or experience].
+
+I am particularly drawn to [Company Name] because of [specific reason - company values, mission, projects]. I believe my skills in [relevant skills] would make me a valuable addition to your team.
+
+I have attached my resume for your review. I would welcome the opportunity to discuss how my experience and enthusiasm can contribute to your team's success.
+
+Thank you for considering my application.
+
+Best regards,
+[Your Name]
+[Contact Information]`
+    },
+    internship: {
+        subject: "Internship Application - [Field] - [Your Name]",
+        body: `Dear [Recipient Name],
+
+I am a [year] student at [University/College] pursuing a degree in [Field], and I am writing to inquire about internship opportunities at [Company Name].
+
+I am eager to apply my academic knowledge in a practical setting and gain valuable industry experience. My coursework in [relevant subjects] has prepared me with skills in [relevant skills].
+
+I am particularly interested in [Company Name] because [specific reason]. I am available to start from [date] and can commit [duration].
+
+I have attached my resume for your consideration. I would be grateful for the opportunity to discuss how I can contribute to your team.
+
+Thank you for your time and consideration.
+
+Best regards,
+[Your Name]
+[University/College]
+[Contact Information]`
+    },
+    networking: {
+        subject: "Connecting via [Platform/Event]",
+        body: `Dear [Recipient Name],
+
+I hope this message finds you well. My name is [Your Name], and I came across your profile on [platform/met you at event].
+
+I was impressed by your work in [field/specific achievement], and I would love to connect and learn more about your experience in [industry/role].
+
+I am currently [brief description of your role/goals], and I believe your insights would be incredibly valuable.
+
+Would you be open to a brief virtual coffee chat? I would greatly appreciate any advice you might have.
+
+Thank you for considering my request.
+
+Best regards,
+[Your Name]
+[LinkedIn Profile/Contact]`
+    },
+    interview_followup: {
+        subject: "Thank You - [Position] Interview",
+        body: `Dear [Recipient Name],
+
+Thank you for taking the time to meet with me today to discuss the [Position] role at [Company Name].
+
+I enjoyed learning more about the position and your team. Our conversation reinforced my enthusiasm for the opportunity and my confidence that my skills in [relevant skills] would enable me to contribute effectively.
+
+I was particularly excited about [specific topic discussed]. I am confident that my experience in [relevant experience] aligns well with your team's goals.
+
+Please don't hesitate to contact me if you need any additional information. I look forward to hearing from you.
+
+Thank you again for the opportunity.
+
+Best regards,
+[Your Name]
+[Contact Information]`
+    },
+    meeting_followup: {
+        subject: "Follow-Up: [Meeting Topic]",
+        body: `Dear [Recipient Name],
+
+Thank you for meeting with me [today/yesterday/on date]. It was a pleasure discussing [topic].
+
+To summarize our conversation:
+• [Key point 1]
+• [Key point 2]
+• [Action item, if any]
+
+As discussed, I will [your next steps]. Please let me know if there's anything else you need from my end.
+
+I look forward to our continued collaboration.
+
+Best regards,
+[Your Name]
+[Position]
+[Company Name]`
+    },
+    no_response: {
+        subject: "Following Up: [Original Subject]",
+        body: `Dear [Recipient Name],
+
+I hope this email finds you well. I wanted to follow up on my previous email regarding [topic/subject] sent on [date].
+
+I understand you have a busy schedule, but I wanted to ensure my message reached you. I would greatly appreciate any update or feedback when you have a moment.
+
+If you need any additional information from my side, please don't hesitate to ask.
+
+Thank you for your time, and I look forward to hearing from you.
+
+Best regards,
+[Your Name]
+[Contact Information]`
+    },
+    late_response: {
+        subject: "Re: [Original Subject] - Apologies for Delayed Response",
+        body: `Dear [Recipient Name],
+
+I sincerely apologize for the delay in responding to your email. [Brief reason if appropriate, e.g., "I have been dealing with some urgent matters."]
+
+Thank you for your patience and understanding. I truly appreciate you reaching out.
+
+[Address the original email content here]
+
+Again, I apologize for any inconvenience caused by my delayed response. Please feel free to reach out if you have any questions.
+
+Best regards,
+[Your Name]
+[Position]`
+    },
+    missed_deadline: {
+        subject: "Apology for Missed Deadline - [Project/Task]",
+        body: `Dear [Recipient Name],
+
+I am writing to sincerely apologize for missing the deadline for [project/task]. I understand this may have caused inconvenience, and I take full responsibility.
+
+[Brief explanation if appropriate]
+
+I am committed to completing this as soon as possible. The new delivery date will be [new date], and I will ensure the quality meets expectations.
+
+I understand if there are any consequences, and I am working to ensure this doesn't happen again.
+
+Thank you for your understanding.
+
+Best regards,
+[Your Name]
+[Position]`
+    },
+    mistake: {
+        subject: "Apology Regarding [Issue]",
+        body: `Dear [Recipient Name],
+
+I want to sincerely apologize for [mistake/issue]. I understand this may have caused [inconvenience/frustration], and I take full responsibility.
+
+I have already taken steps to [corrective action] and will ensure this doesn't happen again in the future.
+
+Please let me know if there's anything else I can do to make this right.
+
+Thank you for your understanding and patience.
+
+Best regards,
+[Your Name]
+[Position]`
+    },
+    thankyou_interview: {
+        subject: "Thank You for the Interview Opportunity",
+        body: `Dear [Recipient Name],
+
+I wanted to express my sincere gratitude for the opportunity to interview for the [Position] role at [Company Name].
+
+I truly enjoyed our conversation and learning more about the team and company culture. The discussion about [specific topic] was particularly exciting.
+
+I am very enthusiastic about the possibility of joining your team and contributing to [Company Name]'s success.
+
+Thank you again for your time and consideration.
+
+Warm regards,
+[Your Name]
+[Contact Information]`
+    },
+    thankyou_help: {
+        subject: "Thank You for Your Help",
+        body: `Dear [Recipient Name],
+
+I wanted to take a moment to express my heartfelt thanks for your help with [specific matter].
+
+Your support made a significant difference, and I truly appreciate the time and effort you dedicated to helping me.
+
+If there's ever anything I can do to return the favor, please don't hesitate to ask.
+
+Thank you once again for your kindness and generosity.
+
+Warm regards,
+[Your Name]`
+    },
+    thankyou_referral: {
+        subject: "Thank You for the Referral",
+        body: `Dear [Recipient Name],
+
+I wanted to express my sincere gratitude for referring me to [Company/Person]. Your recommendation means a great deal to me.
+
+[Update on the outcome if applicable, e.g., "I'm happy to share that the conversation went very well."]
+
+I truly appreciate your support and confidence in me. Please let me know if there's anything I can do to help you in return.
+
+Thank you again!
+
+Warm regards,
+[Your Name]`
+    },
+    product_inquiry: {
+        subject: "Product Inquiry - [Product Name]",
+        body: `Dear [Recipient Name],
+
+I am writing to inquire about [Product Name] that I saw on [source/website].
+
+I would appreciate it if you could provide more information about:
+• [Question 1 - pricing, availability, etc.]
+• [Question 2 - specifications, features]
+• [Question 3 - warranty, support]
+
+I am interested in [your intended use/quantity needed].
+
+Please let me know the best way to proceed or if you need any additional information from my side.
+
+Thank you for your time.
+
+Best regards,
+[Your Name]
+[Contact Information]`
+    },
+    service_inquiry: {
+        subject: "Service Inquiry - [Service Name]",
+        body: `Dear [Recipient Name],
+
+I am reaching out to inquire about [Service Name] offered by [Company Name].
+
+Could you please provide more details about:
+• Scope of services included
+• Pricing and packages available
+• Timeline for implementation
+• Any additional requirements
+
+We are looking for [brief description of your needs].
+
+I would appreciate a call or meeting to discuss this further at your earliest convenience.
+
+Thank you for your time.
+
+Best regards,
+[Your Name]
+[Company Name]
+[Contact Information]`
+    },
+    info_request: {
+        subject: "Information Request - [Topic]",
+        body: `Dear [Recipient Name],
+
+I hope this email finds you well. I am writing to request information regarding [topic/subject].
+
+Specifically, I would like to know:
+• [Question 1]
+• [Question 2]
+• [Question 3]
+
+This information will help me [reason/purpose].
+
+If you could point me to the right resources or provide the information directly, I would greatly appreciate it.
+
+Thank you for your assistance.
+
+Best regards,
+[Your Name]
+[Contact Information]`
+    }
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+    CutcompressTools.setupTabs(document.getElementById('categoryTabs'));
+});
+
+function selectEmailTemplate(templateId) {
+    currentTemplate = templateId;
+    const template = emailTemplates[templateId];
+    
+    // Show customization form
+    document.getElementById('customizationForm').style.display = 'block';
+    document.getElementById('subjectLine').value = template.subject;
+    
+    // Scroll to form
+    document.getElementById('customizationForm').scrollIntoView({ behavior: 'smooth' });
+    
+    updateEmailPreview();
+}
+
+function updateEmailPreview() {
+    if (!currentTemplate) return;
+    
+    const template = emailTemplates[currentTemplate];
+    let preview = template.body;
+    let subject = document.getElementById('subjectLine').value || template.subject;
+    
+    // Replace placeholders
+    const senderName = document.getElementById('senderName').value || '[Your Name]';
+    const recipientName = document.getElementById('recipientName').value || '[Recipient Name]';
+    const companyName = document.getElementById('companyName').value || '[Company Name]';
+    const position = document.getElementById('position').value || '[Position]';
+    const additionalDetails = document.getElementById('additionalDetails').value;
+    
+    preview = preview.replace(/\[Your Name\]/g, senderName);
+    preview = preview.replace(/\[Recipient Name\]/g, recipientName);
+    preview = preview.replace(/\[Company Name\]/g, companyName);
+    preview = preview.replace(/\[Position\]/g, position);
+    
+    subject = subject.replace(/\[Your Name\]/g, senderName);
+    subject = subject.replace(/\[Company Name\]/g, companyName);
+    subject = subject.replace(/\[Position\]/g, position);
+    
+    // Format the preview
+    const formattedPreview = `Subject: ${subject}\n\n${preview}`;
+    
+    document.getElementById('emailPreview').textContent = formattedPreview;
+}
+
+function copyEmail() {
+    const emailText = document.getElementById('emailPreview').textContent;
+    CutcompressTools.copyToClipboard(emailText, document.querySelector('.copy-btn'));
+}
+
+function goBackToTemplates() {
+    currentTemplate = null;
+    document.getElementById('customizationForm').style.display = 'none';
+    document.getElementById('senderName').value = '';
+    document.getElementById('recipientName').value = '';
+    document.getElementById('companyName').value = '';
+    document.getElementById('position').value = '';
+    document.getElementById('subjectLine').value = '';
+    document.getElementById('additionalDetails').value = '';
+    
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+{% endblock %}

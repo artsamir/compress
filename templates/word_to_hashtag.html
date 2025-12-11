@@ -1,0 +1,469 @@
+{% extends 'base.html' %}
+{% block title %}Word to Hashtag Converter - Generate Trending Hashtags{% endblock %}
+{% block description %}Convert text, keywords, or phrases into trending hashtags. Perfect for Instagram, Twitter, LinkedIn, and TikTok. Free online hashtag generator.{% endblock %}
+{% block keywords %}word to hashtag, hashtag generator, instagram hashtags, twitter hashtags, social media hashtags{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/tools_common.css') }}">
+<script src="{{ url_for('static', filename='js/tools_common.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="tool-page">
+    <!-- Theme Toggle -->
+    <button class="theme-toggle" onclick="toggleTheme()">
+        <span class="icon-sun">☀️</span>
+        <span class="icon-moon">🌙</span>
+    </button>
+
+    <div class="tool-container">
+        <!-- Header -->
+        <div class="tool-header">
+            <div class="emoji-icon">#️⃣</div>
+            <h1>Word to Hashtag Converter</h1>
+            <p>Transform your text into powerful hashtags for social media success! 🚀</p>
+        </div>
+
+        <!-- Instructions -->
+        <div class="instructions-card">
+            <h3>📋 How to Use</h3>
+            <ol>
+                <li><strong>Enter</strong> your keywords, phrases, or topic in the text box</li>
+                <li><strong>Choose</strong> your preferred hashtag style and platform</li>
+                <li><strong>Click</strong> "Generate Hashtags" to create your tags</li>
+                <li><strong>Copy</strong> individual hashtags or all at once</li>
+                <li><strong>Paste</strong> directly into your social media post!</li>
+            </ol>
+        </div>
+
+        <!-- Main Tool Card -->
+        <div class="tool-card">
+            <!-- Input Section -->
+            <div class="form-group">
+                <label><i class="fas fa-keyboard"></i> Enter Your Text / Keywords</label>
+                <textarea id="inputText" placeholder="Enter words, phrases, or topics separated by commas or new lines...
+
+Example:
+travel, photography, sunset, beach vacation, summer vibes"></textarea>
+            </div>
+
+            <!-- Platform Selection -->
+            <div class="form-group">
+                <label><i class="fas fa-share-alt"></i> Select Platform</label>
+                <div class="options-grid">
+                    <div class="option-card selected" data-platform="instagram" onclick="selectPlatform(this)">
+                        <div class="option-icon">📸</div>
+                        <div class="option-label">Instagram</div>
+                    </div>
+                    <div class="option-card" data-platform="twitter" onclick="selectPlatform(this)">
+                        <div class="option-icon">🐦</div>
+                        <div class="option-label">Twitter/X</div>
+                    </div>
+                    <div class="option-card" data-platform="tiktok" onclick="selectPlatform(this)">
+                        <div class="option-icon">🎵</div>
+                        <div class="option-label">TikTok</div>
+                    </div>
+                    <div class="option-card" data-platform="linkedin" onclick="selectPlatform(this)">
+                        <div class="option-icon">💼</div>
+                        <div class="option-label">LinkedIn</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hashtag Style -->
+            <div class="form-group">
+                <label><i class="fas fa-text-height"></i> Hashtag Style</label>
+                <div class="options-grid">
+                    <div class="option-card selected" data-style="lowercase" onclick="selectStyle(this)">
+                        <div class="option-icon">🔡</div>
+                        <div class="option-label">lowercase</div>
+                    </div>
+                    <div class="option-card" data-style="camelCase" onclick="selectStyle(this)">
+                        <div class="option-icon">🔤</div>
+                        <div class="option-label">camelCase</div>
+                    </div>
+                    <div class="option-card" data-style="PascalCase" onclick="selectStyle(this)">
+                        <div class="option-icon">🔠</div>
+                        <div class="option-label">PascalCase</div>
+                    </div>
+                    <div class="option-card" data-style="UPPERCASE" onclick="selectStyle(this)">
+                        <div class="option-icon">⬆️</div>
+                        <div class="option-label">UPPERCASE</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Additional Options -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label><i class="fas fa-random"></i> Add Related Hashtags</label>
+                    <select id="relatedOption">
+                        <option value="none">None (only my keywords)</option>
+                        <option value="few">Add a few related (5-10)</option>
+                        <option value="many" selected>Add many related (15-20)</option>
+                        <option value="maximum">Maximum reach (25-30)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-sort"></i> Sort By</label>
+                    <select id="sortOption">
+                        <option value="alphabetical">Alphabetical</option>
+                        <option value="length">By Length</option>
+                        <option value="random" selected>Random Mix</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Generate Button -->
+            <div class="btn-group" style="margin-bottom: 2rem;">
+                <button class="btn btn-primary" onclick="generateHashtags()">
+                    <i class="fas fa-magic"></i> Generate Hashtags
+                </button>
+                <button class="btn btn-secondary" onclick="clearAll()">
+                    <i class="fas fa-trash"></i> Clear All
+                </button>
+            </div>
+
+            <!-- Loading -->
+            <div class="loading-spinner" id="loadingSpinner">
+                <div class="spinner"></div>
+            </div>
+
+            <!-- Output Section -->
+            <div class="output-area" id="outputArea" style="display: none;">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
+                    <h3>🎯 Generated Hashtags <span id="hashtagCount" style="font-weight: normal; color: var(--text-secondary);"></span></h3>
+                    <button class="copy-btn" onclick="copyAllHashtags()">
+                        <i class="fas fa-copy"></i> Copy All
+                    </button>
+                </div>
+                
+                <div class="tags-container" id="hashtagsContainer"></div>
+                
+                <!-- Output Text -->
+                <div style="margin-top: 1.5rem;">
+                    <label style="color: var(--text-primary); font-weight: 500; margin-bottom: 0.5rem; display: block;">
+                        📋 Ready to Copy:
+                    </label>
+                    <div class="output-text" id="outputText"></div>
+                </div>
+
+                <!-- Character Count -->
+                <div style="margin-top: 1rem; display: flex; gap: 2rem; flex-wrap: wrap;">
+                    <div style="color: var(--text-secondary);">
+                        <i class="fas fa-text-width"></i> Characters: <strong id="charCount">0</strong>
+                    </div>
+                    <div style="color: var(--text-secondary);">
+                        <i class="fas fa-hashtag"></i> Hashtags: <strong id="tagCount">0</strong>
+                    </div>
+                    <div id="platformLimit" style="color: var(--text-secondary);"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Trending Hashtags Section -->
+        <div class="tool-card" style="margin-top: 2rem;">
+            <h3 style="color: var(--text-primary); margin-bottom: 1rem;">🔥 Trending Hashtags by Category</h3>
+            
+            <div class="tabs" id="trendingTabs">
+                <button class="tab active" data-tab="travel">✈️ Travel</button>
+                <button class="tab" data-tab="food">🍕 Food</button>
+                <button class="tab" data-tab="fitness">💪 Fitness</button>
+                <button class="tab" data-tab="business">💼 Business</button>
+                <button class="tab" data-tab="tech">💻 Tech</button>
+                <button class="tab" data-tab="fashion">👗 Fashion</button>
+            </div>
+
+            <div class="tab-content active" id="travel">
+                <div class="tags-container">
+                    <span class="tag" onclick="addTrendingTag(this)">#travel</span>
+                    <span class="tag" onclick="addTrendingTag(this)">#wanderlust</span>
+                    <span class="tag" onclick="addTrendingTag(this)">#travelgram</span>
+                    <span class="tag" onclick="addTrendingTag(this)">#travelphotography</span>
+                    <span class="tag" onclick="addTrendingTag(this)">#instatravel</span>
+                    <span class="tag" onclick="addTrendingTag(this)">#adventure</span>
+                    <span class="tag" onclick="addTrendingTag(this)">#explore</span>
+                    <span class="tag" onclick="addTrendingTag(this)">#vacation</span>
+                    <span class="tag" onclick="addTrendingTag(this)">#travelblogger</span>
+                    <span class="tag" onclick="addTrendingTag(this)">#traveltheworld</span>
+                </div>
+            </div>
+
+            <div class="tab-content" id="food">
+                <div class="tags-container">
+                    <span class="tag" onclick="addTrendingTag(this)">#food</span>
+                    <span class="tag" onclick="addTrendingTag(this)">#foodie</span>
+                    <span class="tag" onclick="addTrendingTag(this)">#foodporn</span>
+                    <span class="tag" onclick="addTrendingTag(this)">#instafood</span>
+                    <span class="tag" onclick="addTrendingTag(this)">#yummy</span>
+                    <span class="tag" onclick="addTrendingTag(this)">#delicious</span>
+                    <span class="tag" onclick="addTrendingTag(this)">#homemade</span>
+                    <span class="tag" onclick="addTrendingTag(this)">#cooking</span>
+                    <span class="tag" onclick="addTrendingTag(this)">#foodphotography</span>
+                    <span class="tag" onclick="addTrendingTag(this)">#healthyfood</span>
+                </div>
+            </div>
+
+            <div class="tab-content" id="fitness">
+                <div class="tags-container">
+                    <span class="tag" onclick="addTrendingTag(this)">#fitness</span>
+                    <span class="tag" onclick="addTrendingTag(this)">#gym</span>
+                    <span class="tag" onclick="addTrendingTag(this)">#workout</span>
+                    <span class="tag" onclick="addTrendingTag(this)">#fitnessmotivation</span>
+                    <span class="tag" onclick="addTrendingTag(this)">#fit</span>
+                    <span class="tag" onclick="addTrendingTag(this)">#motivation</span>
+                    <span class="tag" onclick="addTrendingTag(this)">#bodybuilding</span>
+                    <span class="tag" onclick="addTrendingTag(this)">#health</span>
+                    <span class="tag" onclick="addTrendingTag(this)">#training</span>
+                    <span class="tag" onclick="addTrendingTag(this)">#lifestyle</span>
+                </div>
+            </div>
+
+            <div class="tab-content" id="business">
+                <div class="tags-container">
+                    <span class="tag" onclick="addTrendingTag(this)">#business</span>
+                    <span class="tag" onclick="addTrendingTag(this)">#entrepreneur</span>
+                    <span class="tag" onclick="addTrendingTag(this)">#success</span>
+                    <span class="tag" onclick="addTrendingTag(this)">#marketing</span>
+                    <span class="tag" onclick="addTrendingTag(this)">#startup</span>
+                    <span class="tag" onclick="addTrendingTag(this)">#leadership</span>
+                    <span class="tag" onclick="addTrendingTag(this)">#innovation</span>
+                    <span class="tag" onclick="addTrendingTag(this)">#growth</span>
+                    <span class="tag" onclick="addTrendingTag(this)">#networking</span>
+                    <span class="tag" onclick="addTrendingTag(this)">#smallbusiness</span>
+                </div>
+            </div>
+
+            <div class="tab-content" id="tech">
+                <div class="tags-container">
+                    <span class="tag" onclick="addTrendingTag(this)">#technology</span>
+                    <span class="tag" onclick="addTrendingTag(this)">#tech</span>
+                    <span class="tag" onclick="addTrendingTag(this)">#programming</span>
+                    <span class="tag" onclick="addTrendingTag(this)">#coding</span>
+                    <span class="tag" onclick="addTrendingTag(this)">#developer</span>
+                    <span class="tag" onclick="addTrendingTag(this)">#software</span>
+                    <span class="tag" onclick="addTrendingTag(this)">#ai</span>
+                    <span class="tag" onclick="addTrendingTag(this)">#innovation</span>
+                    <span class="tag" onclick="addTrendingTag(this)">#data</span>
+                    <span class="tag" onclick="addTrendingTag(this)">#digital</span>
+                </div>
+            </div>
+
+            <div class="tab-content" id="fashion">
+                <div class="tags-container">
+                    <span class="tag" onclick="addTrendingTag(this)">#fashion</span>
+                    <span class="tag" onclick="addTrendingTag(this)">#style</span>
+                    <span class="tag" onclick="addTrendingTag(this)">#ootd</span>
+                    <span class="tag" onclick="addTrendingTag(this)">#fashionblogger</span>
+                    <span class="tag" onclick="addTrendingTag(this)">#streetstyle</span>
+                    <span class="tag" onclick="addTrendingTag(this)">#fashionista</span>
+                    <span class="tag" onclick="addTrendingTag(this)">#instafashion</span>
+                    <span class="tag" onclick="addTrendingTag(this)">#outfit</span>
+                    <span class="tag" onclick="addTrendingTag(this)">#beauty</span>
+                    <span class="tag" onclick="addTrendingTag(this)">#lookoftheday</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let selectedPlatform = 'instagram';
+let selectedStyle = 'lowercase';
+let generatedHashtags = [];
+
+// Platform limits
+const platformLimits = {
+    instagram: { max: 30, recommended: 20 },
+    twitter: { max: 5, recommended: 3 },
+    tiktok: { max: 100, recommended: 5 },
+    linkedin: { max: 30, recommended: 5 }
+};
+
+// Related hashtags database
+const relatedTags = {
+    travel: ['wanderlust', 'travelgram', 'travelphotography', 'explore', 'adventure', 'vacation', 'trip', 'journey', 'travelblogger', 'instatravel', 'traveler', 'travelling', 'traveltheworld', 'globetrotter', 'traveladdict'],
+    food: ['foodie', 'yummy', 'delicious', 'instafood', 'foodporn', 'cooking', 'homemade', 'recipe', 'foodphotography', 'tasty', 'eating', 'foodlover', 'chef', 'dinner', 'lunch'],
+    fitness: ['gym', 'workout', 'health', 'motivation', 'fit', 'training', 'bodybuilding', 'exercise', 'lifestyle', 'strong', 'fitnessmotivation', 'healthylifestyle', 'gymlife', 'gains', 'muscle'],
+    photography: ['photo', 'photographer', 'photooftheday', 'picoftheday', 'portrait', 'camera', 'photoshoot', 'naturephotography', 'streetphotography', 'canon', 'nikon', 'instagram', 'art', 'beautiful', 'landscape'],
+    love: ['instagood', 'happy', 'beautiful', 'life', 'smile', 'family', 'friends', 'cute', 'fun', 'amazing', 'heart', 'couple', 'romance', 'forever', 'together'],
+    nature: ['landscape', 'mountains', 'sunset', 'beach', 'ocean', 'sky', 'trees', 'flowers', 'wildlife', 'earth', 'green', 'outdoor', 'hiking', 'camping', 'forest'],
+    business: ['entrepreneur', 'success', 'marketing', 'startup', 'money', 'leadership', 'growth', 'innovation', 'mindset', 'hustle', 'goals', 'ceo', 'motivation', 'work', 'career'],
+    fashion: ['style', 'ootd', 'outfit', 'model', 'beauty', 'dress', 'shopping', 'fashionblogger', 'streetstyle', 'fashionista', 'instafashion', 'trendy', 'clothing', 'accessories', 'luxury'],
+    art: ['artist', 'artwork', 'drawing', 'painting', 'creative', 'design', 'illustration', 'sketch', 'digitalart', 'artoftheday', 'creativity', 'artistic', 'gallery', 'instaart', 'contemporaryart'],
+    music: ['musician', 'song', 'singer', 'dj', 'band', 'concert', 'live', 'producer', 'hiphop', 'rap', 'rock', 'pop', 'acoustic', 'guitar', 'spotify']
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+    CutcompressTools.setupTabs(document.getElementById('trendingTabs'));
+});
+
+function selectPlatform(element) {
+    document.querySelectorAll('.option-card[data-platform]').forEach(el => el.classList.remove('selected'));
+    element.classList.add('selected');
+    selectedPlatform = element.dataset.platform;
+    if (generatedHashtags.length > 0) {
+        updateOutput();
+    }
+}
+
+function selectStyle(element) {
+    document.querySelectorAll('.option-card[data-style]').forEach(el => el.classList.remove('selected'));
+    element.classList.add('selected');
+    selectedStyle = element.dataset.style;
+    if (generatedHashtags.length > 0) {
+        generateHashtags();
+    }
+}
+
+function formatHashtag(text, style) {
+    // Remove special characters, keep only alphanumeric
+    let clean = text.replace(/[^a-zA-Z0-9\s]/g, '').trim();
+    if (!clean) return null;
+    
+    const words = clean.split(/\s+/);
+    
+    switch(style) {
+        case 'lowercase':
+            return '#' + words.join('').toLowerCase();
+        case 'UPPERCASE':
+            return '#' + words.join('').toUpperCase();
+        case 'camelCase':
+            return '#' + words.map((w, i) => i === 0 ? w.toLowerCase() : w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join('');
+        case 'PascalCase':
+            return '#' + words.map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join('');
+        default:
+            return '#' + words.join('').toLowerCase();
+    }
+}
+
+function findRelatedTags(keywords) {
+    const related = new Set();
+    const lowerKeywords = keywords.map(k => k.toLowerCase());
+    
+    for (const [category, tags] of Object.entries(relatedTags)) {
+        // Check if any keyword matches the category or tags
+        if (lowerKeywords.some(k => category.includes(k) || k.includes(category) || tags.some(t => t.includes(k) || k.includes(t)))) {
+            tags.forEach(t => related.add(t));
+        }
+    }
+    
+    // Also add some generic popular tags
+    const popular = ['love', 'instagood', 'photooftheday', 'beautiful', 'happy', 'picoftheday', 'follow', 'like', 'instadaily', 'repost'];
+    popular.forEach(t => related.add(t));
+    
+    return Array.from(related);
+}
+
+function generateHashtags() {
+    const input = document.getElementById('inputText').value.trim();
+    if (!input) {
+        CutcompressTools.showAlert('Please enter some text or keywords', 'error');
+        return;
+    }
+    
+    CutcompressTools.showLoading();
+    
+    setTimeout(() => {
+        // Parse input (split by commas, newlines, or spaces)
+        const keywords = input.split(/[,\n]+/).map(k => k.trim()).filter(k => k);
+        
+        // Generate hashtags from keywords
+        generatedHashtags = keywords.map(k => formatHashtag(k, selectedStyle)).filter(h => h);
+        
+        // Add related hashtags based on option
+        const relatedOption = document.getElementById('relatedOption').value;
+        if (relatedOption !== 'none') {
+            const relatedCount = relatedOption === 'few' ? 10 : relatedOption === 'many' ? 20 : 30;
+            const related = findRelatedTags(keywords);
+            const shuffled = related.sort(() => Math.random() - 0.5).slice(0, relatedCount);
+            shuffled.forEach(tag => {
+                const formatted = formatHashtag(tag, selectedStyle);
+                if (formatted && !generatedHashtags.includes(formatted)) {
+                    generatedHashtags.push(formatted);
+                }
+            });
+        }
+        
+        // Remove duplicates
+        generatedHashtags = [...new Set(generatedHashtags)];
+        
+        // Sort
+        const sortOption = document.getElementById('sortOption').value;
+        if (sortOption === 'alphabetical') {
+            generatedHashtags.sort();
+        } else if (sortOption === 'length') {
+            generatedHashtags.sort((a, b) => a.length - b.length);
+        } else {
+            generatedHashtags.sort(() => Math.random() - 0.5);
+        }
+        
+        // Limit based on platform
+        const limit = platformLimits[selectedPlatform].max;
+        generatedHashtags = generatedHashtags.slice(0, limit);
+        
+        updateOutput();
+        CutcompressTools.hideLoading();
+        CutcompressTools.showAlert(`Generated ${generatedHashtags.length} hashtags!`, 'success');
+    }, 500);
+}
+
+function updateOutput() {
+    const container = document.getElementById('hashtagsContainer');
+    const outputText = document.getElementById('outputText');
+    const outputArea = document.getElementById('outputArea');
+    
+    outputArea.style.display = 'block';
+    
+    // Create tags
+    container.innerHTML = generatedHashtags.map(tag => 
+        `<span class="tag">${tag} <span class="remove-tag" onclick="removeHashtag(this, '${tag}')">&times;</span></span>`
+    ).join('');
+    
+    // Update text output
+    const text = generatedHashtags.join(' ');
+    outputText.textContent = text;
+    
+    // Update counts
+    document.getElementById('hashtagCount').textContent = `(${generatedHashtags.length} tags)`;
+    document.getElementById('charCount').textContent = text.length;
+    document.getElementById('tagCount').textContent = generatedHashtags.length;
+    
+    // Platform limit warning
+    const limit = platformLimits[selectedPlatform];
+    const limitDiv = document.getElementById('platformLimit');
+    if (generatedHashtags.length > limit.recommended) {
+        limitDiv.innerHTML = `<span style="color: var(--warning);">⚠️ ${selectedPlatform} recommends ${limit.recommended} hashtags max</span>`;
+    } else {
+        limitDiv.innerHTML = `<span style="color: var(--success);">✅ Good for ${selectedPlatform}</span>`;
+    }
+}
+
+function removeHashtag(element, tag) {
+    generatedHashtags = generatedHashtags.filter(h => h !== tag);
+    updateOutput();
+}
+
+function addTrendingTag(element) {
+    const tag = formatHashtag(element.textContent.replace('#', ''), selectedStyle);
+    if (tag && !generatedHashtags.includes(tag)) {
+        generatedHashtags.push(tag);
+        updateOutput();
+        CutcompressTools.showAlert('Added: ' + tag, 'success');
+    } else {
+        CutcompressTools.showAlert('Tag already exists', 'info');
+    }
+}
+
+function copyAllHashtags() {
+    const text = generatedHashtags.join(' ');
+    CutcompressTools.copyToClipboard(text, document.querySelector('.copy-btn'));
+}
+
+function clearAll() {
+    document.getElementById('inputText').value = '';
+    generatedHashtags = [];
+    document.getElementById('outputArea').style.display = 'none';
+}
+</script>
+{% endblock %}

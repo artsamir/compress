@@ -1,0 +1,341 @@
+{% extends 'base.html' %}
+{% block title %}PowerPoint to PDF Converter - Convert PPT/PPTX to PDF Online{% endblock %}
+{% block description %}Convert PowerPoint presentations (PPT, PPTX) to PDF online for free. Maintain slide quality and formatting. Fast and secure.{% endblock %}
+{% block keywords %}powerpoint to pdf, ppt to pdf, pptx to pdf converter, presentation to pdf, free ppt converter{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/tools_common.css') }}">
+<script src="{{ url_for('static', filename='js/tools_common.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="tool-page">
+    <!-- Theme Toggle -->
+    <button class="theme-toggle" onclick="toggleTheme()">
+        <span class="icon-sun">☀️</span>
+        <span class="icon-moon">🌙</span>
+    </button>
+
+    <div class="tool-container">
+        <!-- Header -->
+        <div class="tool-header">
+            <div class="emoji-icon">📽️</div>
+            <h1>PowerPoint to PDF Converter</h1>
+            <p>Convert your presentations to PDF while keeping all slides beautiful! 🎯</p>
+        </div>
+
+        <!-- Instructions -->
+        <div class="instructions-card">
+            <h3>📋 How to Use</h3>
+            <ol>
+                <li><strong>Upload</strong> your PowerPoint file (.ppt or .pptx)</li>
+                <li><strong>Choose</strong> conversion options (slides per page, quality)</li>
+                <li><strong>Convert</strong> and wait for processing</li>
+                <li><strong>Download</strong> your PDF presentation!</li>
+            </ol>
+        </div>
+
+        <!-- Main Tool Card -->
+        <div class="tool-card">
+            <!-- Upload Area -->
+            <div class="upload-area" id="uploadArea">
+                <input type="file" id="fileInput" accept=".ppt,.pptx" hidden>
+                <div class="upload-icon">🎨</div>
+                <h3>Upload PowerPoint File</h3>
+                <p>Drag & drop your .ppt or .pptx file here</p>
+                <button class="browse-btn" type="button">
+                    <i class="fas fa-folder-open"></i> Choose File
+                </button>
+                <p style="margin-top: 1rem; font-size: 0.85rem; color: var(--text-muted);">
+                    💡 Supports: PPT, PPTX • Max size: 25MB
+                </p>
+            </div>
+
+            <!-- Settings Panel -->
+            <div id="settingsPanel" style="display: none;">
+                <!-- File Info -->
+                <div class="alert alert-info" id="fileInfo" style="margin-bottom: 1.5rem;">
+                    <i class="fas fa-file-powerpoint" style="color: #D24726;"></i>
+                    <span id="fileName">presentation.pptx</span>
+                    <span id="fileSize" style="color: var(--text-secondary);"></span>
+                    <span style="margin-left: auto; cursor: pointer;" onclick="resetUpload()">✕ Remove</span>
+                </div>
+
+                <!-- Layout Options -->
+                <div class="form-group">
+                    <label><i class="fas fa-th-large"></i> Slides Per Page</label>
+                    <div class="options-grid">
+                        <div class="option-card selected" data-layout="1" onclick="selectLayout(this)">
+                            <div class="option-icon">1️⃣</div>
+                            <div class="option-label">1 Slide</div>
+                            <p style="font-size: 0.75rem; color: var(--text-muted);">Full page</p>
+                        </div>
+                        <div class="option-card" data-layout="2" onclick="selectLayout(this)">
+                            <div class="option-icon">2️⃣</div>
+                            <div class="option-label">2 Slides</div>
+                            <p style="font-size: 0.75rem; color: var(--text-muted);">Half page each</p>
+                        </div>
+                        <div class="option-card" data-layout="4" onclick="selectLayout(this)">
+                            <div class="option-icon">4️⃣</div>
+                            <div class="option-label">4 Slides</div>
+                            <p style="font-size: 0.75rem; color: var(--text-muted);">Compact</p>
+                        </div>
+                        <div class="option-card" data-layout="6" onclick="selectLayout(this)">
+                            <div class="option-icon">6️⃣</div>
+                            <div class="option-label">6 Slides</div>
+                            <p style="font-size: 0.75rem; color: var(--text-muted);">Handout</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Orientation -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><i class="fas fa-arrows-alt-h"></i> Page Orientation</label>
+                        <div class="options-grid" style="grid-template-columns: repeat(2, 1fr);">
+                            <div class="option-card" data-orientation="landscape" onclick="selectOrientation(this)">
+                                <div class="option-icon">📃</div>
+                                <div class="option-label">Landscape</div>
+                            </div>
+                            <div class="option-card selected" data-orientation="portrait" onclick="selectOrientation(this)">
+                                <div class="option-icon">📄</div>
+                                <div class="option-label">Portrait</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-image"></i> Quality</label>
+                        <select id="quality">
+                            <option value="high">High Quality (larger file)</option>
+                            <option value="medium" selected>Balanced</option>
+                            <option value="low">Compressed (smaller file)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Additional Options -->
+                <div class="form-group">
+                    <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                        <input type="checkbox" id="includeNotes" style="width: auto;">
+                        <span>📝 Include speaker notes</span>
+                    </label>
+                </div>
+
+                <!-- Loading -->
+                <div class="loading-spinner" id="loadingSpinner">
+                    <div class="spinner"></div>
+                </div>
+
+                <!-- Progress -->
+                <div class="progress-container" id="progressContainer">
+                    <div class="progress-bar">
+                        <div class="progress-fill"></div>
+                    </div>
+                    <p class="progress-text">Converting slides...</p>
+                </div>
+
+                <!-- Info Box -->
+                <div class="alert alert-info" style="margin-top: 1.5rem;">
+                    <i class="fas fa-info-circle"></i>
+                    <span>For best results, PowerPoint files are converted on our secure server. Your files are automatically deleted after conversion.</span>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="btn-group">
+                    <button class="btn btn-secondary" onclick="resetUpload()">
+                        <i class="fas fa-redo"></i> Upload New File
+                    </button>
+                    <button class="btn btn-primary" onclick="convertToPDF()">
+                        <i class="fas fa-file-pdf"></i> Convert to PDF
+                    </button>
+                </div>
+
+                <!-- Results -->
+                <div class="output-area" id="resultsArea" style="display: none;">
+                    <h3>✅ Conversion Complete!</h3>
+                    <div style="display: flex; align-items: center; gap: 1rem; margin-top: 1rem;">
+                        <span style="font-size: 3rem;">📑</span>
+                        <div style="flex: 1;">
+                            <div style="font-weight: 600; color: var(--text-primary);" id="resultFileName">presentation.pdf</div>
+                            <div style="color: var(--text-secondary); font-size: 0.9rem;" id="resultInfo">Ready to download</div>
+                        </div>
+                        <button class="btn btn-download" onclick="downloadPDF()">
+                            <i class="fas fa-download"></i> Download PDF
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Conversion Tips -->
+        <div class="instructions-card" style="margin-top: 2rem;">
+            <h3>💡 Pro Tips</h3>
+            <ol>
+                <li><strong>Use 1 slide per page</strong> for presentations that will be viewed on screen</li>
+                <li><strong>Use 2-4 slides per page</strong> for printed handouts to save paper</li>
+                <li><strong>Use 6 slides per page</strong> for revision notes or compact reference</li>
+                <li><strong>Include speaker notes</strong> if you need to share presentation context</li>
+                <li><strong>Choose portrait</strong> for handouts, <strong>landscape</strong> for slide-focused PDFs</li>
+            </ol>
+        </div>
+    </div>
+</div>
+
+<script>
+let uploadedFile = null;
+let slidesPerPage = 1;
+let orientation = 'portrait';
+
+document.addEventListener('DOMContentLoaded', () => {
+    const uploadArea = document.getElementById('uploadArea');
+    const fileInput = document.getElementById('fileInput');
+    
+    CutcompressTools.setupDragAndDrop(uploadArea, fileInput, handleFileSelect);
+});
+
+function handleFileSelect(files) {
+    const file = files[0];
+    if (!file) return;
+    
+    const ext = file.name.split('.').pop().toLowerCase();
+    if (ext !== 'ppt' && ext !== 'pptx') {
+        CutcompressTools.showAlert('Please upload a PowerPoint file (.ppt or .pptx)', 'error');
+        return;
+    }
+    
+    if (file.size > 25 * 1024 * 1024) {
+        CutcompressTools.showAlert('File size exceeds 25MB limit', 'error');
+        return;
+    }
+    
+    uploadedFile = file;
+    
+    // Update UI
+    document.getElementById('uploadArea').style.display = 'none';
+    document.getElementById('settingsPanel').style.display = 'block';
+    document.getElementById('fileName').textContent = file.name;
+    document.getElementById('fileSize').textContent = ` (${CutcompressTools.formatFileSize(file.size)})`;
+    
+    CutcompressTools.showAlert('File loaded! Configure options and convert.', 'success');
+}
+
+function selectLayout(element) {
+    document.querySelectorAll('.option-card[data-layout]').forEach(el => el.classList.remove('selected'));
+    element.classList.add('selected');
+    slidesPerPage = parseInt(element.dataset.layout);
+}
+
+function selectOrientation(element) {
+    document.querySelectorAll('.option-card[data-orientation]').forEach(el => el.classList.remove('selected'));
+    element.classList.add('selected');
+    orientation = element.dataset.orientation;
+}
+
+async function convertToPDF() {
+    if (!uploadedFile) {
+        CutcompressTools.showAlert('Please upload a file first', 'error');
+        return;
+    }
+    
+    CutcompressTools.showLoading();
+    document.getElementById('progressContainer').classList.add('active');
+    
+    const quality = document.getElementById('quality').value;
+    const includeNotes = document.getElementById('includeNotes').checked;
+    
+    // Simulate progress
+    let progress = 0;
+    const progressInterval = setInterval(() => {
+        progress += Math.random() * 15;
+        if (progress > 90) progress = 90;
+        CutcompressTools.updateProgress(progress);
+    }, 500);
+    
+    try {
+        // Try server-side conversion
+        const formData = new FormData();
+        formData.append('file', uploadedFile);
+        formData.append('slidesPerPage', slidesPerPage);
+        formData.append('orientation', orientation);
+        formData.append('quality', quality);
+        formData.append('includeNotes', includeNotes);
+        
+        const response = await fetch('/convert/ppt-to-pdf', {
+            method: 'POST',
+            body: formData
+        });
+        
+        clearInterval(progressInterval);
+        CutcompressTools.updateProgress(100);
+        
+        if (response.ok) {
+            const blob = await response.blob();
+            window.convertedPdfBlob = blob;
+            showResults();
+        } else {
+            // Show demo message
+            showDemoResults();
+        }
+    } catch (error) {
+        clearInterval(progressInterval);
+        console.error('Conversion error:', error);
+        showDemoResults();
+    }
+}
+
+function showDemoResults() {
+    CutcompressTools.hideLoading();
+    document.getElementById('progressContainer').classList.remove('active');
+    
+    const resultsArea = document.getElementById('resultsArea');
+    resultsArea.style.display = 'block';
+    
+    const pdfName = uploadedFile.name.replace(/\.(ppt|pptx)$/i, '.pdf');
+    document.getElementById('resultFileName').textContent = pdfName;
+    document.getElementById('resultInfo').innerHTML = `
+        <span style="color: var(--warning);">⚠️ Server conversion required for PPT files.</span>
+        <br><small>For full functionality, please ensure the server endpoint is configured.</small>
+    `;
+    
+    CutcompressTools.showAlert('Note: Server-side conversion needed for PowerPoint files.', 'info');
+}
+
+function showResults() {
+    CutcompressTools.hideLoading();
+    document.getElementById('progressContainer').classList.remove('active');
+    
+    const resultsArea = document.getElementById('resultsArea');
+    resultsArea.style.display = 'block';
+    
+    const pdfName = uploadedFile.name.replace(/\.(ppt|pptx)$/i, '.pdf');
+    document.getElementById('resultFileName').textContent = pdfName;
+    document.getElementById('resultInfo').textContent = 'Ready to download';
+    
+    CutcompressTools.showAlert('Conversion complete!', 'success');
+}
+
+function downloadPDF() {
+    if (window.convertedPdfBlob) {
+        const pdfName = uploadedFile.name.replace(/\.(ppt|pptx)$/i, '.pdf');
+        const url = URL.createObjectURL(window.convertedPdfBlob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = pdfName;
+        a.click();
+        URL.revokeObjectURL(url);
+        CutcompressTools.showAlert('PDF downloaded!', 'success');
+    } else {
+        CutcompressTools.showAlert('PDF conversion required. Please configure server endpoint.', 'info');
+    }
+}
+
+function resetUpload() {
+    uploadedFile = null;
+    window.convertedPdfBlob = null;
+    document.getElementById('fileInput').value = '';
+    document.getElementById('uploadArea').style.display = 'block';
+    document.getElementById('settingsPanel').style.display = 'none';
+    document.getElementById('resultsArea').style.display = 'none';
+}
+</script>
+{% endblock %}
