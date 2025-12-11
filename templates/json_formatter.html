@@ -1,0 +1,395 @@
+{% extends 'base.html' %}
+{% block title %}JSON Formatter & Validator - Free Online Tool{% endblock %}
+{% block description %}Format, validate, and beautify JSON data. Free online JSON formatter with syntax highlighting and error detection.{% endblock %}
+{% block keywords %}json formatter, json validator, json beautifier, json minifier{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/tools_common.css') }}">
+<script src="{{ url_for('static', filename='js/tools_common.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="tool-page">
+    <button class="theme-toggle" onclick="toggleTheme()">
+        <span class="icon-sun">☀️</span>
+        <span class="icon-moon">🌙</span>
+    </button>
+
+    <div class="tool-container">
+        <div class="tool-header">
+            <div class="emoji-icon">{ }</div>
+            <h1>JSON Formatter & Validator</h1>
+            <p>Format, validate, and beautify your JSON! ✨</p>
+        </div>
+
+        <div class="instructions-card">
+            <h3>📋 How to Use</h3>
+            <ol>
+                <li><strong>Paste</strong> your JSON in the input area</li>
+                <li><strong>Click</strong> Format to beautify or Minify to compress</li>
+                <li><strong>View</strong> syntax errors if any</li>
+                <li><strong>Copy</strong> the formatted result!</li>
+            </ol>
+        </div>
+
+        <div class="tool-card">
+            <!-- Action Buttons -->
+            <div class="btn-group" style="margin-bottom: 1rem;">
+                <button class="btn btn-primary" onclick="formatJSON()">🎨 Format / Beautify</button>
+                <button class="btn btn-secondary" onclick="minifyJSON()">📦 Minify</button>
+                <button class="btn btn-secondary" onclick="validateJSON()">✅ Validate</button>
+                <button class="btn btn-secondary" onclick="clearJSON()">🗑️ Clear</button>
+            </div>
+
+            <!-- Status Bar -->
+            <div id="statusBar" style="padding: 0.75rem 1rem; border-radius: 8px; margin-bottom: 1rem; display: none;">
+                <span id="statusIcon"></span>
+                <span id="statusMessage"></span>
+            </div>
+
+            <!-- Editor Area -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <!-- Input -->
+                <div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                        <h4 style="color: var(--text-primary); margin: 0;">📥 Input</h4>
+                        <button class="btn btn-secondary" onclick="loadSampleJSON()" style="padding: 0.25rem 0.75rem; font-size: 0.85rem;">
+                            Load Sample
+                        </button>
+                    </div>
+                    <textarea id="jsonInput" placeholder='Paste your JSON here...\n\n{\n  "name": "John",\n  "age": 30\n}' style="width: 100%; height: 400px; font-family: 'Consolas', 'Monaco', monospace; font-size: 14px; padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-tertiary); color: var(--text-primary); resize: vertical;"></textarea>
+                </div>
+
+                <!-- Output -->
+                <div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                        <h4 style="color: var(--text-primary); margin: 0;">📤 Output</h4>
+                        <button class="btn btn-secondary" onclick="copyOutput()" style="padding: 0.25rem 0.75rem; font-size: 0.85rem;">
+                            📋 Copy
+                        </button>
+                    </div>
+                    <pre id="jsonOutput" style="width: 100%; height: 400px; font-family: 'Consolas', 'Monaco', monospace; font-size: 14px; padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-tertiary); color: var(--text-primary); overflow: auto; margin: 0; white-space: pre-wrap; word-break: break-word;"></pre>
+                </div>
+            </div>
+
+            <!-- Options -->
+            <div style="margin-top: 1.5rem; display: flex; gap: 2rem; flex-wrap: wrap;">
+                <div class="form-group" style="margin: 0;">
+                    <label style="margin-bottom: 0.25rem;">Indent Size</label>
+                    <select id="indentSize" style="width: auto;">
+                        <option value="2" selected>2 spaces</option>
+                        <option value="4">4 spaces</option>
+                        <option value="tab">Tab</option>
+                    </select>
+                </div>
+                <div class="form-group" style="margin: 0;">
+                    <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                        <input type="checkbox" id="sortKeys" style="width: auto;">
+                        Sort Keys Alphabetically
+                    </label>
+                </div>
+            </div>
+
+            <!-- Stats -->
+            <div id="jsonStats" style="margin-top: 1rem; padding: 1rem; background: var(--bg-tertiary); border-radius: 8px; display: none;">
+                <h4 style="color: var(--text-primary); margin: 0 0 0.5rem;">📊 JSON Statistics</h4>
+                <div style="display: flex; gap: 2rem; flex-wrap: wrap; color: var(--text-secondary);">
+                    <span>📁 <strong id="statKeys">0</strong> keys</span>
+                    <span>📊 <strong id="statArrays">0</strong> arrays</span>
+                    <span>📦 <strong id="statObjects">0</strong> objects</span>
+                    <span>📏 <strong id="statDepth">0</strong> max depth</span>
+                    <span>💾 <strong id="statSize">0 B</strong></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- JSON Path Finder -->
+        <div class="tool-card" style="margin-top: 1.5rem;">
+            <h3 style="color: var(--text-primary); margin-bottom: 1rem;">🔍 JSON Path Finder</h3>
+            <div class="form-group">
+                <label>Enter JSON Path (e.g., data.users[0].name)</label>
+                <div style="display: flex; gap: 0.5rem;">
+                    <input type="text" id="jsonPath" placeholder="data.users[0].name" style="flex: 1;">
+                    <button class="btn btn-primary" onclick="findPath()">Find</button>
+                </div>
+            </div>
+            <pre id="pathResult" style="background: var(--bg-tertiary); padding: 1rem; border-radius: 8px; margin-top: 0.5rem; display: none; white-space: pre-wrap;"></pre>
+        </div>
+    </div>
+</div>
+
+<style>
+@media (max-width: 768px) {
+    .tool-card > div[style*="grid-template-columns"] {
+        grid-template-columns: 1fr !important;
+    }
+}
+.json-key { color: #e53e3e; }
+.json-string { color: #38a169; }
+.json-number { color: #3182ce; }
+.json-boolean { color: #805ad5; }
+.json-null { color: #718096; }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('jsonInput').addEventListener('input', () => {
+        hideStatus();
+    });
+});
+
+function showStatus(type, message) {
+    const bar = document.getElementById('statusBar');
+    const icon = document.getElementById('statusIcon');
+    const msg = document.getElementById('statusMessage');
+    
+    bar.style.display = 'block';
+    msg.textContent = message;
+    
+    if (type === 'success') {
+        bar.style.background = 'rgba(72, 187, 120, 0.2)';
+        bar.style.color = '#48bb78';
+        icon.textContent = '✅ ';
+    } else if (type === 'error') {
+        bar.style.background = 'rgba(245, 101, 101, 0.2)';
+        bar.style.color = '#f56565';
+        icon.textContent = '❌ ';
+    } else {
+        bar.style.background = 'rgba(66, 153, 225, 0.2)';
+        bar.style.color = '#4299e1';
+        icon.textContent = 'ℹ️ ';
+    }
+}
+
+function hideStatus() {
+    document.getElementById('statusBar').style.display = 'none';
+}
+
+function getIndent() {
+    const val = document.getElementById('indentSize').value;
+    return val === 'tab' ? '\t' : parseInt(val);
+}
+
+function formatJSON() {
+    const input = document.getElementById('jsonInput').value.trim();
+    if (!input) {
+        showStatus('error', 'Please enter some JSON');
+        return;
+    }
+    
+    try {
+        let obj = JSON.parse(input);
+        
+        if (document.getElementById('sortKeys').checked) {
+            obj = sortObjectKeys(obj);
+        }
+        
+        const formatted = JSON.stringify(obj, null, getIndent());
+        document.getElementById('jsonOutput').innerHTML = syntaxHighlight(formatted);
+        showStatus('success', 'JSON formatted successfully!');
+        updateStats(obj, formatted);
+    } catch (e) {
+        showStatus('error', `Invalid JSON: ${e.message}`);
+        document.getElementById('jsonOutput').textContent = '';
+        document.getElementById('jsonStats').style.display = 'none';
+    }
+}
+
+function minifyJSON() {
+    const input = document.getElementById('jsonInput').value.trim();
+    if (!input) {
+        showStatus('error', 'Please enter some JSON');
+        return;
+    }
+    
+    try {
+        const obj = JSON.parse(input);
+        const minified = JSON.stringify(obj);
+        document.getElementById('jsonOutput').textContent = minified;
+        
+        const originalSize = new Blob([input]).size;
+        const minifiedSize = new Blob([minified]).size;
+        const saved = originalSize - minifiedSize;
+        const percent = ((saved / originalSize) * 100).toFixed(1);
+        
+        showStatus('success', `Minified! Saved ${formatBytes(saved)} (${percent}%)`);
+        updateStats(obj, minified);
+    } catch (e) {
+        showStatus('error', `Invalid JSON: ${e.message}`);
+    }
+}
+
+function validateJSON() {
+    const input = document.getElementById('jsonInput').value.trim();
+    if (!input) {
+        showStatus('error', 'Please enter some JSON');
+        return;
+    }
+    
+    try {
+        const obj = JSON.parse(input);
+        showStatus('success', 'Valid JSON! ✓');
+        updateStats(obj, input);
+    } catch (e) {
+        showStatus('error', `Invalid JSON: ${e.message}`);
+        document.getElementById('jsonStats').style.display = 'none';
+    }
+}
+
+function clearJSON() {
+    document.getElementById('jsonInput').value = '';
+    document.getElementById('jsonOutput').textContent = '';
+    document.getElementById('jsonStats').style.display = 'none';
+    hideStatus();
+}
+
+function copyOutput() {
+    const output = document.getElementById('jsonOutput').textContent;
+    if (!output) {
+        CutcompressTools.showAlert('Nothing to copy', 'warning');
+        return;
+    }
+    navigator.clipboard.writeText(output);
+    CutcompressTools.showAlert('Copied to clipboard!', 'success');
+}
+
+function loadSampleJSON() {
+    const sample = {
+        "name": "John Doe",
+        "age": 30,
+        "email": "john@example.com",
+        "isActive": true,
+        "address": {
+            "street": "123 Main St",
+            "city": "New York",
+            "country": "USA"
+        },
+        "hobbies": ["reading", "gaming", "coding"],
+        "orders": [
+            { "id": 1, "product": "Laptop", "price": 999.99 },
+            { "id": 2, "product": "Mouse", "price": 29.99 }
+        ],
+        "metadata": null
+    };
+    document.getElementById('jsonInput').value = JSON.stringify(sample);
+    formatJSON();
+}
+
+function syntaxHighlight(json) {
+    json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+        let cls = 'json-number';
+        if (/^"/.test(match)) {
+            if (/:$/.test(match)) {
+                cls = 'json-key';
+            } else {
+                cls = 'json-string';
+            }
+        } else if (/true|false/.test(match)) {
+            cls = 'json-boolean';
+        } else if (/null/.test(match)) {
+            cls = 'json-null';
+        }
+        return '<span class="' + cls + '">' + match + '</span>';
+    });
+}
+
+function sortObjectKeys(obj) {
+    if (Array.isArray(obj)) {
+        return obj.map(sortObjectKeys);
+    } else if (obj !== null && typeof obj === 'object') {
+        return Object.keys(obj).sort().reduce((result, key) => {
+            result[key] = sortObjectKeys(obj[key]);
+            return result;
+        }, {});
+    }
+    return obj;
+}
+
+function updateStats(obj, jsonStr) {
+    const stats = analyzeJSON(obj);
+    document.getElementById('statKeys').textContent = stats.keys;
+    document.getElementById('statArrays').textContent = stats.arrays;
+    document.getElementById('statObjects').textContent = stats.objects;
+    document.getElementById('statDepth').textContent = stats.depth;
+    document.getElementById('statSize').textContent = formatBytes(new Blob([jsonStr]).size);
+    document.getElementById('jsonStats').style.display = 'block';
+}
+
+function analyzeJSON(obj, depth = 0) {
+    let stats = { keys: 0, arrays: 0, objects: 0, depth: depth };
+    
+    if (Array.isArray(obj)) {
+        stats.arrays++;
+        obj.forEach(item => {
+            const sub = analyzeJSON(item, depth + 1);
+            stats.keys += sub.keys;
+            stats.arrays += sub.arrays;
+            stats.objects += sub.objects;
+            stats.depth = Math.max(stats.depth, sub.depth);
+        });
+    } else if (obj !== null && typeof obj === 'object') {
+        stats.objects++;
+        Object.keys(obj).forEach(key => {
+            stats.keys++;
+            const sub = analyzeJSON(obj[key], depth + 1);
+            stats.keys += sub.keys;
+            stats.arrays += sub.arrays;
+            stats.objects += sub.objects;
+            stats.depth = Math.max(stats.depth, sub.depth);
+        });
+    }
+    
+    return stats;
+}
+
+function formatBytes(bytes) {
+    if (bytes === 0) return '0 B';
+    const k = 1024;
+    const sizes = ['B', 'KB', 'MB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+}
+
+function findPath() {
+    const input = document.getElementById('jsonInput').value.trim();
+    const path = document.getElementById('jsonPath').value.trim();
+    const result = document.getElementById('pathResult');
+    
+    if (!input || !path) {
+        CutcompressTools.showAlert('Please enter JSON and a path', 'warning');
+        return;
+    }
+    
+    try {
+        const obj = JSON.parse(input);
+        const value = getValueByPath(obj, path);
+        
+        result.style.display = 'block';
+        if (value === undefined) {
+            result.textContent = 'Path not found';
+            result.style.color = '#f56565';
+        } else {
+            result.textContent = typeof value === 'object' ? JSON.stringify(value, null, 2) : String(value);
+            result.style.color = 'var(--text-primary)';
+        }
+    } catch (e) {
+        result.style.display = 'block';
+        result.textContent = 'Error: ' + e.message;
+        result.style.color = '#f56565';
+    }
+}
+
+function getValueByPath(obj, path) {
+    const parts = path.replace(/\[(\d+)\]/g, '.$1').split('.');
+    let current = obj;
+    
+    for (const part of parts) {
+        if (current === undefined || current === null) return undefined;
+        current = current[part];
+    }
+    
+    return current;
+}
+</script>
+{% endblock %}

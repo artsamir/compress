@@ -1,0 +1,329 @@
+{% extends 'base.html' %}
+{% block title %}QR Code Generator - Create QR Codes Online Free{% endblock %}
+{% block description %}Generate QR codes for URLs, text, WiFi, vCards, and more. Free online QR code generator with customization options.{% endblock %}
+{% block keywords %}qr code generator, create qr code, qr code maker, free qr code{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/tools_common.css') }}">
+<script src="{{ url_for('static', filename='js/tools_common.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="tool-page">
+    <button class="theme-toggle" onclick="toggleTheme()">
+        <span class="icon-sun">☀️</span>
+        <span class="icon-moon">🌙</span>
+    </button>
+
+    <div class="tool-container">
+        <div class="tool-header">
+            <div class="emoji-icon">📱</div>
+            <h1>QR Code Generator</h1>
+            <p>Create custom QR codes for any purpose! 🔲</p>
+        </div>
+
+        <div class="instructions-card">
+            <h3>📋 How to Use</h3>
+            <ol>
+                <li><strong>Select</strong> the type of QR code you want to create</li>
+                <li><strong>Enter</strong> your content (URL, text, WiFi details, etc.)</li>
+                <li><strong>Customize</strong> colors and size</li>
+                <li><strong>Download</strong> your QR code as PNG!</li>
+            </ol>
+        </div>
+
+        <div class="tool-card">
+            <!-- QR Type Selection -->
+            <div class="form-group">
+                <label>📌 QR Code Type</label>
+                <div class="options-grid" style="grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));">
+                    <div class="option-card selected" data-type="url" onclick="selectQRType(this)">
+                        <div class="option-icon">🔗</div>
+                        <div class="option-label">URL</div>
+                    </div>
+                    <div class="option-card" data-type="text" onclick="selectQRType(this)">
+                        <div class="option-icon">📝</div>
+                        <div class="option-label">Text</div>
+                    </div>
+                    <div class="option-card" data-type="wifi" onclick="selectQRType(this)">
+                        <div class="option-icon">📶</div>
+                        <div class="option-label">WiFi</div>
+                    </div>
+                    <div class="option-card" data-type="email" onclick="selectQRType(this)">
+                        <div class="option-icon">📧</div>
+                        <div class="option-label">Email</div>
+                    </div>
+                    <div class="option-card" data-type="phone" onclick="selectQRType(this)">
+                        <div class="option-icon">📞</div>
+                        <div class="option-label">Phone</div>
+                    </div>
+                    <div class="option-card" data-type="sms" onclick="selectQRType(this)">
+                        <div class="option-icon">💬</div>
+                        <div class="option-label">SMS</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dynamic Input Fields -->
+            <div id="inputFields">
+                <!-- URL Input -->
+                <div id="urlInput" class="qr-input-section">
+                    <div class="form-group">
+                        <label>🔗 Enter URL</label>
+                        <input type="url" id="urlValue" placeholder="https://example.com" oninput="generateQR()">
+                    </div>
+                </div>
+
+                <!-- Text Input -->
+                <div id="textInput" class="qr-input-section" style="display: none;">
+                    <div class="form-group">
+                        <label>📝 Enter Text</label>
+                        <textarea id="textValue" placeholder="Enter your text here..." rows="4" oninput="generateQR()"></textarea>
+                    </div>
+                </div>
+
+                <!-- WiFi Input -->
+                <div id="wifiInput" class="qr-input-section" style="display: none;">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>📶 Network Name (SSID)</label>
+                            <input type="text" id="wifiSSID" placeholder="MyWiFi" oninput="generateQR()">
+                        </div>
+                        <div class="form-group">
+                            <label>🔐 Password</label>
+                            <input type="text" id="wifiPassword" placeholder="password123" oninput="generateQR()">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>🔒 Security Type</label>
+                        <select id="wifiSecurity" onchange="generateQR()">
+                            <option value="WPA">WPA/WPA2</option>
+                            <option value="WEP">WEP</option>
+                            <option value="nopass">No Password</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Email Input -->
+                <div id="emailInput" class="qr-input-section" style="display: none;">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>📧 Email Address</label>
+                            <input type="email" id="emailAddress" placeholder="email@example.com" oninput="generateQR()">
+                        </div>
+                        <div class="form-group">
+                            <label>📋 Subject</label>
+                            <input type="text" id="emailSubject" placeholder="Hello!" oninput="generateQR()">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>💬 Message</label>
+                        <textarea id="emailBody" placeholder="Your message..." rows="3" oninput="generateQR()"></textarea>
+                    </div>
+                </div>
+
+                <!-- Phone Input -->
+                <div id="phoneInput" class="qr-input-section" style="display: none;">
+                    <div class="form-group">
+                        <label>📞 Phone Number</label>
+                        <input type="tel" id="phoneNumber" placeholder="+1234567890" oninput="generateQR()">
+                    </div>
+                </div>
+
+                <!-- SMS Input -->
+                <div id="smsInput" class="qr-input-section" style="display: none;">
+                    <div class="form-group">
+                        <label>📱 Phone Number</label>
+                        <input type="tel" id="smsNumber" placeholder="+1234567890" oninput="generateQR()">
+                    </div>
+                    <div class="form-group">
+                        <label>💬 Message</label>
+                        <textarea id="smsMessage" placeholder="Your SMS message..." rows="3" oninput="generateQR()"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Customization -->
+            <div style="margin-top: 2rem;">
+                <h3 style="color: var(--text-primary); margin-bottom: 1rem;">🎨 Customize</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Foreground Color</label>
+                        <input type="color" id="fgColor" value="#000000" onchange="generateQR()">
+                    </div>
+                    <div class="form-group">
+                        <label>Background Color</label>
+                        <input type="color" id="bgColor" value="#ffffff" onchange="generateQR()">
+                    </div>
+                    <div class="form-group">
+                        <label>Size (px)</label>
+                        <select id="qrSize" onchange="generateQR()">
+                            <option value="150">150 x 150</option>
+                            <option value="200">200 x 200</option>
+                            <option value="256" selected>256 x 256</option>
+                            <option value="300">300 x 300</option>
+                            <option value="400">400 x 400</option>
+                            <option value="512">512 x 512</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- QR Preview -->
+            <div class="preview-area" style="margin-top: 2rem; text-align: center;">
+                <h3 style="margin-bottom: 1rem;">📱 Your QR Code</h3>
+                <div id="qrPreview" style="display: inline-block; padding: 1rem; background: white; border-radius: 8px; box-shadow: var(--shadow-md);">
+                    <canvas id="qrCanvas"></canvas>
+                </div>
+                <p id="qrPlaceholder" style="color: var(--text-secondary); margin-top: 1rem;">Enter content above to generate QR code</p>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-secondary" onclick="resetQR()">
+                    <i class="fas fa-redo"></i> Reset
+                </button>
+                <button class="btn btn-primary" onclick="downloadQR('png')">
+                    <i class="fas fa-download"></i> Download PNG
+                </button>
+                <button class="btn btn-download" onclick="downloadQR('svg')">
+                    <i class="fas fa-file-code"></i> Download SVG
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let currentType = 'url';
+
+function selectQRType(element) {
+    document.querySelectorAll('.option-card[data-type]').forEach(el => el.classList.remove('selected'));
+    element.classList.add('selected');
+    currentType = element.dataset.type;
+    
+    // Hide all input sections
+    document.querySelectorAll('.qr-input-section').forEach(el => el.style.display = 'none');
+    // Show selected
+    document.getElementById(currentType + 'Input').style.display = 'block';
+    
+    generateQR();
+}
+
+function getQRContent() {
+    switch(currentType) {
+        case 'url':
+            return document.getElementById('urlValue').value;
+        case 'text':
+            return document.getElementById('textValue').value;
+        case 'wifi':
+            const ssid = document.getElementById('wifiSSID').value;
+            const pass = document.getElementById('wifiPassword').value;
+            const sec = document.getElementById('wifiSecurity').value;
+            if (!ssid) return '';
+            return `WIFI:T:${sec};S:${ssid};P:${pass};;`;
+        case 'email':
+            const email = document.getElementById('emailAddress').value;
+            const subject = document.getElementById('emailSubject').value;
+            const body = document.getElementById('emailBody').value;
+            if (!email) return '';
+            return `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        case 'phone':
+            const phone = document.getElementById('phoneNumber').value;
+            return phone ? `tel:${phone}` : '';
+        case 'sms':
+            const smsNum = document.getElementById('smsNumber').value;
+            const smsMsg = document.getElementById('smsMessage').value;
+            if (!smsNum) return '';
+            return `sms:${smsNum}${smsMsg ? '?body=' + encodeURIComponent(smsMsg) : ''}`;
+        default:
+            return '';
+    }
+}
+
+function generateQR() {
+    const content = getQRContent();
+    const canvas = document.getElementById('qrCanvas');
+    const placeholder = document.getElementById('qrPlaceholder');
+    
+    if (!content) {
+        canvas.style.display = 'none';
+        placeholder.style.display = 'block';
+        return;
+    }
+    
+    canvas.style.display = 'block';
+    placeholder.style.display = 'none';
+    
+    const size = parseInt(document.getElementById('qrSize').value);
+    const fgColor = document.getElementById('fgColor').value;
+    const bgColor = document.getElementById('bgColor').value;
+    
+    QRCode.toCanvas(canvas, content, {
+        width: size,
+        margin: 2,
+        color: {
+            dark: fgColor,
+            light: bgColor
+        }
+    }, function(error) {
+        if (error) {
+            console.error(error);
+            CutcompressTools.showAlert('Error generating QR code', 'error');
+        }
+    });
+}
+
+function downloadQR(format) {
+    const content = getQRContent();
+    if (!content) {
+        CutcompressTools.showAlert('Please enter content first!', 'error');
+        return;
+    }
+    
+    const size = parseInt(document.getElementById('qrSize').value);
+    const fgColor = document.getElementById('fgColor').value;
+    const bgColor = document.getElementById('bgColor').value;
+    
+    if (format === 'png') {
+        const canvas = document.getElementById('qrCanvas');
+        CutcompressTools.downloadCanvas(canvas, 'qrcode.png');
+        CutcompressTools.showAlert('QR Code downloaded!', 'success');
+    } else if (format === 'svg') {
+        QRCode.toString(content, {
+            type: 'svg',
+            width: size,
+            margin: 2,
+            color: {
+                dark: fgColor,
+                light: bgColor
+            }
+        }, function(error, svg) {
+            if (error) {
+                CutcompressTools.showAlert('Error generating SVG', 'error');
+                return;
+            }
+            const blob = new Blob([svg], { type: 'image/svg+xml' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'qrcode.svg';
+            a.click();
+            URL.revokeObjectURL(url);
+            CutcompressTools.showAlert('SVG downloaded!', 'success');
+        });
+    }
+}
+
+function resetQR() {
+    document.querySelectorAll('input[type="text"], input[type="url"], input[type="email"], input[type="tel"], textarea').forEach(el => el.value = '');
+    document.getElementById('fgColor').value = '#000000';
+    document.getElementById('bgColor').value = '#ffffff';
+    document.getElementById('qrSize').value = '256';
+    generateQR();
+    CutcompressTools.showAlert('Reset!', 'info');
+}
+
+document.addEventListener('DOMContentLoaded', generateQR);
+</script>
+{% endblock %}

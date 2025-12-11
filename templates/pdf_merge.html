@@ -1,0 +1,283 @@
+{% extends 'base.html' %}
+{% block title %}Merge PDF - Combine PDF Files Online Free{% endblock %}
+{% block description %}Merge multiple PDF files into one document. Free online PDF merger tool - no watermarks, no limits.{% endblock %}
+{% block keywords %}merge pdf, combine pdf, pdf merger, join pdf files{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/tools_common.css') }}">
+<script src="{{ url_for('static', filename='js/tools_common.js') }}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="tool-page">
+    <button class="theme-toggle" onclick="toggleTheme()">
+        <span class="icon-sun">☀️</span>
+        <span class="icon-moon">🌙</span>
+    </button>
+
+    <div class="tool-container">
+        <div class="tool-header">
+            <div class="emoji-icon">📑</div>
+            <h1>Merge PDF Files</h1>
+            <p>Combine multiple PDFs into one document! 📄</p>
+        </div>
+
+        <div class="instructions-card">
+            <h3>📋 How to Use</h3>
+            <ol>
+                <li><strong>Upload</strong> multiple PDF files</li>
+                <li><strong>Drag & drop</strong> to reorder the files</li>
+                <li><strong>Click</strong> Merge to combine them</li>
+                <li><strong>Download</strong> your merged PDF!</li>
+            </ol>
+        </div>
+
+        <div class="tool-card">
+            <div class="upload-area" id="uploadArea">
+                <div class="upload-icon">📁</div>
+                <h3>Drop PDF files here</h3>
+                <p>or click to browse</p>
+                <input type="file" id="fileInput" accept=".pdf" multiple hidden>
+            </div>
+
+            <!-- File List -->
+            <div id="fileList" class="file-list" style="display: none;">
+                <h3 style="color: var(--text-primary); margin-bottom: 1rem;">📚 Files to Merge (drag to reorder)</h3>
+                <div id="sortableList"></div>
+            </div>
+
+            <div class="progress-container" id="progressContainer" style="display: none;">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <p class="progress-text" id="progressText">Merging PDFs...</p>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-secondary" onclick="clearFiles()">
+                    <i class="fas fa-trash"></i> Clear All
+                </button>
+                <button class="btn btn-primary" id="mergeBtn" onclick="mergePDFs()" disabled>
+                    <i class="fas fa-object-group"></i> Merge PDFs
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.file-list {
+    margin-top: 1.5rem;
+}
+.file-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: var(--bg-tertiary);
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+    cursor: grab;
+    transition: all 0.2s;
+}
+.file-item:hover {
+    background: var(--primary-light);
+}
+.file-item.dragging {
+    opacity: 0.5;
+    cursor: grabbing;
+}
+.file-item .file-icon {
+    font-size: 1.5rem;
+}
+.file-item .file-info {
+    flex: 1;
+}
+.file-item .file-name {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+.file-item .file-size {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+.file-item .remove-btn {
+    background: none;
+    border: none;
+    color: #e53e3e;
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 0.5rem;
+}
+.file-item .drag-handle {
+    color: var(--text-secondary);
+    cursor: grab;
+}
+</style>
+
+<script>
+let pdfFiles = [];
+
+document.addEventListener('DOMContentLoaded', () => {
+    const uploadArea = document.getElementById('uploadArea');
+    const fileInput = document.getElementById('fileInput');
+    
+    uploadArea.addEventListener('click', () => fileInput.click());
+    
+    CutcompressTools.setupDragAndDrop(uploadArea, (e) => {
+        handleFiles(e.dataTransfer.files);
+    });
+    
+    fileInput.addEventListener('change', (e) => {
+        handleFiles(e.target.files);
+    });
+});
+
+function handleFiles(files) {
+    for (let file of files) {
+        if (file.type === 'application/pdf') {
+            pdfFiles.push(file);
+        }
+    }
+    updateFileList();
+}
+
+function updateFileList() {
+    const fileList = document.getElementById('fileList');
+    const sortableList = document.getElementById('sortableList');
+    const mergeBtn = document.getElementById('mergeBtn');
+    
+    if (pdfFiles.length === 0) {
+        fileList.style.display = 'none';
+        mergeBtn.disabled = true;
+        return;
+    }
+    
+    fileList.style.display = 'block';
+    mergeBtn.disabled = pdfFiles.length < 2;
+    
+    sortableList.innerHTML = pdfFiles.map((file, index) => `
+        <div class="file-item" draggable="true" data-index="${index}">
+            <span class="drag-handle">☰</span>
+            <span class="file-icon">📄</span>
+            <div class="file-info">
+                <div class="file-name">${file.name}</div>
+                <div class="file-size">${CutcompressTools.formatFileSize(file.size)}</div>
+            </div>
+            <button class="remove-btn" onclick="removeFile(${index})">✕</button>
+        </div>
+    `).join('');
+    
+    // Setup drag and drop sorting
+    setupSortable();
+}
+
+function setupSortable() {
+    const items = document.querySelectorAll('.file-item');
+    let draggedItem = null;
+    
+    items.forEach(item => {
+        item.addEventListener('dragstart', (e) => {
+            draggedItem = item;
+            item.classList.add('dragging');
+        });
+        
+        item.addEventListener('dragend', () => {
+            item.classList.remove('dragging');
+            draggedItem = null;
+        });
+        
+        item.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            if (draggedItem && draggedItem !== item) {
+                const rect = item.getBoundingClientRect();
+                const midY = rect.top + rect.height / 2;
+                if (e.clientY < midY) {
+                    item.parentNode.insertBefore(draggedItem, item);
+                } else {
+                    item.parentNode.insertBefore(draggedItem, item.nextSibling);
+                }
+                // Reorder array
+                const newOrder = [...document.querySelectorAll('.file-item')].map(el => parseInt(el.dataset.index));
+                const reordered = newOrder.map(i => pdfFiles[i]);
+                pdfFiles = reordered;
+                // Update indices
+                document.querySelectorAll('.file-item').forEach((el, i) => {
+                    el.dataset.index = i;
+                    el.querySelector('.remove-btn').setAttribute('onclick', `removeFile(${i})`);
+                });
+            }
+        });
+    });
+}
+
+function removeFile(index) {
+    pdfFiles.splice(index, 1);
+    updateFileList();
+}
+
+function clearFiles() {
+    pdfFiles = [];
+    document.getElementById('fileInput').value = '';
+    updateFileList();
+    CutcompressTools.showAlert('Cleared!', 'info');
+}
+
+async function mergePDFs() {
+    if (pdfFiles.length < 2) {
+        CutcompressTools.showAlert('Please add at least 2 PDF files', 'error');
+        return;
+    }
+    
+    const progressContainer = document.getElementById('progressContainer');
+    const progressFill = document.getElementById('progressFill');
+    const progressText = document.getElementById('progressText');
+    
+    progressContainer.style.display = 'block';
+    progressFill.style.width = '0%';
+    
+    try {
+        const { PDFDocument } = PDFLib;
+        const mergedPdf = await PDFDocument.create();
+        
+        for (let i = 0; i < pdfFiles.length; i++) {
+            progressText.textContent = `Processing ${pdfFiles[i].name}...`;
+            progressFill.style.width = `${((i + 1) / pdfFiles.length) * 80}%`;
+            
+            const arrayBuffer = await pdfFiles[i].arrayBuffer();
+            const pdf = await PDFDocument.load(arrayBuffer);
+            const pages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
+            pages.forEach(page => mergedPdf.addPage(page));
+        }
+        
+        progressText.textContent = 'Creating merged PDF...';
+        progressFill.style.width = '90%';
+        
+        const mergedBytes = await mergedPdf.save();
+        const blob = new Blob([mergedBytes], { type: 'application/pdf' });
+        const url = URL.createObjectURL(blob);
+        
+        progressFill.style.width = '100%';
+        progressText.textContent = 'Done!';
+        
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'merged.pdf';
+        a.click();
+        URL.revokeObjectURL(url);
+        
+        CutcompressTools.showAlert('PDFs merged successfully!', 'success');
+        
+        setTimeout(() => {
+            progressContainer.style.display = 'none';
+        }, 2000);
+        
+    } catch (error) {
+        console.error(error);
+        CutcompressTools.showAlert('Error merging PDFs: ' + error.message, 'error');
+        progressContainer.style.display = 'none';
+    }
+}
+</script>
+{% endblock %}

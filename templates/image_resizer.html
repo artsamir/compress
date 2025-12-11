@@ -1,0 +1,313 @@
+{% extends 'base.html' %}
+{% block title %}Image Resizer - Resize Images Online Free{% endblock %}
+{% block description %}Resize images to exact dimensions or by percentage. Free online image resizer with quality control.{% endblock %}
+{% block keywords %}image resizer, resize image online, photo resizer, change image size{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/tools_common.css') }}">
+<script src="{{ url_for('static', filename='js/tools_common.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="tool-page">
+    <button class="theme-toggle" onclick="toggleTheme()">
+        <span class="icon-sun">☀️</span>
+        <span class="icon-moon">🌙</span>
+    </button>
+
+    <div class="tool-container">
+        <div class="tool-header">
+            <div class="emoji-icon">📏</div>
+            <h1>Image Resizer</h1>
+            <p>Resize images to any dimension! 🖼️</p>
+        </div>
+
+        <div class="instructions-card">
+            <h3>📋 How to Use</h3>
+            <ol>
+                <li><strong>Upload</strong> your image</li>
+                <li><strong>Enter</strong> new dimensions or percentage</li>
+                <li><strong>Toggle</strong> aspect ratio lock if needed</li>
+                <li><strong>Download</strong> resized image!</li>
+            </ol>
+        </div>
+
+        <div class="tool-card">
+            <div class="upload-area" id="uploadArea">
+                <div class="upload-icon">🖼️</div>
+                <h3>Drop image here</h3>
+                <p>or click to browse</p>
+                <input type="file" id="fileInput" accept="image/*" hidden>
+            </div>
+
+            <!-- Resize Options -->
+            <div id="resizeOptions" style="display: none;">
+                <!-- Original Info -->
+                <div style="background: var(--bg-tertiary); padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                    <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+                        <img id="previewThumb" style="width: 60px; height: 60px; object-fit: cover; border-radius: 4px;">
+                        <div>
+                            <div id="originalFileName" style="font-weight: 600; color: var(--text-primary);"></div>
+                            <div style="color: var(--text-secondary); font-size: 0.9rem;">
+                                Original: <span id="originalDimensions"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Resize Mode -->
+                <div class="form-group">
+                    <label>📐 Resize Mode</label>
+                    <div class="options-grid" style="grid-template-columns: repeat(2, 1fr);">
+                        <div class="option-card selected" data-mode="pixels" onclick="selectMode(this)">
+                            <div class="option-icon">📏</div>
+                            <div class="option-label">By Pixels</div>
+                        </div>
+                        <div class="option-card" data-mode="percentage" onclick="selectMode(this)">
+                            <div class="option-icon">%</div>
+                            <div class="option-label">By Percentage</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pixels Mode -->
+                <div id="pixelsMode">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Width (px)</label>
+                            <input type="number" id="widthInput" min="1" max="10000" oninput="updateDimensions('width')">
+                        </div>
+                        <div class="form-group" style="display: flex; align-items: flex-end; padding-bottom: 0.5rem;">
+                            <button id="lockBtn" class="btn btn-secondary" onclick="toggleLock()" style="padding: 0.75rem;">
+                                🔗 Locked
+                            </button>
+                        </div>
+                        <div class="form-group">
+                            <label>Height (px)</label>
+                            <input type="number" id="heightInput" min="1" max="10000" oninput="updateDimensions('height')">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Percentage Mode -->
+                <div id="percentageMode" style="display: none;">
+                    <div class="form-group">
+                        <label>Scale (%): <span id="percentValue">100</span>%</label>
+                        <input type="range" id="percentSlider" min="1" max="200" value="100" oninput="updatePercentage()">
+                    </div>
+                </div>
+
+                <!-- Quick Presets -->
+                <div class="form-group" style="margin-top: 1rem;">
+                    <label>🎯 Quick Presets</label>
+                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                        <button class="btn btn-secondary" onclick="applyPreset(1920, 1080)" style="padding: 0.5rem 1rem; font-size: 0.85rem;">1920×1080</button>
+                        <button class="btn btn-secondary" onclick="applyPreset(1280, 720)" style="padding: 0.5rem 1rem; font-size: 0.85rem;">1280×720</button>
+                        <button class="btn btn-secondary" onclick="applyPreset(800, 600)" style="padding: 0.5rem 1rem; font-size: 0.85rem;">800×600</button>
+                        <button class="btn btn-secondary" onclick="applyPreset(640, 480)" style="padding: 0.5rem 1rem; font-size: 0.85rem;">640×480</button>
+                        <button class="btn btn-secondary" onclick="applyPreset(300, 300)" style="padding: 0.5rem 1rem; font-size: 0.85rem;">300×300</button>
+                    </div>
+                </div>
+
+                <!-- Output Quality -->
+                <div class="form-group" style="margin-top: 1rem;">
+                    <label>✨ Output Quality: <span id="qualityValue">90</span>%</label>
+                    <input type="range" id="qualitySlider" min="10" max="100" value="90" oninput="document.getElementById('qualityValue').textContent = this.value">
+                </div>
+
+                <!-- Output Format -->
+                <div class="form-group">
+                    <label>📁 Output Format</label>
+                    <select id="outputFormat">
+                        <option value="image/png">PNG (Best Quality)</option>
+                        <option value="image/jpeg" selected>JPEG (Smaller Size)</option>
+                        <option value="image/webp">WebP (Modern)</option>
+                    </select>
+                </div>
+
+                <!-- Preview -->
+                <div style="margin-top: 1.5rem; text-align: center;">
+                    <h4 style="color: var(--text-primary); margin-bottom: 0.5rem;">New Dimensions</h4>
+                    <div id="newDimensions" style="font-size: 1.5rem; font-weight: 600; color: var(--primary-color);"></div>
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-secondary" onclick="resetTool()">
+                    <i class="fas fa-trash"></i> Clear
+                </button>
+                <button class="btn btn-primary" id="resizeBtn" onclick="resizeImage()" disabled>
+                    <i class="fas fa-expand"></i> Resize & Download
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let originalImage = null;
+let originalWidth = 0;
+let originalHeight = 0;
+let aspectRatio = 1;
+let isLocked = true;
+let currentMode = 'pixels';
+
+document.addEventListener('DOMContentLoaded', () => {
+    const uploadArea = document.getElementById('uploadArea');
+    const fileInput = document.getElementById('fileInput');
+    
+    uploadArea.addEventListener('click', () => fileInput.click());
+    
+    CutcompressTools.setupDragAndDrop(uploadArea, (e) => {
+        const file = e.dataTransfer.files[0];
+        if (file && file.type.startsWith('image/')) {
+            handleFile(file);
+        }
+    });
+    
+    fileInput.addEventListener('change', (e) => {
+        if (e.target.files[0]) {
+            handleFile(e.target.files[0]);
+        }
+    });
+});
+
+function handleFile(file) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        originalImage = new Image();
+        originalImage.onload = () => {
+            originalWidth = originalImage.width;
+            originalHeight = originalImage.height;
+            aspectRatio = originalWidth / originalHeight;
+            
+            document.getElementById('previewThumb').src = e.target.result;
+            document.getElementById('originalFileName').textContent = file.name;
+            document.getElementById('originalDimensions').textContent = `${originalWidth} × ${originalHeight} px`;
+            
+            document.getElementById('widthInput').value = originalWidth;
+            document.getElementById('heightInput').value = originalHeight;
+            updateNewDimensions();
+            
+            document.getElementById('uploadArea').style.display = 'none';
+            document.getElementById('resizeOptions').style.display = 'block';
+            document.getElementById('resizeBtn').disabled = false;
+        };
+        originalImage.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+}
+
+function selectMode(element) {
+    document.querySelectorAll('.option-card[data-mode]').forEach(el => el.classList.remove('selected'));
+    element.classList.add('selected');
+    currentMode = element.dataset.mode;
+    
+    if (currentMode === 'pixels') {
+        document.getElementById('pixelsMode').style.display = 'block';
+        document.getElementById('percentageMode').style.display = 'none';
+    } else {
+        document.getElementById('pixelsMode').style.display = 'none';
+        document.getElementById('percentageMode').style.display = 'block';
+    }
+    updateNewDimensions();
+}
+
+function toggleLock() {
+    isLocked = !isLocked;
+    document.getElementById('lockBtn').textContent = isLocked ? '🔗 Locked' : '🔓 Unlocked';
+}
+
+function updateDimensions(changed) {
+    if (!isLocked) {
+        updateNewDimensions();
+        return;
+    }
+    
+    if (changed === 'width') {
+        const w = parseInt(document.getElementById('widthInput').value) || 0;
+        document.getElementById('heightInput').value = Math.round(w / aspectRatio);
+    } else {
+        const h = parseInt(document.getElementById('heightInput').value) || 0;
+        document.getElementById('widthInput').value = Math.round(h * aspectRatio);
+    }
+    updateNewDimensions();
+}
+
+function updatePercentage() {
+    const percent = parseInt(document.getElementById('percentSlider').value);
+    document.getElementById('percentValue').textContent = percent;
+    updateNewDimensions();
+}
+
+function applyPreset(w, h) {
+    document.getElementById('widthInput').value = w;
+    document.getElementById('heightInput').value = h;
+    isLocked = false;
+    document.getElementById('lockBtn').textContent = '🔓 Unlocked';
+    updateNewDimensions();
+}
+
+function updateNewDimensions() {
+    let w, h;
+    if (currentMode === 'pixels') {
+        w = parseInt(document.getElementById('widthInput').value) || 0;
+        h = parseInt(document.getElementById('heightInput').value) || 0;
+    } else {
+        const percent = parseInt(document.getElementById('percentSlider').value) / 100;
+        w = Math.round(originalWidth * percent);
+        h = Math.round(originalHeight * percent);
+    }
+    document.getElementById('newDimensions').textContent = `${w} × ${h} px`;
+}
+
+function resizeImage() {
+    if (!originalImage) {
+        CutcompressTools.showAlert('Please upload an image first', 'error');
+        return;
+    }
+    
+    let newWidth, newHeight;
+    if (currentMode === 'pixels') {
+        newWidth = parseInt(document.getElementById('widthInput').value) || originalWidth;
+        newHeight = parseInt(document.getElementById('heightInput').value) || originalHeight;
+    } else {
+        const percent = parseInt(document.getElementById('percentSlider').value) / 100;
+        newWidth = Math.round(originalWidth * percent);
+        newHeight = Math.round(originalHeight * percent);
+    }
+    
+    const canvas = document.createElement('canvas');
+    canvas.width = newWidth;
+    canvas.height = newHeight;
+    const ctx = canvas.getContext('2d');
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
+    ctx.drawImage(originalImage, 0, 0, newWidth, newHeight);
+    
+    const format = document.getElementById('outputFormat').value;
+    const quality = parseInt(document.getElementById('qualitySlider').value) / 100;
+    
+    canvas.toBlob((blob) => {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        const ext = format.split('/')[1];
+        a.download = `resized_${newWidth}x${newHeight}.${ext}`;
+        a.click();
+        URL.revokeObjectURL(url);
+        
+        CutcompressTools.showAlert(`Resized to ${newWidth}×${newHeight}!`, 'success');
+    }, format, quality);
+}
+
+function resetTool() {
+    originalImage = null;
+    document.getElementById('fileInput').value = '';
+    document.getElementById('uploadArea').style.display = 'block';
+    document.getElementById('resizeOptions').style.display = 'none';
+    document.getElementById('resizeBtn').disabled = true;
+    CutcompressTools.showAlert('Cleared!', 'info');
+}
+</script>
+{% endblock %}

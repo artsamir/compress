@@ -1,0 +1,337 @@
+{% extends 'base.html' %}
+{% block title %}YouTube Thumbnail Maker - Create Stunning Thumbnails{% endblock %}
+{% block description %}Create eye-catching YouTube thumbnails with our free online tool. Templates, text overlays, and easy customization.{% endblock %}
+{% block keywords %}youtube thumbnail maker, thumbnail creator, youtube thumbnail template{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/tools_common.css') }}">
+<script src="{{ url_for('static', filename='js/tools_common.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="tool-page">
+    <button class="theme-toggle" onclick="toggleTheme()">
+        <span class="icon-sun">☀️</span>
+        <span class="icon-moon">🌙</span>
+    </button>
+
+    <div class="tool-container">
+        <div class="tool-header">
+            <div class="emoji-icon">▶️</div>
+            <h1>YouTube Thumbnail Maker</h1>
+            <p>Create click-worthy thumbnails in seconds! 🎬</p>
+        </div>
+
+        <div class="instructions-card">
+            <h3>📋 How to Use</h3>
+            <ol>
+                <li><strong>Choose</strong> a background (upload or color)</li>
+                <li><strong>Add</strong> text with custom styling</li>
+                <li><strong>Customize</strong> with shapes and effects</li>
+                <li><strong>Download</strong> your 1280×720 thumbnail!</li>
+            </ol>
+        </div>
+
+        <div class="tool-card">
+            <div style="display: grid; grid-template-columns: 300px 1fr; gap: 2rem;">
+                <!-- Left: Controls -->
+                <div style="min-width: 0;">
+                    <!-- Background -->
+                    <div class="form-group">
+                        <label>🖼️ Background</label>
+                        <div class="upload-area mini" id="bgUploadArea" style="padding: 1rem;">
+                            <div class="upload-icon" style="font-size: 1.5rem;">📷</div>
+                            <p style="font-size: 0.85rem; margin: 0;">Upload Image</p>
+                            <input type="file" id="bgInput" accept="image/*" hidden>
+                        </div>
+                        <div style="text-align: center; margin: 0.5rem 0; color: var(--text-secondary);">or</div>
+                        <input type="color" id="bgColor" value="#1a1a2e" onchange="updateCanvas()" style="width: 100%; height: 40px; cursor: pointer;">
+                    </div>
+
+                    <!-- Text 1 -->
+                    <div class="form-group" style="margin-top: 1rem;">
+                        <label>✏️ Main Title</label>
+                        <input type="text" id="mainText" value="YOUR TITLE HERE" oninput="updateCanvas()" placeholder="Main text">
+                        <div class="form-row" style="margin-top: 0.5rem;">
+                            <input type="color" id="mainTextColor" value="#ffffff" onchange="updateCanvas()">
+                            <input type="number" id="mainTextSize" value="72" min="20" max="150" oninput="updateCanvas()" style="width: 70px;">
+                        </div>
+                    </div>
+
+                    <!-- Text 2 -->
+                    <div class="form-group">
+                        <label>📝 Subtitle</label>
+                        <input type="text" id="subText" value="" oninput="updateCanvas()" placeholder="Optional subtitle">
+                        <div class="form-row" style="margin-top: 0.5rem;">
+                            <input type="color" id="subTextColor" value="#ffd700" onchange="updateCanvas()">
+                            <input type="number" id="subTextSize" value="36" min="12" max="80" oninput="updateCanvas()" style="width: 70px;">
+                        </div>
+                    </div>
+
+                    <!-- Text Style -->
+                    <div class="form-group">
+                        <label>🎨 Text Style</label>
+                        <select id="textStyle" onchange="updateCanvas()">
+                            <option value="normal">Normal</option>
+                            <option value="outline">Outline</option>
+                            <option value="shadow" selected>Shadow</option>
+                            <option value="glow">Glow</option>
+                        </select>
+                    </div>
+
+                    <!-- Overlay -->
+                    <div class="form-group">
+                        <label>🌈 Overlay Color</label>
+                        <div class="form-row">
+                            <input type="color" id="overlayColor" value="#000000" onchange="updateCanvas()">
+                            <input type="range" id="overlayOpacity" min="0" max="80" value="30" oninput="updateCanvas()">
+                        </div>
+                    </div>
+
+                    <!-- Badge -->
+                    <div class="form-group">
+                        <label>🏷️ Badge (Corner)</label>
+                        <input type="text" id="badgeText" value="" oninput="updateCanvas()" placeholder="NEW, LIVE, etc.">
+                        <input type="color" id="badgeColor" value="#ff0000" onchange="updateCanvas()" style="margin-top: 0.5rem;">
+                    </div>
+
+                    <!-- Person/Object Image -->
+                    <div class="form-group">
+                        <label>👤 Add Person/Object</label>
+                        <div class="upload-area mini" id="personUploadArea" style="padding: 0.75rem;">
+                            <p style="font-size: 0.8rem; margin: 0;">Upload PNG (transparent)</p>
+                            <input type="file" id="personInput" accept="image/*" hidden>
+                        </div>
+                        <div class="form-row" style="margin-top: 0.5rem;">
+                            <button class="btn btn-secondary" onclick="personPosition = 'left'; updateCanvas()" style="padding: 0.25rem 0.5rem; font-size: 0.8rem;">Left</button>
+                            <button class="btn btn-secondary" onclick="personPosition = 'right'; updateCanvas()" style="padding: 0.25rem 0.5rem; font-size: 0.8rem;">Right</button>
+                            <button class="btn btn-secondary" onclick="personImage = null; updateCanvas()" style="padding: 0.25rem 0.5rem; font-size: 0.8rem;">Remove</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Preview -->
+                <div style="min-width: 0;">
+                    <h4 style="color: var(--text-primary); margin-bottom: 0.5rem;">👁️ Preview (1280×720)</h4>
+                    <div style="background: #000; border-radius: 8px; overflow: hidden;">
+                        <canvas id="thumbnailCanvas" width="1280" height="720" style="width: 100%; display: block;"></canvas>
+                    </div>
+                    
+                    <div class="btn-group" style="margin-top: 1rem;">
+                        <button class="btn btn-secondary" onclick="resetThumbnail()">🔄 Reset</button>
+                        <button class="btn btn-primary" onclick="downloadThumbnail()">📥 Download HD</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="instructions-card" style="margin-top: 2rem;">
+            <h3>💡 Tips for Great Thumbnails</h3>
+            <ul style="color: var(--text-secondary); line-height: 1.8;">
+                <li>Use <strong>bold, contrasting colors</strong> that pop</li>
+                <li>Keep text <strong>short and readable</strong> (3-5 words max)</li>
+                <li>Add a <strong>face with expression</strong> - faces get more clicks!</li>
+                <li>Use <strong>high contrast</strong> between text and background</li>
+                <li>Test at <strong>small size</strong> - that's how users see it</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<style>
+@media (max-width: 900px) {
+    .tool-card > div {
+        grid-template-columns: 1fr !important;
+    }
+}
+</style>
+
+<script>
+let bgImage = null;
+let personImage = null;
+let personPosition = 'right';
+
+document.addEventListener('DOMContentLoaded', () => {
+    const bgUploadArea = document.getElementById('bgUploadArea');
+    const bgInput = document.getElementById('bgInput');
+    const personUploadArea = document.getElementById('personUploadArea');
+    const personInput = document.getElementById('personInput');
+    
+    bgUploadArea.addEventListener('click', () => bgInput.click());
+    personUploadArea.addEventListener('click', () => personInput.click());
+    
+    bgInput.addEventListener('change', (e) => {
+        if (e.target.files[0]) {
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                bgImage = new Image();
+                bgImage.onload = updateCanvas;
+                bgImage.src = ev.target.result;
+            };
+            reader.readAsDataURL(e.target.files[0]);
+        }
+    });
+    
+    personInput.addEventListener('change', (e) => {
+        if (e.target.files[0]) {
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                personImage = new Image();
+                personImage.onload = updateCanvas;
+                personImage.src = ev.target.result;
+            };
+            reader.readAsDataURL(e.target.files[0]);
+        }
+    });
+    
+    updateCanvas();
+});
+
+function updateCanvas() {
+    const canvas = document.getElementById('thumbnailCanvas');
+    const ctx = canvas.getContext('2d');
+    const W = 1280, H = 720;
+    
+    // Clear
+    ctx.clearRect(0, 0, W, H);
+    
+    // Background
+    if (bgImage) {
+        // Cover fit
+        const scale = Math.max(W / bgImage.width, H / bgImage.height);
+        const w = bgImage.width * scale;
+        const h = bgImage.height * scale;
+        ctx.drawImage(bgImage, (W - w) / 2, (H - h) / 2, w, h);
+    } else {
+        ctx.fillStyle = document.getElementById('bgColor').value;
+        ctx.fillRect(0, 0, W, H);
+    }
+    
+    // Overlay
+    const overlayOpacity = parseInt(document.getElementById('overlayOpacity').value) / 100;
+    if (overlayOpacity > 0) {
+        ctx.fillStyle = document.getElementById('overlayColor').value;
+        ctx.globalAlpha = overlayOpacity;
+        ctx.fillRect(0, 0, W, H);
+        ctx.globalAlpha = 1;
+    }
+    
+    // Person image
+    if (personImage) {
+        const maxH = H * 0.9;
+        const scale = maxH / personImage.height;
+        const w = personImage.width * scale;
+        const h = personImage.height * scale;
+        const x = personPosition === 'left' ? 20 : W - w - 20;
+        ctx.drawImage(personImage, x, H - h, w, h);
+    }
+    
+    // Text style
+    const textStyle = document.getElementById('textStyle').value;
+    
+    // Main text
+    const mainText = document.getElementById('mainText').value;
+    if (mainText) {
+        const fontSize = parseInt(document.getElementById('mainTextSize').value);
+        const color = document.getElementById('mainTextColor').value;
+        
+        ctx.font = `bold ${fontSize}px Impact, sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        
+        const textX = personImage ? (personPosition === 'left' ? W * 0.65 : W * 0.35) : W / 2;
+        const textY = H / 2 - 30;
+        
+        applyTextStyle(ctx, textStyle, color, fontSize);
+        ctx.fillText(mainText.toUpperCase(), textX, textY);
+        if (textStyle === 'outline') {
+            ctx.strokeText(mainText.toUpperCase(), textX, textY);
+        }
+    }
+    
+    // Subtitle
+    const subText = document.getElementById('subText').value;
+    if (subText) {
+        const fontSize = parseInt(document.getElementById('subTextSize').value);
+        const color = document.getElementById('subTextColor').value;
+        
+        ctx.font = `bold ${fontSize}px Arial, sans-serif`;
+        const textX = personImage ? (personPosition === 'left' ? W * 0.65 : W * 0.35) : W / 2;
+        const textY = H / 2 + 50;
+        
+        applyTextStyle(ctx, textStyle, color, fontSize);
+        ctx.fillText(subText, textX, textY);
+    }
+    
+    // Badge
+    const badgeText = document.getElementById('badgeText').value;
+    if (badgeText) {
+        const badgeColor = document.getElementById('badgeColor').value;
+        ctx.font = 'bold 28px Arial';
+        const badgeWidth = ctx.measureText(badgeText).width + 30;
+        
+        ctx.fillStyle = badgeColor;
+        ctx.beginPath();
+        ctx.roundRect(W - badgeWidth - 20, 20, badgeWidth, 45, 8);
+        ctx.fill();
+        
+        ctx.fillStyle = '#fff';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(badgeText.toUpperCase(), W - badgeWidth/2 - 20, 42);
+    }
+    
+    ctx.shadowColor = 'transparent';
+    ctx.shadowBlur = 0;
+}
+
+function applyTextStyle(ctx, style, color, fontSize) {
+    ctx.fillStyle = color;
+    ctx.shadowColor = 'transparent';
+    ctx.shadowBlur = 0;
+    ctx.lineWidth = 0;
+    
+    switch(style) {
+        case 'outline':
+            ctx.strokeStyle = '#000';
+            ctx.lineWidth = fontSize / 10;
+            break;
+        case 'shadow':
+            ctx.shadowColor = 'rgba(0,0,0,0.8)';
+            ctx.shadowBlur = 10;
+            ctx.shadowOffsetX = 4;
+            ctx.shadowOffsetY = 4;
+            break;
+        case 'glow':
+            ctx.shadowColor = color;
+            ctx.shadowBlur = 20;
+            break;
+    }
+}
+
+function downloadThumbnail() {
+    const canvas = document.getElementById('thumbnailCanvas');
+    canvas.toBlob((blob) => {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'youtube_thumbnail_1280x720.png';
+        a.click();
+        URL.revokeObjectURL(url);
+        CutcompressTools.showAlert('Thumbnail downloaded!', 'success');
+    }, 'image/png');
+}
+
+function resetThumbnail() {
+    bgImage = null;
+    personImage = null;
+    document.getElementById('bgInput').value = '';
+    document.getElementById('personInput').value = '';
+    document.getElementById('mainText').value = 'YOUR TITLE HERE';
+    document.getElementById('subText').value = '';
+    document.getElementById('badgeText').value = '';
+    updateCanvas();
+    CutcompressTools.showAlert('Reset!', 'info');
+}
+</script>
+{% endblock %}

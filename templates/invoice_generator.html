@@ -1,0 +1,413 @@
+{% extends 'base.html' %}
+{% block title %}Invoice Generator - Create Professional Invoices Free{% endblock %}
+{% block description %}Generate professional invoices for your business. Free online invoice maker with customizable templates.{% endblock %}
+{% block keywords %}invoice generator, create invoice, invoice maker, free invoice template{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/tools_common.css') }}">
+<script src="{{ url_for('static', filename='js/tools_common.js') }}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="tool-page">
+    <button class="theme-toggle" onclick="toggleTheme()">
+        <span class="icon-sun">☀️</span>
+        <span class="icon-moon">🌙</span>
+    </button>
+
+    <div class="tool-container" style="max-width: 1200px;">
+        <div class="tool-header">
+            <div class="emoji-icon">🧾</div>
+            <h1>Invoice Generator</h1>
+            <p>Create professional invoices in minutes! 💼</p>
+        </div>
+
+        <div class="instructions-card">
+            <h3>📋 How to Use</h3>
+            <ol>
+                <li><strong>Fill in</strong> your business and client details</li>
+                <li><strong>Add</strong> line items with descriptions and amounts</li>
+                <li><strong>Preview</strong> your invoice</li>
+                <li><strong>Download</strong> as PDF!</li>
+            </ol>
+        </div>
+
+        <div class="tool-card">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                <!-- Left: Form -->
+                <div>
+                    <!-- Invoice Details -->
+                    <h3 style="color: var(--text-primary); margin-bottom: 1rem;">📋 Invoice Details</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Invoice Number</label>
+                            <input type="text" id="invoiceNumber" value="INV-001" oninput="updatePreview()">
+                        </div>
+                        <div class="form-group">
+                            <label>Date</label>
+                            <input type="date" id="invoiceDate" oninput="updatePreview()">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Due Date</label>
+                        <input type="date" id="dueDate" oninput="updatePreview()">
+                    </div>
+
+                    <!-- From (Business) -->
+                    <h3 style="color: var(--text-primary); margin: 1.5rem 0 1rem;">🏢 From (Your Business)</h3>
+                    <div class="form-group">
+                        <label>Business Name</label>
+                        <input type="text" id="fromName" placeholder="Your Company Name" oninput="updatePreview()">
+                    </div>
+                    <div class="form-group">
+                        <label>Address</label>
+                        <textarea id="fromAddress" rows="2" placeholder="123 Business St, City, State 12345" oninput="updatePreview()"></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" id="fromEmail" placeholder="you@company.com" oninput="updatePreview()">
+                        </div>
+                        <div class="form-group">
+                            <label>Phone</label>
+                            <input type="tel" id="fromPhone" placeholder="+1 234 567 890" oninput="updatePreview()">
+                        </div>
+                    </div>
+
+                    <!-- To (Client) -->
+                    <h3 style="color: var(--text-primary); margin: 1.5rem 0 1rem;">👤 Bill To (Client)</h3>
+                    <div class="form-group">
+                        <label>Client Name</label>
+                        <input type="text" id="toName" placeholder="Client Company Name" oninput="updatePreview()">
+                    </div>
+                    <div class="form-group">
+                        <label>Client Address</label>
+                        <textarea id="toAddress" rows="2" placeholder="456 Client Ave, City, State 67890" oninput="updatePreview()"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Client Email</label>
+                        <input type="email" id="toEmail" placeholder="client@company.com" oninput="updatePreview()">
+                    </div>
+
+                    <!-- Items -->
+                    <h3 style="color: var(--text-primary); margin: 1.5rem 0 1rem;">📦 Items</h3>
+                    <div id="itemsContainer"></div>
+                    <button class="btn btn-secondary" onclick="addItem()" style="width: 100%; margin-top: 0.5rem;">
+                        ➕ Add Item
+                    </button>
+
+                    <!-- Notes -->
+                    <div class="form-group" style="margin-top: 1.5rem;">
+                        <label>📝 Notes / Terms</label>
+                        <textarea id="notes" rows="3" placeholder="Payment due within 30 days. Thank you for your business!" oninput="updatePreview()"></textarea>
+                    </div>
+
+                    <!-- Tax & Discount -->
+                    <div class="form-row" style="margin-top: 1rem;">
+                        <div class="form-group">
+                            <label>Tax (%)</label>
+                            <input type="number" id="taxRate" value="0" min="0" max="100" oninput="updatePreview()">
+                        </div>
+                        <div class="form-group">
+                            <label>Discount (%)</label>
+                            <input type="number" id="discountRate" value="0" min="0" max="100" oninput="updatePreview()">
+                        </div>
+                        <div class="form-group">
+                            <label>Currency</label>
+                            <select id="currency" onchange="updatePreview()">
+                                <option value="$">$ USD</option>
+                                <option value="€">€ EUR</option>
+                                <option value="£">£ GBP</option>
+                                <option value="₹">₹ INR</option>
+                                <option value="¥">¥ JPY</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Preview -->
+                <div>
+                    <h3 style="color: var(--text-primary); margin-bottom: 1rem;">👁️ Preview</h3>
+                    <div id="invoicePreview" style="background: white; padding: 2rem; border-radius: 8px; box-shadow: var(--shadow-md); font-family: Arial, sans-serif; color: #333; min-height: 600px;"></div>
+                </div>
+            </div>
+
+            <div class="btn-group" style="margin-top: 2rem;">
+                <button class="btn btn-secondary" onclick="resetInvoice()">🔄 Reset</button>
+                <button class="btn btn-primary" onclick="downloadPDF()">📥 Download PDF</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.item-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr auto;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+    align-items: end;
+}
+.item-row input {
+    padding: 0.5rem;
+}
+.item-row .remove-item {
+    background: #e53e3e;
+    color: white;
+    border: none;
+    padding: 0.5rem;
+    border-radius: 4px;
+    cursor: pointer;
+}
+@media (max-width: 900px) {
+    .tool-card > div {
+        grid-template-columns: 1fr !important;
+    }
+    .item-row {
+        grid-template-columns: 1fr 1fr !important;
+    }
+}
+</style>
+
+<script>
+let items = [{ description: 'Service/Product', quantity: 1, rate: 100 }];
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('invoiceDate').value = new Date().toISOString().split('T')[0];
+    const due = new Date();
+    due.setDate(due.getDate() + 30);
+    document.getElementById('dueDate').value = due.toISOString().split('T')[0];
+    renderItems();
+    updatePreview();
+});
+
+function renderItems() {
+    const container = document.getElementById('itemsContainer');
+    container.innerHTML = items.map((item, i) => `
+        <div class="item-row">
+            <input type="text" placeholder="Description" value="${item.description}" onchange="updateItem(${i}, 'description', this.value)">
+            <input type="number" placeholder="Qty" value="${item.quantity}" min="1" onchange="updateItem(${i}, 'quantity', this.value)">
+            <input type="number" placeholder="Rate" value="${item.rate}" min="0" step="0.01" onchange="updateItem(${i}, 'rate', this.value)">
+            <input type="text" value="${(item.quantity * item.rate).toFixed(2)}" readonly style="background: var(--bg-tertiary);">
+            <button class="remove-item" onclick="removeItem(${i})">✕</button>
+        </div>
+    `).join('');
+}
+
+function addItem() {
+    items.push({ description: '', quantity: 1, rate: 0 });
+    renderItems();
+    updatePreview();
+}
+
+function updateItem(index, field, value) {
+    items[index][field] = field === 'description' ? value : parseFloat(value) || 0;
+    renderItems();
+    updatePreview();
+}
+
+function removeItem(index) {
+    if (items.length > 1) {
+        items.splice(index, 1);
+        renderItems();
+        updatePreview();
+    }
+}
+
+function formatDate(dateStr) {
+    if (!dateStr) return '';
+    return new Date(dateStr).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+}
+
+function updatePreview() {
+    const currency = document.getElementById('currency').value;
+    const subtotal = items.reduce((sum, item) => sum + (item.quantity * item.rate), 0);
+    const discountRate = parseFloat(document.getElementById('discountRate').value) || 0;
+    const discount = subtotal * (discountRate / 100);
+    const taxRate = parseFloat(document.getElementById('taxRate').value) || 0;
+    const tax = (subtotal - discount) * (taxRate / 100);
+    const total = subtotal - discount + tax;
+
+    const preview = document.getElementById('invoicePreview');
+    preview.innerHTML = `
+        <div style="display: flex; justify-content: space-between; margin-bottom: 2rem;">
+            <div>
+                <h2 style="color: #2563eb; margin: 0;">INVOICE</h2>
+                <p style="margin: 0.5rem 0; color: #666;">#${document.getElementById('invoiceNumber').value || 'INV-001'}</p>
+            </div>
+            <div style="text-align: right;">
+                <div><strong>Date:</strong> ${formatDate(document.getElementById('invoiceDate').value)}</div>
+                <div><strong>Due:</strong> ${formatDate(document.getElementById('dueDate').value)}</div>
+            </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+            <div>
+                <h4 style="color: #666; margin: 0 0 0.5rem; font-size: 0.9rem;">FROM</h4>
+                <strong>${document.getElementById('fromName').value || 'Your Business'}</strong><br>
+                <span style="white-space: pre-line; font-size: 0.9rem; color: #555;">${document.getElementById('fromAddress').value || ''}</span><br>
+                <span style="font-size: 0.9rem; color: #555;">${document.getElementById('fromEmail').value || ''}</span><br>
+                <span style="font-size: 0.9rem; color: #555;">${document.getElementById('fromPhone').value || ''}</span>
+            </div>
+            <div>
+                <h4 style="color: #666; margin: 0 0 0.5rem; font-size: 0.9rem;">BILL TO</h4>
+                <strong>${document.getElementById('toName').value || 'Client Name'}</strong><br>
+                <span style="white-space: pre-line; font-size: 0.9rem; color: #555;">${document.getElementById('toAddress').value || ''}</span><br>
+                <span style="font-size: 0.9rem; color: #555;">${document.getElementById('toEmail').value || ''}</span>
+            </div>
+        </div>
+
+        <table style="width: 100%; border-collapse: collapse; margin-bottom: 2rem;">
+            <thead>
+                <tr style="background: #f3f4f6;">
+                    <th style="padding: 0.75rem; text-align: left; border-bottom: 2px solid #e5e7eb;">Description</th>
+                    <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #e5e7eb;">Qty</th>
+                    <th style="padding: 0.75rem; text-align: right; border-bottom: 2px solid #e5e7eb;">Rate</th>
+                    <th style="padding: 0.75rem; text-align: right; border-bottom: 2px solid #e5e7eb;">Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${items.map(item => `
+                    <tr>
+                        <td style="padding: 0.75rem; border-bottom: 1px solid #e5e7eb;">${item.description || '-'}</td>
+                        <td style="padding: 0.75rem; text-align: center; border-bottom: 1px solid #e5e7eb;">${item.quantity}</td>
+                        <td style="padding: 0.75rem; text-align: right; border-bottom: 1px solid #e5e7eb;">${currency}${item.rate.toFixed(2)}</td>
+                        <td style="padding: 0.75rem; text-align: right; border-bottom: 1px solid #e5e7eb;">${currency}${(item.quantity * item.rate).toFixed(2)}</td>
+                    </tr>
+                `).join('')}
+            </tbody>
+        </table>
+
+        <div style="display: flex; justify-content: flex-end;">
+            <div style="width: 250px;">
+                <div style="display: flex; justify-content: space-between; padding: 0.5rem 0;">
+                    <span>Subtotal:</span>
+                    <span>${currency}${subtotal.toFixed(2)}</span>
+                </div>
+                ${discountRate > 0 ? `
+                <div style="display: flex; justify-content: space-between; padding: 0.5rem 0; color: #16a34a;">
+                    <span>Discount (${discountRate}%):</span>
+                    <span>-${currency}${discount.toFixed(2)}</span>
+                </div>
+                ` : ''}
+                ${taxRate > 0 ? `
+                <div style="display: flex; justify-content: space-between; padding: 0.5rem 0;">
+                    <span>Tax (${taxRate}%):</span>
+                    <span>${currency}${tax.toFixed(2)}</span>
+                </div>
+                ` : ''}
+                <div style="display: flex; justify-content: space-between; padding: 0.75rem 0; border-top: 2px solid #333; font-size: 1.2rem; font-weight: bold;">
+                    <span>Total:</span>
+                    <span>${currency}${total.toFixed(2)}</span>
+                </div>
+            </div>
+        </div>
+
+        ${document.getElementById('notes').value ? `
+        <div style="margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #e5e7eb;">
+            <h4 style="color: #666; margin: 0 0 0.5rem; font-size: 0.9rem;">NOTES</h4>
+            <p style="color: #555; font-size: 0.9rem; white-space: pre-line;">${document.getElementById('notes').value}</p>
+        </div>
+        ` : ''}
+    `;
+}
+
+function downloadPDF() {
+    CutcompressTools.showLoading();
+    
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    
+    const currency = document.getElementById('currency').value;
+    const subtotal = items.reduce((sum, item) => sum + (item.quantity * item.rate), 0);
+    const discountRate = parseFloat(document.getElementById('discountRate').value) || 0;
+    const discount = subtotal * (discountRate / 100);
+    const taxRate = parseFloat(document.getElementById('taxRate').value) || 0;
+    const tax = (subtotal - discount) * (taxRate / 100);
+    const total = subtotal - discount + tax;
+    
+    let y = 20;
+    
+    // Header
+    doc.setFontSize(24);
+    doc.setTextColor(37, 99, 235);
+    doc.text('INVOICE', 20, y);
+    doc.setFontSize(12);
+    doc.setTextColor(100);
+    doc.text(`#${document.getElementById('invoiceNumber').value}`, 20, y + 8);
+    
+    doc.setTextColor(0);
+    doc.text(`Date: ${formatDate(document.getElementById('invoiceDate').value)}`, 190, y, { align: 'right' });
+    doc.text(`Due: ${formatDate(document.getElementById('dueDate').value)}`, 190, y + 6, { align: 'right' });
+    
+    y += 30;
+    
+    // From/To
+    doc.setFontSize(10);
+    doc.setTextColor(100);
+    doc.text('FROM', 20, y);
+    doc.text('BILL TO', 110, y);
+    
+    doc.setTextColor(0);
+    doc.setFontSize(11);
+    y += 6;
+    doc.text(document.getElementById('fromName').value || 'Your Business', 20, y);
+    doc.text(document.getElementById('toName').value || 'Client Name', 110, y);
+    
+    y += 25;
+    
+    // Items table header
+    doc.setFillColor(243, 244, 246);
+    doc.rect(20, y - 5, 170, 10, 'F');
+    doc.setFontSize(10);
+    doc.text('Description', 22, y);
+    doc.text('Qty', 100, y);
+    doc.text('Rate', 130, y);
+    doc.text('Amount', 165, y);
+    
+    y += 10;
+    
+    // Items
+    items.forEach(item => {
+        doc.text(item.description || '-', 22, y);
+        doc.text(String(item.quantity), 100, y);
+        doc.text(`${currency}${item.rate.toFixed(2)}`, 130, y);
+        doc.text(`${currency}${(item.quantity * item.rate).toFixed(2)}`, 165, y);
+        y += 8;
+    });
+    
+    y += 10;
+    
+    // Totals
+    doc.text(`Subtotal: ${currency}${subtotal.toFixed(2)}`, 190, y, { align: 'right' });
+    y += 6;
+    if (discountRate > 0) {
+        doc.text(`Discount (${discountRate}%): -${currency}${discount.toFixed(2)}`, 190, y, { align: 'right' });
+        y += 6;
+    }
+    if (taxRate > 0) {
+        doc.text(`Tax (${taxRate}%): ${currency}${tax.toFixed(2)}`, 190, y, { align: 'right' });
+        y += 6;
+    }
+    doc.setFontSize(14);
+    doc.setFont(undefined, 'bold');
+    doc.text(`Total: ${currency}${total.toFixed(2)}`, 190, y + 5, { align: 'right' });
+    
+    doc.save(`Invoice_${document.getElementById('invoiceNumber').value}.pdf`);
+    CutcompressTools.hideLoading();
+    CutcompressTools.showAlert('Invoice downloaded!', 'success');
+}
+
+function resetInvoice() {
+    items = [{ description: 'Service/Product', quantity: 1, rate: 100 }];
+    document.querySelectorAll('input[type="text"], input[type="email"], input[type="tel"], textarea').forEach(el => el.value = '');
+    document.getElementById('invoiceNumber').value = 'INV-001';
+    document.getElementById('taxRate').value = '0';
+    document.getElementById('discountRate').value = '0';
+    renderItems();
+    updatePreview();
+    CutcompressTools.showAlert('Reset!', 'info');
+}
+</script>
+{% endblock %}

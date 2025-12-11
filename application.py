@@ -8,6 +8,8 @@ from docx2pdf import convert
 import io
 import base64
 from models_api import db, APIKey, APIUsage
+import sqlite3
+import datetime
 # from models import db
 from blueprints.auth import bp as auth_bp
 from blueprints.image_to_jpg_api import bp as image_to_jpg_api_bp
@@ -69,6 +71,72 @@ def inject_session():
 # Create database tables
 with application.app_context():
     db.create_all()
+
+# ---------- Usage tracking (lightweight, local-only) ----------
+USAGE_DB = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'usage.db')
+TOOL_PATHS = {
+    '/passport-maker', '/word-to-hashtag', '/word-to-pdf', '/excel-to-pdf', '/ppt-to-pdf',
+    '/id-card-maker', '/certificate-maker', '/email-templates', '/application-letter',
+    '/project-front-page', '/resume-maker', '/reduce-image-size', '/image-to-jpg',
+    '/image-to-png', '/image-to-webp', '/image-to-pdf', '/merge-images', '/background-remove',
+    # New tools (Batch 2)
+    '/qr-code-generator', '/pdf-merge', '/pdf-compress', '/image-cropper', '/image-resizer',
+    '/watermark-maker', '/youtube-thumbnail', '/invoice-generator', '/color-picker',
+    '/json-formatter', '/base64-tool', '/word-counter'
+}
+
+def init_usage_db():
+    conn = sqlite3.connect(USAGE_DB)
+    conn.execute('''CREATE TABLE IF NOT EXISTS tool_usage (
+        path TEXT PRIMARY KEY,
+        count INTEGER DEFAULT 0,
+        last_seen TEXT
+    )''')
+    conn.commit()
+    conn.close()
+
+init_usage_db()
+
+
+@application.before_request
+def track_tool_usage():
+    try:
+        path = request.path
+        # ignore static and admin endpoints
+        if path.startswith('/static') or path.startswith('/admin'):
+            return
+        # track only known tool paths (adjustable)
+        if path in TOOL_PATHS:
+            conn = sqlite3.connect(USAGE_DB)
+            cur = conn.cursor()
+            cur.execute('SELECT count FROM tool_usage WHERE path=?', (path,))
+            row = cur.fetchone()
+            now = datetime.datetime.utcnow().isoformat()
+            if row:
+                cur.execute('UPDATE tool_usage SET count = count + 1, last_seen = ? WHERE path = ?', (now, path))
+            else:
+                cur.execute('INSERT INTO tool_usage (path, count, last_seen) VALUES (?, ?, ?)', (path, 1, now))
+            conn.commit()
+            conn.close()
+    except Exception:
+        # don't break the app if tracking fails
+        pass
+
+
+@application.route('/admin/usage')
+def admin_usage():
+    """Return JSON report of top-used tools (local-only endpoint)."""
+    try:
+        conn = sqlite3.connect(USAGE_DB)
+        cur = conn.cursor()
+        cur.execute('SELECT path, count, last_seen FROM tool_usage ORDER BY count DESC')
+        data = [{'path': r[0], 'count': r[1], 'last_seen': r[2]} for r in cur.fetchall()]
+        conn.close()
+        return jsonify({'success': True, 'usage': data})
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+# ---------------------------------------------------------------
 
 # ---------------- Force HTTPS & WWW ----------------
 @application.before_request
@@ -167,6 +235,56 @@ def application_letter():
 @application.route('/project-front-page')
 def project_front_page():
     return render_template('project_front_page.html')
+
+# ---------- New Popular Tools (Batch 2) ----------
+
+@application.route('/qr-code-generator')
+def qr_code_generator():
+    return render_template('qr_code_generator.html')
+
+@application.route('/pdf-merge')
+def pdf_merge():
+    return render_template('pdf_merge.html')
+
+@application.route('/pdf-compress')
+def pdf_compress():
+    return render_template('pdf_compress.html')
+
+@application.route('/image-cropper')
+def image_cropper():
+    return render_template('image_cropper.html')
+
+@application.route('/image-resizer')
+def image_resizer():
+    return render_template('image_resizer.html')
+
+@application.route('/watermark-maker')
+def watermark_maker():
+    return render_template('watermark_maker.html')
+
+@application.route('/youtube-thumbnail')
+def youtube_thumbnail():
+    return render_template('youtube_thumbnail.html')
+
+@application.route('/invoice-generator')
+def invoice_generator():
+    return render_template('invoice_generator.html')
+
+@application.route('/color-picker')
+def color_picker():
+    return render_template('color_picker.html')
+
+@application.route('/json-formatter')
+def json_formatter():
+    return render_template('json_formatter.html')
+
+@application.route('/base64-tool')
+def base64_tool():
+    return render_template('base64_tool.html')
+
+@application.route('/word-counter')
+def word_counter():
+    return render_template('word_counter.html')
 
 # -----------------------------------------------
 

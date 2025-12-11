@@ -1,0 +1,241 @@
+{% extends 'base.html' %}
+{% block title %}Image Cropper - Crop Images Online Free{% endblock %}
+{% block description %}Crop images online for free. Easy-to-use image cropper with preset aspect ratios for social media, print, and more.{% endblock %}
+{% block keywords %}image cropper, crop image online, photo cropper, crop picture{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/tools_common.css') }}">
+<script src="{{ url_for('static', filename='js/tools_common.js') }}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css">
+{% endblock %}
+
+{% block content %}
+<div class="tool-page">
+    <button class="theme-toggle" onclick="toggleTheme()">
+        <span class="icon-sun">☀️</span>
+        <span class="icon-moon">🌙</span>
+    </button>
+
+    <div class="tool-container">
+        <div class="tool-header">
+            <div class="emoji-icon">✂️</div>
+            <h1>Image Cropper</h1>
+            <p>Crop your images to perfect dimensions! 🖼️</p>
+        </div>
+
+        <div class="instructions-card">
+            <h3>📋 How to Use</h3>
+            <ol>
+                <li><strong>Upload</strong> your image</li>
+                <li><strong>Select</strong> aspect ratio or go freeform</li>
+                <li><strong>Drag</strong> the crop area to adjust</li>
+                <li><strong>Download</strong> your cropped image!</li>
+            </ol>
+        </div>
+
+        <div class="tool-card">
+            <div class="upload-area" id="uploadArea">
+                <div class="upload-icon">🖼️</div>
+                <h3>Drop image here</h3>
+                <p>or click to browse</p>
+                <input type="file" id="fileInput" accept="image/*" hidden>
+            </div>
+
+            <!-- Cropper Container -->
+            <div id="cropperContainer" style="display: none;">
+                <!-- Aspect Ratio Selection -->
+                <div class="form-group" style="margin-bottom: 1rem;">
+                    <label>📐 Aspect Ratio</label>
+                    <div class="options-grid" style="grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));">
+                        <div class="option-card selected" data-ratio="NaN" onclick="setAspectRatio(this)">
+                            <div class="option-icon">🔓</div>
+                            <div class="option-label">Free</div>
+                        </div>
+                        <div class="option-card" data-ratio="1" onclick="setAspectRatio(this)">
+                            <div class="option-icon">⬜</div>
+                            <div class="option-label">1:1</div>
+                        </div>
+                        <div class="option-card" data-ratio="1.7778" onclick="setAspectRatio(this)">
+                            <div class="option-icon">📺</div>
+                            <div class="option-label">16:9</div>
+                        </div>
+                        <div class="option-card" data-ratio="1.3333" onclick="setAspectRatio(this)">
+                            <div class="option-icon">🖼️</div>
+                            <div class="option-label">4:3</div>
+                        </div>
+                        <div class="option-card" data-ratio="0.8" onclick="setAspectRatio(this)">
+                            <div class="option-icon">📱</div>
+                            <div class="option-label">4:5</div>
+                        </div>
+                        <div class="option-card" data-ratio="0.5625" onclick="setAspectRatio(this)">
+                            <div class="option-icon">📲</div>
+                            <div class="option-label">9:16</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Presets -->
+                <div class="form-group">
+                    <label>🎯 Quick Presets</label>
+                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                        <button class="btn btn-secondary" onclick="setPreset(1080, 1080)" style="padding: 0.5rem 1rem; font-size: 0.85rem;">Instagram Post</button>
+                        <button class="btn btn-secondary" onclick="setPreset(1200, 628)" style="padding: 0.5rem 1rem; font-size: 0.85rem;">Facebook</button>
+                        <button class="btn btn-secondary" onclick="setPreset(1280, 720)" style="padding: 0.5rem 1rem; font-size: 0.85rem;">YouTube</button>
+                        <button class="btn btn-secondary" onclick="setPreset(1500, 500)" style="padding: 0.5rem 1rem; font-size: 0.85rem;">Twitter Header</button>
+                        <button class="btn btn-secondary" onclick="setPreset(1000, 1500)" style="padding: 0.5rem 1rem; font-size: 0.85rem;">Pinterest</button>
+                    </div>
+                </div>
+
+                <!-- Image Preview -->
+                <div style="max-height: 500px; overflow: hidden; margin: 1.5rem 0; background: #000; border-radius: 8px;">
+                    <img id="cropImage" style="display: block; max-width: 100%;">
+                </div>
+
+                <!-- Crop Info -->
+                <div style="display: flex; gap: 2rem; flex-wrap: wrap; margin-bottom: 1rem;">
+                    <div style="color: var(--text-secondary);">
+                        <span>📏 Width: </span><span id="cropWidth">0</span>px
+                    </div>
+                    <div style="color: var(--text-secondary);">
+                        <span>📐 Height: </span><span id="cropHeight">0</span>px
+                    </div>
+                </div>
+
+                <!-- Controls -->
+                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem;">
+                    <button class="btn btn-secondary" onclick="cropper.rotate(-90)" style="padding: 0.5rem 1rem;">↺ Rotate Left</button>
+                    <button class="btn btn-secondary" onclick="cropper.rotate(90)" style="padding: 0.5rem 1rem;">↻ Rotate Right</button>
+                    <button class="btn btn-secondary" onclick="cropper.scaleX(cropper.getData().scaleX === 1 ? -1 : 1)" style="padding: 0.5rem 1rem;">↔️ Flip H</button>
+                    <button class="btn btn-secondary" onclick="cropper.scaleY(cropper.getData().scaleY === 1 ? -1 : 1)" style="padding: 0.5rem 1rem;">↕️ Flip V</button>
+                    <button class="btn btn-secondary" onclick="cropper.reset()" style="padding: 0.5rem 1rem;">🔄 Reset</button>
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-secondary" onclick="resetTool()">
+                    <i class="fas fa-trash"></i> Clear
+                </button>
+                <button class="btn btn-primary" id="cropBtn" onclick="cropImage()" disabled>
+                    <i class="fas fa-crop"></i> Crop & Download
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let cropper = null;
+
+document.addEventListener('DOMContentLoaded', () => {
+    const uploadArea = document.getElementById('uploadArea');
+    const fileInput = document.getElementById('fileInput');
+    
+    uploadArea.addEventListener('click', () => fileInput.click());
+    
+    CutcompressTools.setupDragAndDrop(uploadArea, (e) => {
+        const file = e.dataTransfer.files[0];
+        if (file && file.type.startsWith('image/')) {
+            handleFile(file);
+        }
+    });
+    
+    fileInput.addEventListener('change', (e) => {
+        if (e.target.files[0]) {
+            handleFile(e.target.files[0]);
+        }
+    });
+});
+
+function handleFile(file) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        const img = document.getElementById('cropImage');
+        img.src = e.target.result;
+        
+        document.getElementById('uploadArea').style.display = 'none';
+        document.getElementById('cropperContainer').style.display = 'block';
+        document.getElementById('cropBtn').disabled = false;
+        
+        // Destroy previous cropper if exists
+        if (cropper) {
+            cropper.destroy();
+        }
+        
+        // Initialize cropper
+        cropper = new Cropper(img, {
+            viewMode: 1,
+            dragMode: 'move',
+            aspectRatio: NaN,
+            autoCropArea: 0.8,
+            restore: false,
+            guides: true,
+            center: true,
+            highlight: false,
+            cropBoxMovable: true,
+            cropBoxResizable: true,
+            toggleDragModeOnDblclick: false,
+            crop(event) {
+                document.getElementById('cropWidth').textContent = Math.round(event.detail.width);
+                document.getElementById('cropHeight').textContent = Math.round(event.detail.height);
+            }
+        });
+    };
+    reader.readAsDataURL(file);
+}
+
+function setAspectRatio(element) {
+    document.querySelectorAll('.option-card[data-ratio]').forEach(el => el.classList.remove('selected'));
+    element.classList.add('selected');
+    
+    const ratio = parseFloat(element.dataset.ratio);
+    if (cropper) {
+        cropper.setAspectRatio(isNaN(ratio) ? NaN : ratio);
+    }
+}
+
+function setPreset(width, height) {
+    if (cropper) {
+        cropper.setAspectRatio(width / height);
+    }
+    CutcompressTools.showAlert(`Set to ${width}x${height}`, 'info');
+}
+
+function cropImage() {
+    if (!cropper) {
+        CutcompressTools.showAlert('Please upload an image first', 'error');
+        return;
+    }
+    
+    const canvas = cropper.getCroppedCanvas({
+        maxWidth: 4096,
+        maxHeight: 4096,
+        imageSmoothingEnabled: true,
+        imageSmoothingQuality: 'high'
+    });
+    
+    canvas.toBlob((blob) => {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'cropped_image.png';
+        a.click();
+        URL.revokeObjectURL(url);
+        
+        CutcompressTools.showAlert('Image cropped and downloaded!', 'success');
+    }, 'image/png', 1);
+}
+
+function resetTool() {
+    if (cropper) {
+        cropper.destroy();
+        cropper = null;
+    }
+    document.getElementById('fileInput').value = '';
+    document.getElementById('uploadArea').style.display = 'block';
+    document.getElementById('cropperContainer').style.display = 'none';
+    document.getElementById('cropBtn').disabled = true;
+    CutcompressTools.showAlert('Cleared!', 'info');
+}
+</script>
+{% endblock %}

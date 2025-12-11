@@ -83,7 +83,23 @@ function createAlertsContainer() {
 }
 
 // File Upload Utilities
-function setupDragAndDrop(dropZone, fileInput, handleFiles) {
+function setupDragAndDrop(dropZone, fileInputOrCallback, handleFiles) {
+    // Support two calling patterns:
+    // 1. setupDragAndDrop(dropZone, fileInput, handleFiles) - original
+    // 2. setupDragAndDrop(dropZone, callback) - simplified for drop-only
+    
+    let fileInput = null;
+    let callback = null;
+    
+    if (typeof fileInputOrCallback === 'function') {
+        // Pattern 2: callback function passed directly
+        callback = fileInputOrCallback;
+    } else {
+        // Pattern 1: file input element passed
+        fileInput = fileInputOrCallback;
+        callback = (files) => handleFiles(files);
+    }
+    
     ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
         dropZone.addEventListener(eventName, preventDefaults, false);
     });
@@ -106,12 +122,13 @@ function setupDragAndDrop(dropZone, fileInput, handleFiles) {
     });
     
     dropZone.addEventListener('drop', (e) => {
-        const files = e.dataTransfer.files;
-        handleFiles(files);
+        callback(e);
     });
     
-    dropZone.addEventListener('click', () => fileInput.click());
-    fileInput.addEventListener('change', () => handleFiles(fileInput.files));
+    if (fileInput) {
+        dropZone.addEventListener('click', () => fileInput.click());
+        fileInput.addEventListener('change', () => callback({ dataTransfer: { files: fileInput.files } }));
+    }
 }
 
 // Format File Size

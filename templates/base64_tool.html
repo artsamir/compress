@@ -1,0 +1,429 @@
+{% extends 'base.html' %}
+{% block title %}Base64 Encoder & Decoder - Free Online Tool{% endblock %}
+{% block description %}Encode and decode Base64 strings and files. Free online Base64 converter for text, images, and files.{% endblock %}
+{% block keywords %}base64 encoder, base64 decoder, base64 converter, encode base64, decode base64{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/tools_common.css') }}">
+<script src="{{ url_for('static', filename='js/tools_common.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="tool-page">
+    <button class="theme-toggle" onclick="toggleTheme()">
+        <span class="icon-sun">☀️</span>
+        <span class="icon-moon">🌙</span>
+    </button>
+
+    <div class="tool-container">
+        <div class="tool-header">
+            <div class="emoji-icon">🔐</div>
+            <h1>Base64 Encoder & Decoder</h1>
+            <p>Convert text and files to/from Base64! 🔄</p>
+        </div>
+
+        <div class="instructions-card">
+            <h3>📋 How to Use</h3>
+            <ol>
+                <li><strong>Choose</strong> encode or decode mode</li>
+                <li><strong>Enter</strong> text or upload a file</li>
+                <li><strong>Convert</strong> with one click</li>
+                <li><strong>Copy</strong> or download the result!</li>
+            </ol>
+        </div>
+
+        <!-- Mode Tabs -->
+        <div class="tool-card">
+            <div style="display: flex; gap: 0.5rem; margin-bottom: 1.5rem;">
+                <button class="mode-tab active" onclick="switchMode('text')" id="tabText">📝 Text</button>
+                <button class="mode-tab" onclick="switchMode('file')" id="tabFile">📁 File</button>
+                <button class="mode-tab" onclick="switchMode('image')" id="tabImage">🖼️ Image</button>
+            </div>
+
+            <!-- Text Mode -->
+            <div id="textMode">
+                <div style="display: grid; grid-template-columns: 1fr auto 1fr; gap: 1rem; align-items: start;">
+                    <!-- Input -->
+                    <div>
+                        <h4 style="color: var(--text-primary); margin-bottom: 0.5rem;">📥 Input</h4>
+                        <textarea id="textInput" placeholder="Enter text to encode or Base64 to decode..." style="width: 100%; height: 200px; font-family: monospace; padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-tertiary); color: var(--text-primary); resize: vertical;"></textarea>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div style="display: flex; flex-direction: column; gap: 0.5rem; padding-top: 2rem;">
+                        <button class="btn btn-primary" onclick="encodeText()">
+                            Encode →
+                        </button>
+                        <button class="btn btn-secondary" onclick="decodeText()">
+                            ← Decode
+                        </button>
+                        <button class="btn btn-secondary" onclick="swapText()">
+                            ⇄ Swap
+                        </button>
+                    </div>
+
+                    <!-- Output -->
+                    <div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                            <h4 style="color: var(--text-primary); margin: 0;">📤 Output</h4>
+                            <button class="btn btn-secondary" onclick="copyOutput('textOutput')" style="padding: 0.25rem 0.75rem; font-size: 0.85rem;">
+                                📋 Copy
+                            </button>
+                        </div>
+                        <textarea id="textOutput" readonly placeholder="Result will appear here..." style="width: 100%; height: 200px; font-family: monospace; padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-tertiary); color: var(--text-primary); resize: vertical;"></textarea>
+                    </div>
+                </div>
+
+                <!-- Options -->
+                <div style="margin-top: 1rem; display: flex; gap: 1.5rem; flex-wrap: wrap;">
+                    <label style="display: flex; align-items: center; gap: 0.5rem; color: var(--text-secondary); cursor: pointer;">
+                        <input type="checkbox" id="urlSafe" style="width: auto;">
+                        URL-safe encoding
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 0.5rem; color: var(--text-secondary); cursor: pointer;">
+                        <input type="checkbox" id="lineBreaks" style="width: auto;">
+                        Add line breaks (76 chars)
+                    </label>
+                </div>
+            </div>
+
+            <!-- File Mode -->
+            <div id="fileMode" style="display: none;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                    <!-- Encode File -->
+                    <div>
+                        <h4 style="color: var(--text-primary); margin-bottom: 1rem;">📁 File → Base64</h4>
+                        <div class="upload-area" id="fileUploadArea">
+                            <div class="upload-icon">📄</div>
+                            <p>Drop a file here or click to upload</p>
+                            <span style="font-size: 0.85rem; color: var(--text-secondary);">Any file type supported</span>
+                            <input type="file" id="fileInput" hidden>
+                        </div>
+                        <div id="fileInfo" style="display: none; margin-top: 1rem; padding: 1rem; background: var(--bg-tertiary); border-radius: 8px;">
+                            <p style="margin: 0;"><strong>File:</strong> <span id="fileName"></span></p>
+                            <p style="margin: 0.5rem 0 0;"><strong>Size:</strong> <span id="fileSize"></span></p>
+                        </div>
+                        <textarea id="fileBase64Output" readonly placeholder="Base64 output will appear here..." style="width: 100%; height: 150px; font-family: monospace; padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-tertiary); color: var(--text-primary); margin-top: 1rem; resize: vertical;"></textarea>
+                        <button class="btn btn-secondary" onclick="copyOutput('fileBase64Output')" style="margin-top: 0.5rem;">
+                            📋 Copy Base64
+                        </button>
+                    </div>
+
+                    <!-- Decode to File -->
+                    <div>
+                        <h4 style="color: var(--text-primary); margin-bottom: 1rem;">🔤 Base64 → File</h4>
+                        <textarea id="base64ToFileInput" placeholder="Paste Base64 string here..." style="width: 100%; height: 150px; font-family: monospace; padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-tertiary); color: var(--text-primary); resize: vertical;"></textarea>
+                        <div class="form-row" style="margin-top: 1rem;">
+                            <div class="form-group" style="flex: 1;">
+                                <label>Filename</label>
+                                <input type="text" id="downloadFilename" placeholder="file.txt" value="decoded_file">
+                            </div>
+                            <div class="form-group">
+                                <label>Extension</label>
+                                <select id="fileExtension">
+                                    <option value=".txt">.txt</option>
+                                    <option value=".json">.json</option>
+                                    <option value=".html">.html</option>
+                                    <option value=".css">.css</option>
+                                    <option value=".js">.js</option>
+                                    <option value=".pdf">.pdf</option>
+                                    <option value=".zip">.zip</option>
+                                    <option value=".png">.png</option>
+                                    <option value=".jpg">.jpg</option>
+                                    <option value="">(custom)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" onclick="downloadDecodedFile()" style="margin-top: 0.5rem;">
+                            📥 Download File
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Image Mode -->
+            <div id="imageMode" style="display: none;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                    <!-- Encode Image -->
+                    <div>
+                        <h4 style="color: var(--text-primary); margin-bottom: 1rem;">🖼️ Image → Data URI</h4>
+                        <div class="upload-area" id="imageUploadArea">
+                            <div class="upload-icon">🖼️</div>
+                            <p>Drop an image here or click to upload</p>
+                            <span style="font-size: 0.85rem; color: var(--text-secondary);">PNG, JPG, GIF, WebP, SVG</span>
+                            <input type="file" id="imageInput" accept="image/*" hidden>
+                        </div>
+                        <div id="imagePreviewContainer" style="display: none; margin-top: 1rem;">
+                            <img id="imagePreview" style="max-width: 100%; max-height: 200px; border-radius: 8px;">
+                        </div>
+                        <textarea id="imageDataUri" readonly placeholder="Data URI will appear here..." style="width: 100%; height: 100px; font-family: monospace; font-size: 12px; padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-tertiary); color: var(--text-primary); margin-top: 1rem; resize: vertical;"></textarea>
+                        <div class="btn-group" style="margin-top: 0.5rem;">
+                            <button class="btn btn-secondary" onclick="copyOutput('imageDataUri')">📋 Copy Data URI</button>
+                            <button class="btn btn-secondary" onclick="copyImageBase64Only()">📋 Copy Base64 Only</button>
+                        </div>
+                    </div>
+
+                    <!-- Decode Image -->
+                    <div>
+                        <h4 style="color: var(--text-primary); margin-bottom: 1rem;">🔤 Data URI → Image</h4>
+                        <textarea id="dataUriInput" placeholder="Paste Data URI or Base64 here...\n\nExample: data:image/png;base64,iVBORw0KGgo..." style="width: 100%; height: 150px; font-family: monospace; font-size: 12px; padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-tertiary); color: var(--text-primary); resize: vertical;"></textarea>
+                        <button class="btn btn-primary" onclick="decodeImage()" style="margin-top: 0.5rem;">
+                            👁️ Preview Image
+                        </button>
+                        <div id="decodedImageContainer" style="display: none; margin-top: 1rem; text-align: center;">
+                            <img id="decodedImage" style="max-width: 100%; max-height: 300px; border-radius: 8px;">
+                            <button class="btn btn-secondary" onclick="downloadDecodedImage()" style="margin-top: 0.5rem;">
+                                📥 Download Image
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.mode-tab {
+    padding: 0.75rem 1.5rem;
+    border: 2px solid var(--border-color);
+    background: var(--bg-secondary);
+    color: var(--text-secondary);
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+.mode-tab:hover {
+    background: var(--bg-tertiary);
+}
+.mode-tab.active {
+    background: var(--accent-color);
+    color: white;
+    border-color: var(--accent-color);
+}
+@media (max-width: 768px) {
+    #textMode > div {
+        grid-template-columns: 1fr !important;
+    }
+    #textMode > div > div:nth-child(2) {
+        flex-direction: row !important;
+        padding: 0 !important;
+    }
+    #fileMode > div, #imageMode > div {
+        grid-template-columns: 1fr !important;
+    }
+}
+</style>
+
+<script>
+let currentImageDataUri = '';
+
+document.addEventListener('DOMContentLoaded', () => {
+    // File upload
+    const fileUploadArea = document.getElementById('fileUploadArea');
+    const fileInput = document.getElementById('fileInput');
+    fileUploadArea.addEventListener('click', () => fileInput.click());
+    fileUploadArea.addEventListener('dragover', (e) => { e.preventDefault(); fileUploadArea.style.borderColor = 'var(--accent-color)'; });
+    fileUploadArea.addEventListener('dragleave', () => { fileUploadArea.style.borderColor = 'var(--border-color)'; });
+    fileUploadArea.addEventListener('drop', (e) => { e.preventDefault(); fileUploadArea.style.borderColor = 'var(--border-color)'; handleFile(e.dataTransfer.files[0]); });
+    fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
+    
+    // Image upload
+    const imageUploadArea = document.getElementById('imageUploadArea');
+    const imageInput = document.getElementById('imageInput');
+    imageUploadArea.addEventListener('click', () => imageInput.click());
+    imageUploadArea.addEventListener('dragover', (e) => { e.preventDefault(); imageUploadArea.style.borderColor = 'var(--accent-color)'; });
+    imageUploadArea.addEventListener('dragleave', () => { imageUploadArea.style.borderColor = 'var(--border-color)'; });
+    imageUploadArea.addEventListener('drop', (e) => { e.preventDefault(); imageUploadArea.style.borderColor = 'var(--border-color)'; handleImage(e.dataTransfer.files[0]); });
+    imageInput.addEventListener('change', (e) => handleImage(e.target.files[0]));
+});
+
+function switchMode(mode) {
+    document.querySelectorAll('.mode-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('tab' + mode.charAt(0).toUpperCase() + mode.slice(1)).classList.add('active');
+    
+    document.getElementById('textMode').style.display = mode === 'text' ? 'block' : 'none';
+    document.getElementById('fileMode').style.display = mode === 'file' ? 'block' : 'none';
+    document.getElementById('imageMode').style.display = mode === 'image' ? 'block' : 'none';
+}
+
+// Text functions
+function encodeText() {
+    const input = document.getElementById('textInput').value;
+    if (!input) {
+        CutcompressTools.showAlert('Please enter text to encode', 'warning');
+        return;
+    }
+    
+    try {
+        let encoded = btoa(unescape(encodeURIComponent(input)));
+        
+        if (document.getElementById('urlSafe').checked) {
+            encoded = encoded.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+        }
+        
+        if (document.getElementById('lineBreaks').checked) {
+            encoded = encoded.match(/.{1,76}/g).join('\n');
+        }
+        
+        document.getElementById('textOutput').value = encoded;
+        CutcompressTools.showAlert('Encoded successfully!', 'success');
+    } catch (e) {
+        CutcompressTools.showAlert('Error encoding: ' + e.message, 'error');
+    }
+}
+
+function decodeText() {
+    let input = document.getElementById('textInput').value.trim();
+    if (!input) {
+        CutcompressTools.showAlert('Please enter Base64 to decode', 'warning');
+        return;
+    }
+    
+    try {
+        // Remove line breaks and restore URL-safe chars
+        input = input.replace(/\s/g, '').replace(/-/g, '+').replace(/_/g, '/');
+        // Add padding if needed
+        while (input.length % 4) input += '=';
+        
+        const decoded = decodeURIComponent(escape(atob(input)));
+        document.getElementById('textOutput').value = decoded;
+        CutcompressTools.showAlert('Decoded successfully!', 'success');
+    } catch (e) {
+        CutcompressTools.showAlert('Error decoding: Invalid Base64 string', 'error');
+    }
+}
+
+function swapText() {
+    const input = document.getElementById('textInput');
+    const output = document.getElementById('textOutput');
+    const temp = input.value;
+    input.value = output.value;
+    output.value = temp;
+}
+
+// File functions
+function handleFile(file) {
+    if (!file) return;
+    
+    document.getElementById('fileName').textContent = file.name;
+    document.getElementById('fileSize').textContent = formatBytes(file.size);
+    document.getElementById('fileInfo').style.display = 'block';
+    
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        const base64 = e.target.result.split(',')[1];
+        document.getElementById('fileBase64Output').value = base64;
+        CutcompressTools.showAlert('File encoded!', 'success');
+    };
+    reader.readAsDataURL(file);
+}
+
+function downloadDecodedFile() {
+    const base64 = document.getElementById('base64ToFileInput').value.trim();
+    const filename = document.getElementById('downloadFilename').value || 'decoded_file';
+    const ext = document.getElementById('fileExtension').value;
+    
+    if (!base64) {
+        CutcompressTools.showAlert('Please enter Base64 string', 'warning');
+        return;
+    }
+    
+    try {
+        // Remove data URI prefix if present
+        const cleanBase64 = base64.replace(/^data:[^;]+;base64,/, '');
+        const binary = atob(cleanBase64);
+        const bytes = new Uint8Array(binary.length);
+        for (let i = 0; i < binary.length; i++) {
+            bytes[i] = binary.charCodeAt(i);
+        }
+        
+        const blob = new Blob([bytes]);
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename + ext;
+        a.click();
+        URL.revokeObjectURL(url);
+        CutcompressTools.showAlert('File downloaded!', 'success');
+    } catch (e) {
+        CutcompressTools.showAlert('Error decoding Base64', 'error');
+    }
+}
+
+// Image functions
+function handleImage(file) {
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        currentImageDataUri = e.target.result;
+        document.getElementById('imagePreview').src = currentImageDataUri;
+        document.getElementById('imagePreviewContainer').style.display = 'block';
+        document.getElementById('imageDataUri').value = currentImageDataUri;
+        CutcompressTools.showAlert('Image encoded!', 'success');
+    };
+    reader.readAsDataURL(file);
+}
+
+function copyImageBase64Only() {
+    if (!currentImageDataUri) {
+        CutcompressTools.showAlert('No image loaded', 'warning');
+        return;
+    }
+    const base64 = currentImageDataUri.split(',')[1];
+    navigator.clipboard.writeText(base64);
+    CutcompressTools.showAlert('Base64 copied!', 'success');
+}
+
+function decodeImage() {
+    let input = document.getElementById('dataUriInput').value.trim();
+    if (!input) {
+        CutcompressTools.showAlert('Please enter Data URI or Base64', 'warning');
+        return;
+    }
+    
+    // Add data URI prefix if not present
+    if (!input.startsWith('data:')) {
+        input = 'data:image/png;base64,' + input;
+    }
+    
+    const img = document.getElementById('decodedImage');
+    img.onload = () => {
+        document.getElementById('decodedImageContainer').style.display = 'block';
+        CutcompressTools.showAlert('Image decoded!', 'success');
+    };
+    img.onerror = () => {
+        CutcompressTools.showAlert('Invalid image data', 'error');
+    };
+    img.src = input;
+}
+
+function downloadDecodedImage() {
+    const img = document.getElementById('decodedImage');
+    const a = document.createElement('a');
+    a.href = img.src;
+    a.download = 'decoded_image.png';
+    a.click();
+}
+
+function copyOutput(id) {
+    const output = document.getElementById(id).value;
+    if (!output) {
+        CutcompressTools.showAlert('Nothing to copy', 'warning');
+        return;
+    }
+    navigator.clipboard.writeText(output);
+    CutcompressTools.showAlert('Copied to clipboard!', 'success');
+}
+
+function formatBytes(bytes) {
+    if (bytes === 0) return '0 B';
+    const k = 1024;
+    const sizes = ['B', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+}
+</script>
+{% endblock %}

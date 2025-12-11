@@ -1,0 +1,403 @@
+{% extends 'base.html' %}
+{% block title %}Watermark Maker - Add Watermarks to Images Online{% endblock %}
+{% block description %}Add text or image watermarks to your photos. Free online watermark tool with customization options.{% endblock %}
+{% block keywords %}watermark maker, add watermark, photo watermark, image watermark{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/tools_common.css') }}">
+<script src="{{ url_for('static', filename='js/tools_common.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="tool-page">
+    <button class="theme-toggle" onclick="toggleTheme()">
+        <span class="icon-sun">☀️</span>
+        <span class="icon-moon">🌙</span>
+    </button>
+
+    <div class="tool-container">
+        <div class="tool-header">
+            <div class="emoji-icon">💧</div>
+            <h1>Watermark Maker</h1>
+            <p>Protect your images with custom watermarks! 🔐</p>
+        </div>
+
+        <div class="instructions-card">
+            <h3>📋 How to Use</h3>
+            <ol>
+                <li><strong>Upload</strong> your image</li>
+                <li><strong>Choose</strong> text or image watermark</li>
+                <li><strong>Customize</strong> position, size, and opacity</li>
+                <li><strong>Download</strong> watermarked image!</li>
+            </ol>
+        </div>
+
+        <div class="tool-card">
+            <div class="upload-area" id="uploadArea">
+                <div class="upload-icon">🖼️</div>
+                <h3>Drop image here</h3>
+                <p>or click to browse</p>
+                <input type="file" id="fileInput" accept="image/*" hidden>
+            </div>
+
+            <!-- Watermark Options -->
+            <div id="watermarkOptions" style="display: none;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                    <!-- Left: Options -->
+                    <div>
+                        <!-- Watermark Type -->
+                        <div class="form-group">
+                            <label>📝 Watermark Type</label>
+                            <div class="options-grid" style="grid-template-columns: 1fr 1fr;">
+                                <div class="option-card selected" data-type="text" onclick="selectType(this)">
+                                    <div class="option-icon">✍️</div>
+                                    <div class="option-label">Text</div>
+                                </div>
+                                <div class="option-card" data-type="image" onclick="selectType(this)">
+                                    <div class="option-icon">🖼️</div>
+                                    <div class="option-label">Image</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Text Watermark Options -->
+                        <div id="textOptions">
+                            <div class="form-group">
+                                <label>Text</label>
+                                <input type="text" id="watermarkText" value="© Your Name" oninput="updatePreview()">
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Font Size</label>
+                                    <input type="number" id="fontSize" value="48" min="10" max="200" oninput="updatePreview()">
+                                </div>
+                                <div class="form-group">
+                                    <label>Color</label>
+                                    <input type="color" id="textColor" value="#ffffff" onchange="updatePreview()">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Font</label>
+                                <select id="fontFamily" onchange="updatePreview()">
+                                    <option value="Arial">Arial</option>
+                                    <option value="Georgia">Georgia</option>
+                                    <option value="Times New Roman">Times New Roman</option>
+                                    <option value="Verdana">Verdana</option>
+                                    <option value="Courier New">Courier New</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Image Watermark Options -->
+                        <div id="imageOptions" style="display: none;">
+                            <div class="form-group">
+                                <label>Upload Logo/Watermark Image</label>
+                                <div class="upload-area mini" id="logoUploadArea" style="padding: 1rem;">
+                                    <div class="upload-icon" style="font-size: 1.5rem;">🖼️</div>
+                                    <p style="font-size: 0.85rem;">Click to upload logo</p>
+                                    <input type="file" id="logoInput" accept="image/*" hidden>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Logo Size: <span id="logoSizeValue">30</span>%</label>
+                                <input type="range" id="logoSize" min="5" max="100" value="30" oninput="document.getElementById('logoSizeValue').textContent = this.value; updatePreview()">
+                            </div>
+                        </div>
+
+                        <!-- Common Options -->
+                        <div class="form-group">
+                            <label>📍 Position</label>
+                            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem;">
+                                <button class="btn btn-secondary" onclick="setPosition('top-left')" style="padding: 0.5rem;">↖️</button>
+                                <button class="btn btn-secondary" onclick="setPosition('top-center')" style="padding: 0.5rem;">⬆️</button>
+                                <button class="btn btn-secondary" onclick="setPosition('top-right')" style="padding: 0.5rem;">↗️</button>
+                                <button class="btn btn-secondary" onclick="setPosition('center-left')" style="padding: 0.5rem;">⬅️</button>
+                                <button class="btn btn-secondary selected" id="centerBtn" onclick="setPosition('center')" style="padding: 0.5rem;">⭕</button>
+                                <button class="btn btn-secondary" onclick="setPosition('center-right')" style="padding: 0.5rem;">➡️</button>
+                                <button class="btn btn-secondary" onclick="setPosition('bottom-left')" style="padding: 0.5rem;">↙️</button>
+                                <button class="btn btn-secondary" onclick="setPosition('bottom-center')" style="padding: 0.5rem;">⬇️</button>
+                                <button class="btn btn-secondary" onclick="setPosition('bottom-right')" style="padding: 0.5rem;">↘️</button>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>🔆 Opacity: <span id="opacityValue">50</span>%</label>
+                            <input type="range" id="opacity" min="10" max="100" value="50" oninput="document.getElementById('opacityValue').textContent = this.value; updatePreview()">
+                        </div>
+
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="tileMode" onchange="updatePreview()"> Tile watermark (repeat pattern)
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Right: Preview -->
+                    <div>
+                        <h4 style="color: var(--text-primary); margin-bottom: 1rem;">👁️ Preview</h4>
+                        <div style="background: #333; border-radius: 8px; overflow: hidden;">
+                            <canvas id="previewCanvas" style="width: 100%; display: block;"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-secondary" onclick="resetTool()">
+                    <i class="fas fa-trash"></i> Clear
+                </button>
+                <button class="btn btn-primary" id="downloadBtn" onclick="downloadImage()" disabled>
+                    <i class="fas fa-download"></i> Download
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+@media (max-width: 768px) {
+    #watermarkOptions > div {
+        grid-template-columns: 1fr !important;
+    }
+}
+</style>
+
+<script>
+let mainImage = null;
+let logoImage = null;
+let watermarkType = 'text';
+let position = 'center';
+
+document.addEventListener('DOMContentLoaded', () => {
+    const uploadArea = document.getElementById('uploadArea');
+    const fileInput = document.getElementById('fileInput');
+    const logoUploadArea = document.getElementById('logoUploadArea');
+    const logoInput = document.getElementById('logoInput');
+    
+    uploadArea.addEventListener('click', () => fileInput.click());
+    logoUploadArea.addEventListener('click', () => logoInput.click());
+    
+    CutcompressTools.setupDragAndDrop(uploadArea, (e) => {
+        const file = e.dataTransfer.files[0];
+        if (file && file.type.startsWith('image/')) {
+            handleMainImage(file);
+        }
+    });
+    
+    fileInput.addEventListener('change', (e) => {
+        if (e.target.files[0]) handleMainImage(e.target.files[0]);
+    });
+    
+    logoInput.addEventListener('change', (e) => {
+        if (e.target.files[0]) handleLogoImage(e.target.files[0]);
+    });
+});
+
+function handleMainImage(file) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        mainImage = new Image();
+        mainImage.onload = () => {
+            document.getElementById('uploadArea').style.display = 'none';
+            document.getElementById('watermarkOptions').style.display = 'block';
+            document.getElementById('downloadBtn').disabled = false;
+            updatePreview();
+        };
+        mainImage.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+}
+
+function handleLogoImage(file) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        logoImage = new Image();
+        logoImage.onload = () => {
+            updatePreview();
+            CutcompressTools.showAlert('Logo loaded!', 'success');
+        };
+        logoImage.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+}
+
+function selectType(element) {
+    document.querySelectorAll('.option-card[data-type]').forEach(el => el.classList.remove('selected'));
+    element.classList.add('selected');
+    watermarkType = element.dataset.type;
+    
+    document.getElementById('textOptions').style.display = watermarkType === 'text' ? 'block' : 'none';
+    document.getElementById('imageOptions').style.display = watermarkType === 'image' ? 'block' : 'none';
+    updatePreview();
+}
+
+function setPosition(pos) {
+    position = pos;
+    updatePreview();
+}
+
+function updatePreview() {
+    if (!mainImage) return;
+    
+    const canvas = document.getElementById('previewCanvas');
+    const ctx = canvas.getContext('2d');
+    
+    // Set canvas size
+    const maxWidth = 500;
+    const scale = Math.min(maxWidth / mainImage.width, 1);
+    canvas.width = mainImage.width * scale;
+    canvas.height = mainImage.height * scale;
+    
+    // Draw main image
+    ctx.drawImage(mainImage, 0, 0, canvas.width, canvas.height);
+    
+    const opacity = parseInt(document.getElementById('opacity').value) / 100;
+    const tileMode = document.getElementById('tileMode').checked;
+    
+    ctx.globalAlpha = opacity;
+    
+    if (watermarkType === 'text') {
+        const text = document.getElementById('watermarkText').value || '© Watermark';
+        const fontSize = parseInt(document.getElementById('fontSize').value) * scale;
+        const color = document.getElementById('textColor').value;
+        const font = document.getElementById('fontFamily').value;
+        
+        ctx.font = `${fontSize}px ${font}`;
+        ctx.fillStyle = color;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        
+        if (tileMode) {
+            const textWidth = ctx.measureText(text).width;
+            const gap = textWidth * 1.5;
+            for (let y = 0; y < canvas.height + fontSize; y += fontSize * 2) {
+                for (let x = 0; x < canvas.width + textWidth; x += gap) {
+                    ctx.save();
+                    ctx.translate(x, y);
+                    ctx.rotate(-Math.PI / 6);
+                    ctx.fillText(text, 0, 0);
+                    ctx.restore();
+                }
+            }
+        } else {
+            const pos = getPosition(canvas.width, canvas.height, fontSize * 2, fontSize);
+            ctx.fillText(text, pos.x, pos.y);
+        }
+    } else if (watermarkType === 'image' && logoImage) {
+        const logoScale = parseInt(document.getElementById('logoSize').value) / 100;
+        const logoWidth = canvas.width * logoScale;
+        const logoHeight = (logoImage.height / logoImage.width) * logoWidth;
+        
+        if (tileMode) {
+            for (let y = 0; y < canvas.height; y += logoHeight * 1.5) {
+                for (let x = 0; x < canvas.width; x += logoWidth * 1.5) {
+                    ctx.drawImage(logoImage, x, y, logoWidth, logoHeight);
+                }
+            }
+        } else {
+            const pos = getPosition(canvas.width, canvas.height, logoWidth, logoHeight);
+            ctx.drawImage(logoImage, pos.x - logoWidth/2, pos.y - logoHeight/2, logoWidth, logoHeight);
+        }
+    }
+    
+    ctx.globalAlpha = 1;
+}
+
+function getPosition(canvasW, canvasH, itemW, itemH) {
+    const padding = 20;
+    const positions = {
+        'top-left': { x: padding + itemW/2, y: padding + itemH/2 },
+        'top-center': { x: canvasW/2, y: padding + itemH/2 },
+        'top-right': { x: canvasW - padding - itemW/2, y: padding + itemH/2 },
+        'center-left': { x: padding + itemW/2, y: canvasH/2 },
+        'center': { x: canvasW/2, y: canvasH/2 },
+        'center-right': { x: canvasW - padding - itemW/2, y: canvasH/2 },
+        'bottom-left': { x: padding + itemW/2, y: canvasH - padding - itemH/2 },
+        'bottom-center': { x: canvasW/2, y: canvasH - padding - itemH/2 },
+        'bottom-right': { x: canvasW - padding - itemW/2, y: canvasH - padding - itemH/2 }
+    };
+    return positions[position];
+}
+
+function downloadImage() {
+    if (!mainImage) return;
+    
+    // Create full-size canvas
+    const canvas = document.createElement('canvas');
+    canvas.width = mainImage.width;
+    canvas.height = mainImage.height;
+    const ctx = canvas.getContext('2d');
+    
+    ctx.drawImage(mainImage, 0, 0);
+    
+    const opacity = parseInt(document.getElementById('opacity').value) / 100;
+    const tileMode = document.getElementById('tileMode').checked;
+    
+    ctx.globalAlpha = opacity;
+    
+    if (watermarkType === 'text') {
+        const text = document.getElementById('watermarkText').value || '© Watermark';
+        const fontSize = parseInt(document.getElementById('fontSize').value);
+        const color = document.getElementById('textColor').value;
+        const font = document.getElementById('fontFamily').value;
+        
+        ctx.font = `${fontSize}px ${font}`;
+        ctx.fillStyle = color;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        
+        if (tileMode) {
+            const textWidth = ctx.measureText(text).width;
+            const gap = textWidth * 1.5;
+            for (let y = 0; y < canvas.height + fontSize; y += fontSize * 2) {
+                for (let x = 0; x < canvas.width + textWidth; x += gap) {
+                    ctx.save();
+                    ctx.translate(x, y);
+                    ctx.rotate(-Math.PI / 6);
+                    ctx.fillText(text, 0, 0);
+                    ctx.restore();
+                }
+            }
+        } else {
+            const pos = getPosition(canvas.width, canvas.height, fontSize * 2, fontSize);
+            ctx.fillText(text, pos.x, pos.y);
+        }
+    } else if (watermarkType === 'image' && logoImage) {
+        const logoScale = parseInt(document.getElementById('logoSize').value) / 100;
+        const logoWidth = canvas.width * logoScale;
+        const logoHeight = (logoImage.height / logoImage.width) * logoWidth;
+        
+        if (tileMode) {
+            for (let y = 0; y < canvas.height; y += logoHeight * 1.5) {
+                for (let x = 0; x < canvas.width; x += logoWidth * 1.5) {
+                    ctx.drawImage(logoImage, x, y, logoWidth, logoHeight);
+                }
+            }
+        } else {
+            const pos = getPosition(canvas.width, canvas.height, logoWidth, logoHeight);
+            ctx.drawImage(logoImage, pos.x - logoWidth/2, pos.y - logoHeight/2, logoWidth, logoHeight);
+        }
+    }
+    
+    canvas.toBlob((blob) => {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'watermarked_image.png';
+        a.click();
+        URL.revokeObjectURL(url);
+        CutcompressTools.showAlert('Downloaded!', 'success');
+    }, 'image/png');
+}
+
+function resetTool() {
+    mainImage = null;
+    logoImage = null;
+    document.getElementById('fileInput').value = '';
+    document.getElementById('uploadArea').style.display = 'block';
+    document.getElementById('watermarkOptions').style.display = 'none';
+    document.getElementById('downloadBtn').disabled = true;
+    CutcompressTools.showAlert('Cleared!', 'info');
+}
+</script>
+{% endblock %}

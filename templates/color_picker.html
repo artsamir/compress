@@ -1,0 +1,450 @@
+{% extends 'base.html' %}
+{% block title %}Color Picker & Palette Generator - Free Online Tool{% endblock %}
+{% block description %}Pick colors, generate palettes, and get color codes in HEX, RGB, HSL formats. Free online color picker tool for designers.{% endblock %}
+{% block keywords %}color picker, palette generator, color codes, hex color, rgb{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/tools_common.css') }}">
+<script src="{{ url_for('static', filename='js/tools_common.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="tool-page">
+    <button class="theme-toggle" onclick="toggleTheme()">
+        <span class="icon-sun">☀️</span>
+        <span class="icon-moon">🌙</span>
+    </button>
+
+    <div class="tool-container">
+        <div class="tool-header">
+            <div class="emoji-icon">🎨</div>
+            <h1>Color Picker & Palette</h1>
+            <p>Pick colors and generate beautiful palettes! 🌈</p>
+        </div>
+
+        <div class="instructions-card">
+            <h3>📋 How to Use</h3>
+            <ol>
+                <li><strong>Pick</strong> a color using the color picker or enter a code</li>
+                <li><strong>View</strong> all color formats (HEX, RGB, HSL)</li>
+                <li><strong>Generate</strong> harmonious color palettes</li>
+                <li><strong>Copy</strong> any color code with one click!</li>
+            </ol>
+        </div>
+
+        <div class="tool-card">
+            <!-- Color Picker Section -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                <div>
+                    <h3 style="color: var(--text-primary); margin-bottom: 1rem;">🎯 Pick a Color</h3>
+                    
+                    <div style="display: flex; gap: 1rem; align-items: stretch;">
+                        <input type="color" id="colorPicker" value="#6366f1" onchange="updateColor(this.value)" style="width: 100px; height: 100px; border: none; cursor: pointer; border-radius: 8px;">
+                        <div id="colorPreview" style="flex: 1; border-radius: 8px; background: #6366f1;"></div>
+                    </div>
+
+                    <div class="form-group" style="margin-top: 1rem;">
+                        <label>Enter Color Code</label>
+                        <input type="text" id="hexInput" value="#6366f1" oninput="updateFromHex(this.value)" placeholder="#6366f1">
+                    </div>
+
+                    <!-- Color Codes -->
+                    <div style="margin-top: 1.5rem;">
+                        <h4 style="color: var(--text-primary); margin-bottom: 0.5rem;">📋 Color Codes</h4>
+                        <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                            <div class="color-code-row">
+                                <span>HEX:</span>
+                                <code id="hexCode">#6366f1</code>
+                                <button class="copy-btn" onclick="copyCode('hexCode')">📋</button>
+                            </div>
+                            <div class="color-code-row">
+                                <span>RGB:</span>
+                                <code id="rgbCode">rgb(99, 102, 241)</code>
+                                <button class="copy-btn" onclick="copyCode('rgbCode')">📋</button>
+                            </div>
+                            <div class="color-code-row">
+                                <span>HSL:</span>
+                                <code id="hslCode">hsl(239, 84%, 67%)</code>
+                                <button class="copy-btn" onclick="copyCode('hslCode')">📋</button>
+                            </div>
+                            <div class="color-code-row">
+                                <span>RGBA:</span>
+                                <code id="rgbaCode">rgba(99, 102, 241, 1)</code>
+                                <button class="copy-btn" onclick="copyCode('rgbaCode')">📋</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Palette Generator -->
+                <div>
+                    <h3 style="color: var(--text-primary); margin-bottom: 1rem;">🌈 Generate Palette</h3>
+                    
+                    <div class="form-group">
+                        <label>Palette Type</label>
+                        <select id="paletteType" onchange="generatePalette()">
+                            <option value="complementary">Complementary</option>
+                            <option value="analogous">Analogous</option>
+                            <option value="triadic">Triadic</option>
+                            <option value="tetradic">Tetradic</option>
+                            <option value="split">Split Complementary</option>
+                            <option value="monochromatic">Monochromatic</option>
+                        </select>
+                    </div>
+
+                    <div id="paletteContainer" style="display: flex; gap: 0.5rem; margin-top: 1rem;"></div>
+
+                    <button class="btn btn-secondary" onclick="randomColor()" style="margin-top: 1rem;">
+                        🎲 Random Color
+                    </button>
+                </div>
+            </div>
+
+            <!-- Shades & Tints -->
+            <div style="margin-top: 2rem;">
+                <h3 style="color: var(--text-primary); margin-bottom: 1rem;">🎚️ Shades & Tints</h3>
+                <div id="shadesContainer" style="display: flex; gap: 0.25rem;"></div>
+            </div>
+
+            <!-- Saved Colors -->
+            <div style="margin-top: 2rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <h3 style="color: var(--text-primary); margin: 0;">💾 Saved Colors</h3>
+                    <button class="btn btn-secondary" onclick="saveColor()" style="padding: 0.5rem 1rem;">
+                        ➕ Save Current
+                    </button>
+                </div>
+                <div id="savedColors" style="display: flex; gap: 0.5rem; flex-wrap: wrap;"></div>
+            </div>
+
+            <!-- Image Color Picker -->
+            <div style="margin-top: 2rem;">
+                <h3 style="color: var(--text-primary); margin-bottom: 1rem;">🖼️ Pick from Image</h3>
+                <div class="upload-area mini" id="imageUploadArea" style="padding: 1rem;">
+                    <div class="upload-icon" style="font-size: 1.5rem;">📷</div>
+                    <p style="font-size: 0.85rem; margin: 0;">Upload an image to pick colors</p>
+                    <input type="file" id="imageInput" accept="image/*" hidden>
+                </div>
+                <div id="imagePickerContainer" style="display: none; margin-top: 1rem;">
+                    <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 0.5rem;">Click on the image to pick a color</p>
+                    <canvas id="imageCanvas" style="max-width: 100%; cursor: crosshair; border-radius: 8px;"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.color-code-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    background: var(--bg-tertiary);
+    border-radius: 4px;
+}
+.color-code-row span {
+    width: 50px;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+.color-code-row code {
+    flex: 1;
+    font-family: monospace;
+    color: var(--text-primary);
+}
+.color-code-row .copy-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 0.25rem;
+}
+.palette-color {
+    flex: 1;
+    min-height: 80px;
+    border-radius: 8px;
+    cursor: pointer;
+    position: relative;
+    transition: transform 0.2s;
+}
+.palette-color:hover {
+    transform: scale(1.05);
+}
+.palette-color::after {
+    content: attr(data-hex);
+    position: absolute;
+    bottom: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.7rem;
+    color: white;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+    background: rgba(0,0,0,0.3);
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+.shade-box {
+    flex: 1;
+    min-height: 50px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+.shade-box:first-child { border-radius: 8px 0 0 8px; }
+.shade-box:last-child { border-radius: 0 8px 8px 0; }
+.shade-box:hover { transform: scaleY(1.1); }
+.saved-color {
+    width: 50px;
+    height: 50px;
+    border-radius: 8px;
+    cursor: pointer;
+    position: relative;
+    transition: transform 0.2s;
+}
+.saved-color:hover { transform: scale(1.1); }
+.saved-color .remove {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: #e53e3e;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    font-size: 10px;
+    cursor: pointer;
+    display: none;
+}
+.saved-color:hover .remove { display: block; }
+</style>
+
+<script>
+let currentColor = '#6366f1';
+let savedColors = JSON.parse(localStorage.getItem('savedColors') || '[]');
+
+document.addEventListener('DOMContentLoaded', () => {
+    updateColor(currentColor);
+    renderSavedColors();
+    
+    const imageUploadArea = document.getElementById('imageUploadArea');
+    const imageInput = document.getElementById('imageInput');
+    
+    imageUploadArea.addEventListener('click', () => imageInput.click());
+    imageInput.addEventListener('change', handleImageUpload);
+});
+
+function updateColor(hex) {
+    currentColor = hex;
+    document.getElementById('colorPicker').value = hex;
+    document.getElementById('hexInput').value = hex;
+    document.getElementById('colorPreview').style.background = hex;
+    
+    const rgb = hexToRgb(hex);
+    const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
+    
+    document.getElementById('hexCode').textContent = hex.toUpperCase();
+    document.getElementById('rgbCode').textContent = `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
+    document.getElementById('hslCode').textContent = `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`;
+    document.getElementById('rgbaCode').textContent = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 1)`;
+    
+    generatePalette();
+    generateShades();
+}
+
+function updateFromHex(value) {
+    if (/^#[0-9A-Fa-f]{6}$/.test(value)) {
+        updateColor(value);
+    }
+}
+
+function hexToRgb(hex) {
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16)
+    } : { r: 0, g: 0, b: 0 };
+}
+
+function rgbToHex(r, g, b) {
+    return '#' + [r, g, b].map(x => {
+        const hex = Math.max(0, Math.min(255, Math.round(x))).toString(16);
+        return hex.length === 1 ? '0' + hex : hex;
+    }).join('');
+}
+
+function rgbToHsl(r, g, b) {
+    r /= 255; g /= 255; b /= 255;
+    const max = Math.max(r, g, b), min = Math.min(r, g, b);
+    let h, s, l = (max + min) / 2;
+    
+    if (max === min) {
+        h = s = 0;
+    } else {
+        const d = max - min;
+        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+        switch (max) {
+            case r: h = ((g - b) / d + (g < b ? 6 : 0)) / 6; break;
+            case g: h = ((b - r) / d + 2) / 6; break;
+            case b: h = ((r - g) / d + 4) / 6; break;
+        }
+    }
+    return { h: Math.round(h * 360), s: Math.round(s * 100), l: Math.round(l * 100) };
+}
+
+function hslToHex(h, s, l) {
+    s /= 100; l /= 100;
+    const c = (1 - Math.abs(2 * l - 1)) * s;
+    const x = c * (1 - Math.abs((h / 60) % 2 - 1));
+    const m = l - c / 2;
+    let r, g, b;
+    
+    if (h < 60) { r = c; g = x; b = 0; }
+    else if (h < 120) { r = x; g = c; b = 0; }
+    else if (h < 180) { r = 0; g = c; b = x; }
+    else if (h < 240) { r = 0; g = x; b = c; }
+    else if (h < 300) { r = x; g = 0; b = c; }
+    else { r = c; g = 0; b = x; }
+    
+    return rgbToHex((r + m) * 255, (g + m) * 255, (b + m) * 255);
+}
+
+function generatePalette() {
+    const type = document.getElementById('paletteType').value;
+    const rgb = hexToRgb(currentColor);
+    const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
+    let colors = [];
+    
+    switch(type) {
+        case 'complementary':
+            colors = [currentColor, hslToHex((hsl.h + 180) % 360, hsl.s, hsl.l)];
+            break;
+        case 'analogous':
+            colors = [
+                hslToHex((hsl.h - 30 + 360) % 360, hsl.s, hsl.l),
+                currentColor,
+                hslToHex((hsl.h + 30) % 360, hsl.s, hsl.l)
+            ];
+            break;
+        case 'triadic':
+            colors = [
+                currentColor,
+                hslToHex((hsl.h + 120) % 360, hsl.s, hsl.l),
+                hslToHex((hsl.h + 240) % 360, hsl.s, hsl.l)
+            ];
+            break;
+        case 'tetradic':
+            colors = [
+                currentColor,
+                hslToHex((hsl.h + 90) % 360, hsl.s, hsl.l),
+                hslToHex((hsl.h + 180) % 360, hsl.s, hsl.l),
+                hslToHex((hsl.h + 270) % 360, hsl.s, hsl.l)
+            ];
+            break;
+        case 'split':
+            colors = [
+                currentColor,
+                hslToHex((hsl.h + 150) % 360, hsl.s, hsl.l),
+                hslToHex((hsl.h + 210) % 360, hsl.s, hsl.l)
+            ];
+            break;
+        case 'monochromatic':
+            colors = [
+                hslToHex(hsl.h, hsl.s, Math.max(hsl.l - 30, 10)),
+                hslToHex(hsl.h, hsl.s, Math.max(hsl.l - 15, 20)),
+                currentColor,
+                hslToHex(hsl.h, hsl.s, Math.min(hsl.l + 15, 90)),
+                hslToHex(hsl.h, hsl.s, Math.min(hsl.l + 30, 95))
+            ];
+            break;
+    }
+    
+    document.getElementById('paletteContainer').innerHTML = colors.map(c => 
+        `<div class="palette-color" style="background: ${c};" data-hex="${c.toUpperCase()}" onclick="updateColor('${c}')"></div>`
+    ).join('');
+}
+
+function generateShades() {
+    const rgb = hexToRgb(currentColor);
+    const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
+    const shades = [];
+    
+    for (let i = 10; i <= 90; i += 10) {
+        shades.push(hslToHex(hsl.h, hsl.s, i));
+    }
+    
+    document.getElementById('shadesContainer').innerHTML = shades.map(c => 
+        `<div class="shade-box" style="background: ${c};" onclick="updateColor('${c}')" title="${c.toUpperCase()}"></div>`
+    ).join('');
+}
+
+function copyCode(id) {
+    const code = document.getElementById(id).textContent;
+    navigator.clipboard.writeText(code);
+    CutcompressTools.showAlert(`Copied: ${code}`, 'success');
+}
+
+function randomColor() {
+    const hex = '#' + Math.floor(Math.random()*16777215).toString(16).padStart(6, '0');
+    updateColor(hex);
+}
+
+function saveColor() {
+    if (!savedColors.includes(currentColor)) {
+        savedColors.push(currentColor);
+        localStorage.setItem('savedColors', JSON.stringify(savedColors));
+        renderSavedColors();
+        CutcompressTools.showAlert('Color saved!', 'success');
+    }
+}
+
+function removeSavedColor(index) {
+    savedColors.splice(index, 1);
+    localStorage.setItem('savedColors', JSON.stringify(savedColors));
+    renderSavedColors();
+}
+
+function renderSavedColors() {
+    document.getElementById('savedColors').innerHTML = savedColors.map((c, i) => 
+        `<div class="saved-color" style="background: ${c};" onclick="updateColor('${c}')" title="${c}">
+            <button class="remove" onclick="event.stopPropagation(); removeSavedColor(${i})">✕</button>
+        </div>`
+    ).join('') || '<p style="color: var(--text-secondary);">No saved colors yet</p>';
+}
+
+function handleImageUpload(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+        const img = new Image();
+        img.onload = () => {
+            const canvas = document.getElementById('imageCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            const maxWidth = 500;
+            const scale = Math.min(maxWidth / img.width, 1);
+            canvas.width = img.width * scale;
+            canvas.height = img.height * scale;
+            
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+            document.getElementById('imagePickerContainer').style.display = 'block';
+            
+            canvas.onclick = (e) => {
+                const rect = canvas.getBoundingClientRect();
+                const x = (e.clientX - rect.left) * (canvas.width / rect.width);
+                const y = (e.clientY - rect.top) * (canvas.height / rect.height);
+                const pixel = ctx.getImageData(x, y, 1, 1).data;
+                const hex = rgbToHex(pixel[0], pixel[1], pixel[2]);
+                updateColor(hex);
+                CutcompressTools.showAlert(`Picked: ${hex}`, 'success');
+            };
+        };
+        img.src = ev.target.result;
+    };
+    reader.readAsDataURL(file);
+}
+</script>
+{% endblock %}

@@ -6,6 +6,15 @@
 
 {% block head %}
     <meta name="robots" content="index, follow">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        // Ensure Dark Mode is default for the futuristic Tools page
+        if (!localStorage.getItem('cutcompress-theme')) {
+            localStorage.setItem('cutcompress-theme', 'dark');
+        }
+    </script>
+    <script src="{{ url_for('static', filename='js/tools_common.js') }}"></script>
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
@@ -22,368 +31,1289 @@
 {% endblock %}
 
 {% block content %}
-<div class="tools-container">
-    <section class="tools-hero">
-        <h1>Our Tools</h1>
-        <p>Professional image & document processing tools</p>
-    </section>
+<div class="tools-page">
+    <!-- Theme Toggle -->
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle Theme">
+        <span class="icon-sun">☀️</span>
+        <span class="icon-moon">🌙</span>
+    </button>
 
-    <section class="tools-grid">
-        <!-- Available Tools -->
-        <div class="tools-section">
-            <h2>Available Tools</h2>
-            <div class="tools-list">
-                <a href="{{ url_for('reduce_image_size') }}" class="tool-card available">
-                    <div class="tool-icon">🖼️</div>
-                    <h3>Reduce Image Size</h3>
-                    <p>Compress images to desired file size</p>
-                    <span class="tool-badge available-badge">Available</span>
-                </a>
+    <!-- Animated Background -->
+    <div class="bg-animation">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+        <div class="grid-overlay"></div>
+    </div>
 
-                <a href="{{ url_for('image_to_jpg') }}" class="tool-card coming">
-                    <div class="tool-icon">🎨</div>
-                    <h3>Image to JPG</h3>
-                    <p>Convert images to JPG format</p>
-                    <span class="tool-badge available-badge">Available</span>
-                </a>
-
-                <a href="{{ url_for('tool_image_to_png') }}" class="tool-card coming">
-                    <div class="tool-icon">🌅</div>
-                    <h3>Image to PNG</h3>
-                    <p>Convert images to PNG format</p>
-                    <span class="tool-badge available-badge">Available</span>
-                </a>
-
-                <a href="{{ url_for('tool_image_to_webp') }}" class="tool-card coming">
-                    <div class="tool-icon">✨</div>
-                    <h3>Image to WebP</h3>
-                    <p>Convert images to modern WebP format</p>
-                    <span class="tool-badge available-badge">Available</span>
-                </a>
-
-                <a href="{{ url_for('tool_image_to_pdf') }}" class="tool-card coming">
-                    <div class="tool-icon">📄</div>
-                    <h3>Image to PDF</h3>
-                    <p>Convert images to PDF documents</p>
-                    <span class="tool-badge available-badge">Available</span>
-                </a>
-
-                <a href="{{ url_for('merge_images') }}" class="tool-card coming">
-                    <div class="tool-icon">🖼️</div>
-                    <h3>Merge Images</h3>
-                    <p>Combine multiple images into one</p>
-                    <span class="tool-badge available-badge">Available</span>
-                </a>
-
-                <a href="{{ url_for('background_remove') }}" class="tool-card coming">
-                    <div class="tool-icon">🎭</div>
-                    <h3>Background Remove</h3>
-                    <p>Remove image backgrounds easily</p>
-                    <span class="tool-badge available-badge">Available</span>
-                </a>
-
-                <a href="{{ url_for('resume_maker') }}" class="tool-card coming">
-                    <div class="tool-icon">📄</div>
-                    <h3>Resume Maker</h3>
-                    <p>Create professional resumes easily</p>
-                    <span class="tool-badge available-badge">Available</span>
-                </a>
-
-                <a href="{{ url_for('json_email_extractor') }}" class="tool-card coming">
-                    <div class="tool-icon">📧</div>
-                    <h3>JSON Email Extractor</h3>
-                    <p>Extract emails from JSON data</p>
-                    <span class="tool-badge available-badge">Available</span>
-                </a>
-
-                <a href="{{ url_for('csv_comparator') }}" class="tool-card coming">
-                    <div class="tool-icon">📊</div>
-                    <h3>CSV Comparator</h3>
-                    <p>Compare two CSV files side by side</p>
-                    <span class="tool-badge available-badge">Available</span>
-                </a>
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-content">
+            <span class="hero-badge">✨ 30+ Free Tools</span>
+            <h1 class="hero-title">
+                <span class="gradient-text">Powerful Tools</span>
+                <br>For Creators
+            </h1>
+            <p class="hero-subtitle">Transform images, documents & data with our cutting-edge online tools. No signup required.</p>
+            
+            <!-- Search Bar -->
+            <div class="search-container">
+                <div class="search-icon">🔍</div>
+                <input type="text" id="toolSearch" class="search-input" placeholder="Search tools..." oninput="filterTools(this.value)">
+                <kbd class="search-shortcut">Ctrl+K</kbd>
             </div>
-        </div>
 
-        <!-- Coming Soon Tools -->
-        <div class="tools-section">
-            <h2>More Tools</h2>
-            <div class="tools-list">
-                <a href="{{ url_for('passport_maker') }}" class="tool-card available">
-                    <div class="tool-icon">🛂</div>
-                    <h3>Passport Maker</h3>
-                    <p>Create professional passport photos</p>
-                    <span class="tool-badge available-badge">Available</span>
-                </a>
-
-                <a href="{{ url_for('word_to_hashtag') }}" class="tool-card available">
-                    <div class="tool-icon">#️⃣</div>
-                    <h3>Word to Hashtag</h3>
-                    <p>Convert text to hashtags</p>
-                    <span class="tool-badge available-badge">Available</span>
-                </a>
-
-                <a href="{{ url_for('word_to_pdf') }}" class="tool-card available">
-                    <div class="tool-icon">📄</div>
-                    <h3>Word to PDF</h3>
-                    <p>Convert Word documents to PDF</p>
-                    <span class="tool-badge available-badge">Available</span>
-                </a>
-
-                <a href="{{ url_for('excel_to_pdf') }}" class="tool-card available">
-                    <div class="tool-icon">📊</div>
-                    <h3>Excel to PDF</h3>
-                    <p>Convert Excel spreadsheets to PDF</p>
-                    <span class="tool-badge available-badge">Available</span>
-                </a>
-
-                <a href="{{ url_for('ppt_to_pdf') }}" class="tool-card available">
-                    <div class="tool-icon">🎬</div>
-                    <h3>PowerPoint to PDF</h3>
-                    <p>Convert presentations to PDF</p>
-                    <span class="tool-badge available-badge">Available</span>
-                </a>
-
-                <a href="{{ url_for('project_front_page') }}" class="tool-card available">
-                    <div class="tool-icon">📑</div>
-                    <h3>Project Front Page Maker</h3>
-                    <p>Design project cover pages</p>
-                    <span class="tool-badge available-badge">Available</span>
-                </a>
-
-                <a href="{{ url_for('id_card_maker') }}" class="tool-card available">
-                    <div class="tool-icon">🪪</div>
-                    <h3>ID Card Maker</h3>
-                    <p>Create professional ID cards</p>
-                    <span class="tool-badge available-badge">Available</span>
-                </a>
-
-                <a href="{{ url_for('certificate_maker') }}" class="tool-card available">
-                    <div class="tool-icon">🏆</div>
-                    <h3>Certificate Maker</h3>
-                    <p>Generate certificates and awards</p>
-                    <span class="tool-badge available-badge">Available</span>
-                </a>
-
-                <a href="{{ url_for('email_templates') }}" class="tool-card available">
-                    <div class="tool-icon">✉️</div>
-                    <h3>Email Templates</h3>
-                    <p>Professional email templates</p>
-                    <span class="tool-badge available-badge">Available</span>
-                </a>
-
-                <a href="{{ url_for('application_letter') }}" class="tool-card available">
-                    <div class="tool-icon">📝</div>
-                    <h3>Application Letter Template</h3>
-                    <p>Job application letter templates</p>
-                    <span class="tool-badge available-badge">Available</span>
-                </a>
+            <!-- Quick Stats -->
+            <div class="stats-row">
+                <div class="stat-item">
+                    <span class="stat-number">30+</span>
+                    <span class="stat-label">Tools</span>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-item">
+                    <span class="stat-number">100%</span>
+                    <span class="stat-label">Free</span>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-item">
+                    <span class="stat-number">0</span>
+                    <span class="stat-label">Signup</span>
+                </div>
             </div>
         </div>
     </section>
 
+    <!-- Category Filter -->
+    <section class="filter-section">
+        <div class="filter-container">
+            <button class="filter-btn active" onclick="filterCategory('all')">
+                <span class="filter-icon">🎯</span> All Tools
+            </button>
+            <button class="filter-btn" onclick="filterCategory('image')">
+                <span class="filter-icon">🖼️</span> Image
+            </button>
+            <button class="filter-btn" onclick="filterCategory('pdf')">
+                <span class="filter-icon">📄</span> PDF
+            </button>
+            <button class="filter-btn" onclick="filterCategory('document')">
+                <span class="filter-icon">📝</span> Document
+            </button>
+            <button class="filter-btn" onclick="filterCategory('developer')">
+                <span class="filter-icon">💻</span> Developer
+            </button>
+            <button class="filter-btn" onclick="filterCategory('design')">
+                <span class="filter-icon">🎨</span> Design
+            </button>
+        </div>
+    </section>
+
+    <!-- Tools Grid -->
+    <section class="tools-section">
+        <div class="tools-wrapper">
+            
+            <!-- Featured / New Tools -->
+            <div class="section-header">
+                <h2 class="section-title">
+                    <span class="section-icon">🔥</span>
+                    New & Popular
+                </h2>
+                <span class="section-badge pulse">HOT</span>
+            </div>
+            
+            <div class="tools-grid" id="newToolsGrid">
+                <a href="{{ url_for('qr_code_generator') }}" class="tool-card featured" data-category="design" data-name="QR Code Generator">
+                    <div class="card-glow"></div>
+                    <div class="card-content">
+                        <div class="tool-icon-wrapper">
+                            <span class="tool-icon">📱</span>
+                        </div>
+                        <h3>QR Code Generator</h3>
+                        <p>Create QR codes for URLs, text, WiFi & more</p>
+                        <div class="tool-tags">
+                            <span class="tag">Design</span>
+                            <span class="tag new">New</span>
+                        </div>
+                    </div>
+                    <div class="card-arrow">→</div>
+                </a>
+
+                <a href="{{ url_for('youtube_thumbnail') }}" class="tool-card featured" data-category="design" data-name="YouTube Thumbnail Maker">
+                    <div class="card-glow"></div>
+                    <div class="card-content">
+                        <div class="tool-icon-wrapper">
+                            <span class="tool-icon">▶️</span>
+                        </div>
+                        <h3>YouTube Thumbnail</h3>
+                        <p>Create eye-catching thumbnails</p>
+                        <div class="tool-tags">
+                            <span class="tag">Design</span>
+                            <span class="tag new">New</span>
+                        </div>
+                    </div>
+                    <div class="card-arrow">→</div>
+                </a>
+
+                <a href="{{ url_for('invoice_generator') }}" class="tool-card featured" data-category="document" data-name="Invoice Generator">
+                    <div class="card-glow"></div>
+                    <div class="card-content">
+                        <div class="tool-icon-wrapper">
+                            <span class="tool-icon">🧾</span>
+                        </div>
+                        <h3>Invoice Generator</h3>
+                        <p>Create professional invoices</p>
+                        <div class="tool-tags">
+                            <span class="tag">Business</span>
+                            <span class="tag new">New</span>
+                        </div>
+                    </div>
+                    <div class="card-arrow">→</div>
+                </a>
+
+                <a href="{{ url_for('color_picker') }}" class="tool-card featured" data-category="design" data-name="Color Picker Palette">
+                    <div class="card-glow"></div>
+                    <div class="card-content">
+                        <div class="tool-icon-wrapper">
+                            <span class="tool-icon">🎨</span>
+                        </div>
+                        <h3>Color Picker</h3>
+                        <p>Pick colors & generate palettes</p>
+                        <div class="tool-tags">
+                            <span class="tag">Design</span>
+                            <span class="tag new">New</span>
+                        </div>
+                    </div>
+                    <div class="card-arrow">→</div>
+                </a>
+            </div>
+
+            <!-- Image Tools -->
+            <div class="section-header">
+                <h2 class="section-title">
+                    <span class="section-icon">🖼️</span>
+                    Image Tools
+                </h2>
+            </div>
+            
+            <div class="tools-grid" id="imageToolsGrid">
+                <a href="{{ url_for('reduce_image_size') }}" class="tool-card" data-category="image" data-name="Reduce Image Size Compress">
+                    <div class="card-content">
+                        <div class="tool-icon-wrapper blue">
+                            <span class="tool-icon">🗜️</span>
+                        </div>
+                        <h3>Reduce Image Size</h3>
+                        <p>Compress images to desired file size</p>
+                    </div>
+                    <div class="card-arrow">→</div>
+                </a>
+
+                <a href="{{ url_for('image_to_jpg') }}" class="tool-card" data-category="image" data-name="Image to JPG Converter">
+                    <div class="card-content">
+                        <div class="tool-icon-wrapper orange">
+                            <span class="tool-icon">🎨</span>
+                        </div>
+                        <h3>Image to JPG</h3>
+                        <p>Convert images to JPG format</p>
+                    </div>
+                    <div class="card-arrow">→</div>
+                </a>
+
+                <a href="{{ url_for('tool_image_to_png') }}" class="tool-card" data-category="image" data-name="Image to PNG Converter">
+                    <div class="card-content">
+                        <div class="tool-icon-wrapper green">
+                            <span class="tool-icon">🌅</span>
+                        </div>
+                        <h3>Image to PNG</h3>
+                        <p>Convert images to PNG format</p>
+                    </div>
+                    <div class="card-arrow">→</div>
+                </a>
+
+                <a href="{{ url_for('tool_image_to_webp') }}" class="tool-card" data-category="image" data-name="Image to WebP Converter">
+                    <div class="card-content">
+                        <div class="tool-icon-wrapper purple">
+                            <span class="tool-icon">✨</span>
+                        </div>
+                        <h3>Image to WebP</h3>
+                        <p>Convert to modern WebP format</p>
+                    </div>
+                    <div class="card-arrow">→</div>
+                </a>
+
+                <a href="{{ url_for('image_cropper') }}" class="tool-card" data-category="image" data-name="Image Cropper">
+                    <div class="card-content">
+                        <div class="tool-icon-wrapper pink">
+                            <span class="tool-icon">✂️</span>
+                        </div>
+                        <h3>Image Cropper</h3>
+                        <p>Crop images with precision</p>
+                    </div>
+                    <div class="card-arrow">→</div>
+                </a>
+
+                <a href="{{ url_for('image_resizer') }}" class="tool-card" data-category="image" data-name="Image Resizer">
+                    <div class="card-content">
+                        <div class="tool-icon-wrapper cyan">
+                            <span class="tool-icon">📐</span>
+                        </div>
+                        <h3>Image Resizer</h3>
+                        <p>Resize images to any dimension</p>
+                    </div>
+                    <div class="card-arrow">→</div>
+                </a>
+
+                <a href="{{ url_for('watermark_maker') }}" class="tool-card" data-category="image" data-name="Watermark Maker">
+                    <div class="card-content">
+                        <div class="tool-icon-wrapper blue">
+                            <span class="tool-icon">💧</span>
+                        </div>
+                        <h3>Watermark Maker</h3>
+                        <p>Add text or image watermarks</p>
+                    </div>
+                    <div class="card-arrow">→</div>
+                </a>
+
+                <a href="{{ url_for('merge_images') }}" class="tool-card" data-category="image" data-name="Merge Images Combine">
+                    <div class="card-content">
+                        <div class="tool-icon-wrapper green">
+                            <span class="tool-icon">🖼️</span>
+                        </div>
+                        <h3>Merge Images</h3>
+                        <p>Combine multiple images into one</p>
+                    </div>
+                    <div class="card-arrow">→</div>
+                </a>
+
+                <a href="{{ url_for('background_remove') }}" class="tool-card" data-category="image" data-name="Background Remove">
+                    <div class="card-content">
+                        <div class="tool-icon-wrapper purple">
+                            <span class="tool-icon">🎭</span>
+                        </div>
+                        <h3>Background Remove</h3>
+                        <p>Remove image backgrounds easily</p>
+                    </div>
+                    <div class="card-arrow">→</div>
+                </a>
+
+                <a href="{{ url_for('passport_maker') }}" class="tool-card" data-category="image" data-name="Passport Photo Maker">
+                    <div class="card-content">
+                        <div class="tool-icon-wrapper orange">
+                            <span class="tool-icon">🛂</span>
+                        </div>
+                        <h3>Passport Maker</h3>
+                        <p>Create professional passport photos</p>
+                    </div>
+                    <div class="card-arrow">→</div>
+                </a>
+            </div>
+
+            <!-- PDF Tools -->
+            <div class="section-header">
+                <h2 class="section-title">
+                    <span class="section-icon">📄</span>
+                    PDF Tools
+                </h2>
+            </div>
+            
+            <div class="tools-grid" id="pdfToolsGrid">
+                <a href="{{ url_for('pdf_merge') }}" class="tool-card" data-category="pdf" data-name="PDF Merge Combine">
+                    <div class="card-content">
+                        <div class="tool-icon-wrapper red">
+                            <span class="tool-icon">📑</span>
+                        </div>
+                        <h3>PDF Merge</h3>
+                        <p>Combine multiple PDFs into one</p>
+                    </div>
+                    <div class="card-arrow">→</div>
+                </a>
+
+                <a href="{{ url_for('pdf_compress') }}" class="tool-card" data-category="pdf" data-name="PDF Compress">
+                    <div class="card-content">
+                        <div class="tool-icon-wrapper orange">
+                            <span class="tool-icon">📦</span>
+                        </div>
+                        <h3>PDF Compress</h3>
+                        <p>Reduce PDF file size</p>
+                    </div>
+                    <div class="card-arrow">→</div>
+                </a>
+
+                <a href="{{ url_for('tool_image_to_pdf') }}" class="tool-card" data-category="pdf" data-name="Image to PDF Converter">
+                    <div class="card-content">
+                        <div class="tool-icon-wrapper blue">
+                            <span class="tool-icon">📄</span>
+                        </div>
+                        <h3>Image to PDF</h3>
+                        <p>Convert images to PDF documents</p>
+                    </div>
+                    <div class="card-arrow">→</div>
+                </a>
+
+                <a href="{{ url_for('word_to_pdf') }}" class="tool-card" data-category="pdf" data-name="Word to PDF Converter">
+                    <div class="card-content">
+                        <div class="tool-icon-wrapper blue">
+                            <span class="tool-icon">📝</span>
+                        </div>
+                        <h3>Word to PDF</h3>
+                        <p>Convert Word documents to PDF</p>
+                    </div>
+                    <div class="card-arrow">→</div>
+                </a>
+
+                <a href="{{ url_for('excel_to_pdf') }}" class="tool-card" data-category="pdf" data-name="Excel to PDF Converter">
+                    <div class="card-content">
+                        <div class="tool-icon-wrapper green">
+                            <span class="tool-icon">📊</span>
+                        </div>
+                        <h3>Excel to PDF</h3>
+                        <p>Convert Excel spreadsheets to PDF</p>
+                    </div>
+                    <div class="card-arrow">→</div>
+                </a>
+
+                <a href="{{ url_for('ppt_to_pdf') }}" class="tool-card" data-category="pdf" data-name="PowerPoint to PDF Converter">
+                    <div class="card-content">
+                        <div class="tool-icon-wrapper orange">
+                            <span class="tool-icon">🎬</span>
+                        </div>
+                        <h3>PowerPoint to PDF</h3>
+                        <p>Convert presentations to PDF</p>
+                    </div>
+                    <div class="card-arrow">→</div>
+                </a>
+            </div>
+
+            <!-- Document Tools -->
+            <div class="section-header">
+                <h2 class="section-title">
+                    <span class="section-icon">📝</span>
+                    Document Tools
+                </h2>
+            </div>
+            
+            <div class="tools-grid" id="documentToolsGrid">
+                <a href="{{ url_for('resume_maker') }}" class="tool-card" data-category="document" data-name="Resume Maker Builder">
+                    <div class="card-content">
+                        <div class="tool-icon-wrapper blue">
+                            <span class="tool-icon">📋</span>
+                        </div>
+                        <h3>Resume Maker</h3>
+                        <p>Create professional resumes easily</p>
+                    </div>
+                    <div class="card-arrow">→</div>
+                </a>
+
+                <a href="{{ url_for('id_card_maker') }}" class="tool-card" data-category="document" data-name="ID Card Maker">
+                    <div class="card-content">
+                        <div class="tool-icon-wrapper purple">
+                            <span class="tool-icon">🪪</span>
+                        </div>
+                        <h3>ID Card Maker</h3>
+                        <p>Create professional ID cards</p>
+                    </div>
+                    <div class="card-arrow">→</div>
+                </a>
+
+                <a href="{{ url_for('certificate_maker') }}" class="tool-card" data-category="document" data-name="Certificate Maker Generator">
+                    <div class="card-content">
+                        <div class="tool-icon-wrapper gold">
+                            <span class="tool-icon">🏆</span>
+                        </div>
+                        <h3>Certificate Maker</h3>
+                        <p>Generate certificates and awards</p>
+                    </div>
+                    <div class="card-arrow">→</div>
+                </a>
+
+                <a href="{{ url_for('project_front_page') }}" class="tool-card" data-category="document" data-name="Project Front Page Cover">
+                    <div class="card-content">
+                        <div class="tool-icon-wrapper cyan">
+                            <span class="tool-icon">📑</span>
+                        </div>
+                        <h3>Project Front Page</h3>
+                        <p>Design project cover pages</p>
+                    </div>
+                    <div class="card-arrow">→</div>
+                </a>
+
+                <a href="{{ url_for('email_templates') }}" class="tool-card" data-category="document" data-name="Email Templates">
+                    <div class="card-content">
+                        <div class="tool-icon-wrapper pink">
+                            <span class="tool-icon">✉️</span>
+                        </div>
+                        <h3>Email Templates</h3>
+                        <p>Professional email templates</p>
+                    </div>
+                    <div class="card-arrow">→</div>
+                </a>
+
+                <a href="{{ url_for('application_letter') }}" class="tool-card" data-category="document" data-name="Application Letter Template">
+                    <div class="card-content">
+                        <div class="tool-icon-wrapper green">
+                            <span class="tool-icon">📝</span>
+                        </div>
+                        <h3>Application Letter</h3>
+                        <p>Job application letter templates</p>
+                    </div>
+                    <div class="card-arrow">→</div>
+                </a>
+            </div>
+
+            <!-- Developer Tools -->
+            <div class="section-header">
+                <h2 class="section-title">
+                    <span class="section-icon">💻</span>
+                    Developer Tools
+                </h2>
+            </div>
+            
+            <div class="tools-grid" id="developerToolsGrid">
+                <a href="{{ url_for('json_formatter') }}" class="tool-card" data-category="developer" data-name="JSON Formatter Validator">
+                    <div class="card-content">
+                        <div class="tool-icon-wrapper cyan">
+                            <span class="tool-icon">{ }</span>
+                        </div>
+                        <h3>JSON Formatter</h3>
+                        <p>Format & validate JSON data</p>
+                    </div>
+                    <div class="card-arrow">→</div>
+                </a>
+
+                <a href="{{ url_for('base64_tool') }}" class="tool-card" data-category="developer" data-name="Base64 Encoder Decoder">
+                    <div class="card-content">
+                        <div class="tool-icon-wrapper purple">
+                            <span class="tool-icon">🔐</span>
+                        </div>
+                        <h3>Base64 Tool</h3>
+                        <p>Encode & decode Base64</p>
+                    </div>
+                    <div class="card-arrow">→</div>
+                </a>
+
+                <a href="{{ url_for('json_email_extractor') }}" class="tool-card" data-category="developer" data-name="JSON Email Extractor">
+                    <div class="card-content">
+                        <div class="tool-icon-wrapper orange">
+                            <span class="tool-icon">📧</span>
+                        </div>
+                        <h3>JSON Email Extractor</h3>
+                        <p>Extract emails from JSON data</p>
+                    </div>
+                    <div class="card-arrow">→</div>
+                </a>
+
+                <a href="{{ url_for('csv_comparator') }}" class="tool-card" data-category="developer" data-name="CSV Comparator">
+                    <div class="card-content">
+                        <div class="tool-icon-wrapper green">
+                            <span class="tool-icon">📊</span>
+                        </div>
+                        <h3>CSV Comparator</h3>
+                        <p>Compare two CSV files side by side</p>
+                    </div>
+                    <div class="card-arrow">→</div>
+                </a>
+
+                <a href="{{ url_for('word_counter') }}" class="tool-card" data-category="developer" data-name="Word Counter Text Analyzer">
+                    <div class="card-content">
+                        <div class="tool-icon-wrapper blue">
+                            <span class="tool-icon">📊</span>
+                        </div>
+                        <h3>Word Counter</h3>
+                        <p>Count words, characters & more</p>
+                    </div>
+                    <div class="card-arrow">→</div>
+                </a>
+
+                <a href="{{ url_for('word_to_hashtag') }}" class="tool-card" data-category="developer" data-name="Word to Hashtag Converter">
+                    <div class="card-content">
+                        <div class="tool-icon-wrapper pink">
+                            <span class="tool-icon">#️⃣</span>
+                        </div>
+                        <h3>Word to Hashtag</h3>
+                        <p>Convert text to hashtags</p>
+                    </div>
+                    <div class="card-arrow">→</div>
+                </a>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- CTA Section -->
     <section class="cta-section">
-        <h2>Have a Tool Idea?</h2>
-        <p>We're always adding new features. Let us know what tools you'd like to see!</p>
-        <a href="{{ url_for('contact') }}" class="cta-button">Contact Us</a>
+        <div class="cta-content">
+            <div class="cta-icon">💡</div>
+            <h2>Have a Tool Idea?</h2>
+            <p>We're always adding new features. Let us know what tools you'd like to see!</p>
+            <a href="{{ url_for('contact') }}" class="cta-button">
+                <span>Contact Us</span>
+                <span class="btn-arrow">→</span>
+            </a>
+        </div>
     </section>
 </div>
 
 <style>
-.tools-container {
-    width: 100%;
+/* ============================================
+   FUTURISTIC TOOLS PAGE - CUTCOMPRESS
+   Modern Dark Theme with Glassmorphism
+============================================ */
+
+:root {
+    /* Default Dark Theme */
+    --bg-primary: #0a0a0f;
+    --bg-secondary: #12121a;
+    --bg-card: rgba(20, 20, 30, 0.8);
+    --text-primary: #ffffff;
+    --text-secondary: rgba(255, 255, 255, 0.6);
+    --accent-primary: #6366f1;
+    --accent-secondary: #8b5cf6;
+    --accent-pink: #ec4899;
+    --accent-cyan: #06b6d4;
+    --border-color: rgba(255, 255, 255, 0.08);
+    --glow-color: rgba(99, 102, 241, 0.4);
+    --search-bg: rgba(255, 255, 255, 0.05);
+    --filter-bg: rgba(255, 255, 255, 0.05);
+    --filter-bg-hover: rgba(255, 255, 255, 0.1);
+    --orb-opacity: 1;
+    --grid-opacity: 1;
 }
 
-.tools-hero {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    padding: 3rem 2rem;
+[data-theme="light"] {
+    /* Light Theme */
+    --bg-primary: #f8fafc;
+    --bg-secondary: #ffffff;
+    --bg-card: rgba(255, 255, 255, 0.9);
+    --text-primary: #1e293b;
+    --text-secondary: #64748b;
+    --accent-primary: #4f46e5;
+    --accent-secondary: #7c3aed;
+    --accent-pink: #db2777;
+    --accent-cyan: #0891b2;
+    --border-color: rgba(0, 0, 0, 0.08);
+    --glow-color: rgba(79, 70, 229, 0.2);
+    --search-bg: rgba(0, 0, 0, 0.05);
+    --filter-bg: rgba(0, 0, 0, 0.05);
+    --filter-bg-hover: rgba(0, 0, 0, 0.1);
+    --orb-opacity: 0.5;
+    --grid-opacity: 0.4;
+}
+
+.tools-page {
+    min-height: 100vh;
+    background: var(--bg-primary);
+    font-family: 'Inter', -apple-system, sans-serif;
+    position: relative;
+    overflow-x: hidden;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Theme Toggle Button */
+.theme-toggle {
+    position: fixed;
+    top: 90px;
+    right: 30px;
+    bottom: auto;
+    z-index: 10000; /* High z-index to ensure visibility */
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: var(--bg-card);
+    border: 1px solid rgba(255, 255, 255, 0.2); /* More visible border */
+    color: var(--text-primary);
+    font-size: 1.5rem;
+    cursor: pointer;
+    display: flex !important; /* Force display */
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.theme-toggle:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 20px var(--glow-color);
+    border-color: var(--accent-primary);
+}
+
+.icon-sun, .icon-moon {
+    position: absolute;
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+    display: block !important; /* Override JS display:none to allow opacity transition */
+    top: 50%;
+    left: 50%;
+    margin-top: -12px; /* Half of font-size approx */
+    margin-left: -12px;
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
     text-align: center;
-    margin-bottom: 3rem;
 }
 
-.tools-hero h1 {
-    font-size: 2.5rem;
-    margin-bottom: 0.5rem;
+[data-theme="dark"] .icon-sun { opacity: 1; transform: rotate(0deg); visibility: visible; }
+[data-theme="dark"] .icon-moon { opacity: 0; transform: rotate(90deg); visibility: hidden; }
+[data-theme="light"] .icon-sun { opacity: 0; transform: rotate(-90deg); visibility: hidden; }
+[data-theme="light"] .icon-moon { opacity: 1; transform: rotate(0deg); visibility: visible; }
+
+/* Animated Background */
+.bg-animation {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
 }
 
-.tools-hero p {
-    font-size: 1.1rem;
-    opacity: 0.9;
+.orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    animation: float 20s ease-in-out infinite;
+    opacity: var(--orb-opacity);
+    transition: opacity 0.3s ease;
 }
 
-.tools-grid {
-    max-width: 1200px;
+.orb-1 {
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(99, 102, 241, 0.3), transparent);
+    top: -200px;
+    right: -200px;
+    animation-delay: 0s;
+}
+
+.orb-2 {
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(236, 72, 153, 0.2), transparent);
+    bottom: -150px;
+    left: -150px;
+    animation-delay: -7s;
+}
+
+.orb-3 {
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(6, 182, 212, 0.2), transparent);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation-delay: -14s;
+}
+
+@keyframes float {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    25% { transform: translate(50px, -50px) scale(1.1); }
+    50% { transform: translate(-30px, 30px) scale(0.95); }
+    75% { transform: translate(20px, 50px) scale(1.05); }
+}
+
+.grid-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+    background-size: 60px 60px;
+    opacity: var(--grid-opacity);
+}
+
+[data-theme="light"] .grid-overlay {
+    background-image: 
+        linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,0,0,0.03) 1px, transparent 1px);
+}
+
+/* Hero Section */
+.hero-section {
+    position: relative;
+    z-index: 1;
+    padding: 4rem 2rem 3rem;
+    text-align: center;
+}
+
+.hero-content {
+    max-width: 800px;
     margin: 0 auto;
-    padding: 0 2rem 3rem;
 }
 
-.tools-section {
-    margin-bottom: 4rem;
+.hero-badge {
+    display: inline-block;
+    padding: 0.5rem 1.25rem;
+    background: rgba(99, 102, 241, 0.15);
+    border: 1px solid rgba(99, 102, 241, 0.3);
+    border-radius: 100px;
+    color: var(--accent-primary);
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-bottom: 1.5rem;
+    animation: pulse-glow 3s ease-in-out infinite;
 }
 
-.tools-section h2 {
-    color: #2c3e50;
-    font-size: 1.8rem;
+@keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 0 20px rgba(99, 102, 241, 0.2); }
+    50% { box-shadow: 0 0 30px rgba(99, 102, 241, 0.4); }
+}
+
+.hero-title {
+    font-size: 3.5rem;
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 1.25rem;
+    color: var(--text-primary);
+}
+
+.gradient-text {
+    background: linear-gradient(135deg, #6366f1, #ec4899, #06b6d4);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradient-shift 5s ease infinite;
+}
+
+@keyframes gradient-shift {
+    0%, 100% { background-position: 0% center; }
+    50% { background-position: 100% center; }
+}
+
+.hero-subtitle {
+    font-size: 1.2rem;
+    color: var(--text-secondary);
     margin-bottom: 2rem;
-    padding-bottom: 1rem;
-    border-bottom: 3px solid #667eea;
+    line-height: 1.6;
 }
 
-.tools-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+/* Search Bar */
+.search-container {
+    display: flex;
+    align-items: center;
+    max-width: 500px;
+    margin: 0 auto 2rem;
+    padding: 0.75rem 1.25rem;
+    background: var(--search-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+}
+
+.search-container:focus-within {
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 30px rgba(99, 102, 241, 0.2);
+}
+
+.search-icon {
+    font-size: 1.1rem;
+    margin-right: 0.75rem;
+    opacity: 0.5;
+    color: var(--text-primary);
+}
+
+.search-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--text-primary);
+    font-size: 1rem;
+    outline: none;
+}
+
+.search-input::placeholder {
+    color: var(--text-secondary);
+}
+
+.search-shortcut {
+    padding: 0.25rem 0.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    border: none;
+}
+
+[data-theme="light"] .search-shortcut {
+    background: rgba(0, 0, 0, 0.05);
+    color: var(--text-secondary);
+}
+
+/* Stats Row */
+.stats-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     gap: 2rem;
 }
 
-.tool-card {
-    background: white;
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.stat-number {
+    font-size: 2rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--text-primary), var(--text-secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.stat-label {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.stat-divider {
+    width: 1px;
+    height: 40px;
+    background: var(--border-color);
+}
+
+/* Filter Section */
+.filter-section {
+    position: relative;
+    z-index: 1;
+    padding: 0 2rem 2rem;
+}
+
+.filter-container {
+    max-width: 900px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.filter-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    background: var(--filter-bg);
+    border: 1px solid var(--border-color);
     border-radius: 12px;
-    padding: 2rem;
-    text-align: center;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
     transition: all 0.3s ease;
+}
+
+.filter-btn:hover {
+    background: var(--filter-bg-hover);
+    color: var(--text-primary);
+}
+
+.filter-btn.active {
+    background: var(--accent-primary);
+    border-color: var(--accent-primary);
+    color: white;
+    box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);
+}
+
+.filter-icon {
+    font-size: 1rem;
+}
+
+/* Tools Section */
+.tools-section {
+    position: relative;
+    z-index: 1;
+    padding: 2rem;
+}
+
+.tools-wrapper {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 3rem 0 1.5rem;
+}
+
+.section-header:first-child {
+    margin-top: 0;
+}
+
+.section-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.section-icon {
+    font-size: 1.5rem;
+}
+
+.section-badge {
+    padding: 0.35rem 0.75rem;
+    background: linear-gradient(135deg, #ef4444, #f97316);
+    border-radius: 6px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.section-badge.pulse {
+    animation: badge-pulse 2s ease-in-out infinite;
+}
+
+@keyframes badge-pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+/* Tools Grid */
+.tools-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.25rem;
+}
+
+/* Tool Card */
+.tool-card {
+    position: relative;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 1.5rem;
     text-decoration: none;
     color: inherit;
-    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     overflow: hidden;
+    backdrop-filter: blur(10px);
 }
 
 .tool-card::before {
     content: '';
     position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    inset: 0;
+    background: linear-gradient(135deg, 
+        rgba(99, 102, 241, 0.1) 0%, 
+        transparent 50%,
+        rgba(236, 72, 153, 0.05) 100%);
     opacity: 0;
-    z-index: -1;
-    transition: left 0.3s ease;
+    transition: opacity 0.4s ease;
 }
 
-.tool-card.available:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.2);
+.tool-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(99, 102, 241, 0.5);
+    box-shadow: 
+        0 20px 40px rgba(0, 0, 0, 0.1),
+        0 0 40px var(--card-hover-shadow);
 }
 
-.tool-card.coming:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+.tool-card:hover::before {
+    opacity: 1;
 }
 
-.tool-icon {
-    font-size: 3rem;
+.tool-card.featured {
+    background: linear-gradient(135deg, 
+        rgba(99, 102, 241, 0.15) 0%, 
+        var(--bg-card) 100%);
+    border-color: rgba(99, 102, 241, 0.3);
+}
+
+.card-glow {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, var(--glow-color), transparent 40%);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+}
+
+.tool-card:hover .card-glow {
+    opacity: 1;
+}
+
+.card-content {
+    flex: 1;
+    position: relative;
+    z-index: 1;
+}
+
+.tool-icon-wrapper {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(99, 102, 241, 0.15);
+    border-radius: 12px;
     margin-bottom: 1rem;
     transition: transform 0.3s ease;
 }
 
-.tool-card:hover .tool-icon {
+.tool-card:hover .tool-icon-wrapper {
     transform: scale(1.1);
 }
 
+.tool-icon-wrapper.blue { background: rgba(59, 130, 246, 0.15); }
+.tool-icon-wrapper.green { background: rgba(34, 197, 94, 0.15); }
+.tool-icon-wrapper.orange { background: rgba(249, 115, 22, 0.15); }
+.tool-icon-wrapper.purple { background: rgba(139, 92, 246, 0.15); }
+.tool-icon-wrapper.pink { background: rgba(236, 72, 153, 0.15); }
+.tool-icon-wrapper.cyan { background: rgba(6, 182, 212, 0.15); }
+.tool-icon-wrapper.red { background: rgba(239, 68, 68, 0.15); }
+.tool-icon-wrapper.gold { background: rgba(234, 179, 8, 0.15); }
+
+.tool-icon {
+    font-size: 1.5rem;
+}
+
 .tool-card h3 {
-    color: #2c3e50;
-    font-size: 1.2rem;
-    margin-bottom: 0.75rem;
+    font-size: 1.1rem;
     font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 0.5rem;
 }
 
 .tool-card p {
-    color: #7f8c8d;
     font-size: 0.9rem;
-    margin-bottom: 1rem;
+    color: var(--text-secondary);
+    margin: 0;
     line-height: 1.4;
 }
 
-.tool-badge {
-    display: inline-block;
-    padding: 0.4rem 1rem;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: 600;
+.tool-tags {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
 }
 
-.available-badge {
-    background: #d4edda;
-    color: #155724;
+.tag {
+    padding: 0.25rem 0.6rem;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 6px;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
 }
 
-.coming-badge {
-    background: #fff3cd;
-    color: #856404;
+[data-theme="light"] .tag {
+    background: rgba(0, 0, 0, 0.05);
 }
 
+.tag.new {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color: white;
+}
+
+.card-arrow {
+    position: relative;
+    z-index: 1;
+    font-size: 1.25rem;
+    color: var(--text-secondary);
+    transition: all 0.3s ease;
+}
+
+.tool-card:hover .card-arrow {
+    color: var(--accent-primary);
+    transform: translateX(4px);
+}
+
+/* CTA Section */
 .cta-section {
-    background: linear-gradient(135deg, #667eea08 0%, #764ba208 100%);
-    padding: 3rem 2rem;
+    position: relative;
+    z-index: 1;
+    padding: 4rem 2rem;
+}
+
+.cta-content {
+    max-width: 600px;
+    margin: 0 auto;
     text-align: center;
-    border-radius: 12px;
-    margin: 2rem;
+    padding: 3rem;
+    background: rgba(99, 102, 241, 0.08);
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    border-radius: 24px;
+    backdrop-filter: blur(10px);
 }
 
-.cta-section h2 {
-    color: #2c3e50;
+.cta-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.cta-content h2 {
     font-size: 2rem;
-    margin-bottom: 0.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 0.75rem;
 }
 
-.cta-section p {
-    color: #7f8c8d;
-    font-size: 1.05rem;
-    margin-bottom: 1.5rem;
+.cta-content p {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    margin: 0 0 1.5rem;
 }
 
 .cta-button {
-    display: inline-block;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 2rem;
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+    border-radius: 12px;
     color: white;
-    padding: 0.75rem 2rem;
-    border-radius: 6px;
-    text-decoration: none;
     font-weight: 600;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    box-shadow: 0 4px 15px rgba(103, 126, 234, 0.3);
+    font-size: 1rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);
 }
 
 .cta-button:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(103, 126, 234, 0.4);
+    box-shadow: 0 8px 30px rgba(99, 102, 241, 0.5);
 }
 
+.btn-arrow {
+    transition: transform 0.3s ease;
+}
+
+.cta-button:hover .btn-arrow {
+    transform: translateX(4px);
+}
+
+/* Responsive */
 @media (max-width: 768px) {
-    .tools-hero h1 {
-        font-size: 1.8rem;
+    .theme-toggle {
+        bottom: 20px;
+        right: 20px;
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
     }
 
-    .tools-list {
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-        gap: 1rem;
+    .hero-title {
+        font-size: 2.2rem;
     }
-
-    .tool-card {
-        padding: 1.5rem;
-    }
-
-    .tool-icon {
-        font-size: 2.5rem;
-    }
-
-    .tool-card h3 {
+    
+    .hero-subtitle {
         font-size: 1rem;
     }
-
-    .tool-card p {
+    
+    .stats-row {
+        gap: 1rem;
+    }
+    
+    .stat-number {
+        font-size: 1.5rem;
+    }
+    
+    .filter-container {
+        gap: 0.5rem;
+    }
+    
+    .filter-btn {
+        padding: 0.5rem 1rem;
         font-size: 0.8rem;
     }
-
-    .cta-section {
-        margin: 1rem;
+    
+    .tools-grid {
+        grid-template-columns: 1fr;
     }
-
-    .cta-section h2 {
+    
+    .section-title {
+        font-size: 1.25rem;
+    }
+    
+    .tool-card {
+        padding: 1.25rem;
+    }
+    
+    .cta-content {
+        padding: 2rem 1.5rem;
+    }
+    
+    .cta-content h2 {
         font-size: 1.5rem;
     }
 }
 </style>
+
+<script>
+// Search functionality
+function filterTools(query) {
+    const cards = document.querySelectorAll('.tool-card');
+    const normalizedQuery = query.toLowerCase().trim();
+    
+    cards.forEach(card => {
+        const name = card.dataset.name?.toLowerCase() || '';
+        const shouldShow = name.includes(normalizedQuery);
+        card.style.display = shouldShow ? 'flex' : 'none';
+    });
+    
+    // Show/hide section headers based on visible cards
+    document.querySelectorAll('.section-header').forEach(header => {
+        const grid = header.nextElementSibling;
+        if (grid && grid.classList.contains('tools-grid')) {
+            const visibleCards = Array.from(grid.querySelectorAll('.tool-card')).filter(c => c.style.display !== 'none');
+            header.style.display = visibleCards.length > 0 || !query ? 'flex' : 'none';
+        }
+    });
+}
+
+// Category filter
+function filterCategory(category) {
+    // Update active button
+    document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+    event.target.closest('.filter-btn').classList.add('active');
+    
+    const cards = document.querySelectorAll('.tool-card');
+    
+    cards.forEach(card => {
+        if (category === 'all') {
+            card.style.display = 'flex';
+        } else {
+            const cardCategory = card.dataset.category;
+            card.style.display = cardCategory === category ? 'flex' : 'none';
+        }
+    });
+    
+    // Show/hide section headers
+    document.querySelectorAll('.section-header').forEach(header => {
+        const grid = header.nextElementSibling;
+        if (grid && grid.classList.contains('tools-grid')) {
+            const visibleCards = Array.from(grid.querySelectorAll('.tool-card')).filter(c => c.style.display !== 'none');
+            header.style.display = visibleCards.length > 0 ? 'flex' : 'none';
+        }
+    });
+}
+
+// Keyboard shortcut for search
+document.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        document.getElementById('toolSearch').focus();
+    }
+});
+</script>
 {% endblock %}
