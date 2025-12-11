@@ -5,6 +5,8 @@
 {% block keywords %}blog, image conversion tips, compression guides, digital tools tutorial, web tools blog{% endblock %}
 
 {% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/futuristic_theme.css') }}">
+    <script src="{{ url_for('static', filename='js/tools_common.js') }}"></script>
     <meta name="robots" content="index, follow">
     <script type="application/ld+json">
     {
@@ -22,720 +24,128 @@
 {% endblock %}
 
 {% block content %}
-<div class="blog-main">
-    <!-- Enhanced Hero Section -->
-    <section class="blog-hero">
-        <div class="hero-background">
-            <div class="hero-pattern"></div>
-        </div>
-        <div class="hero-content">
-            <span class="hero-badge">📚 Knowledge Hub</span>
-            <h1 class="hero-title">Digital Tools & Tips</h1>
-            <p class="hero-subtitle">Master image editing, document conversion, and file compression with practical guides</p>
-            <div class="hero-stats">
-                <div class="stat">
-                    <span class="stat-number">12+</span>
-                    <span class="stat-label">Articles</span>
-                </div>
-                <div class="stat">
-                    <span class="stat-number">100%</span>
-                    <span class="stat-label">Free</span>
-                </div>
-                <div class="stat">
-                    <span class="stat-number">Latest</span>
-                    <span class="stat-label">Updates</span>
-                </div>
+<div class="page-container">
+    <!-- Theme Toggle -->
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle Theme">
+        <span class="icon-sun">☀️</span>
+        <span class="icon-moon">🌙</span>
+    </button>
+
+    <!-- Animated Background -->
+    <div class="bg-animation">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+        <div class="grid-overlay"></div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero-section" style="text-align: center; margin-bottom: 4rem;">
+        <span class="badge" style="background: rgba(var(--accent-rgb), 0.1); color: var(--accent-primary); padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.9rem; font-weight: 600; display: inline-block; margin-bottom: 1rem;">📚 Knowledge Hub</span>
+        <h1 class="section-title">Digital Tools & <span class="gradient-text">Tips</span></h1>
+        <p class="section-subtitle">Master image editing, document conversion, and file compression with practical guides</p>
+        
+        <div class="hero-stats" style="display: flex; justify-content: center; gap: 3rem; margin-top: 2rem;">
+            <div class="stat" style="text-align: center;">
+                <span class="stat-number" style="display: block; font-size: 2rem; font-weight: 700; color: var(--text-primary);">12+</span>
+                <span class="stat-label" style="color: var(--text-secondary); font-size: 0.9rem;">Articles</span>
+            </div>
+            <div class="stat" style="text-align: center;">
+                <span class="stat-number" style="display: block; font-size: 2rem; font-weight: 700; color: var(--text-primary);">100%</span>
+                <span class="stat-label" style="color: var(--text-secondary); font-size: 0.9rem;">Free</span>
+            </div>
+            <div class="stat" style="text-align: center;">
+                <span class="stat-number" style="display: block; font-size: 2rem; font-weight: 700; color: var(--text-primary);">Latest</span>
+                <span class="stat-label" style="color: var(--text-secondary); font-size: 0.9rem;">Updates</span>
             </div>
         </div>
     </section>
 
     <!-- Featured Article Section -->
-    <section class="blog-featured">
-        <div class="featured-container">
-            <div class="featured-badge">⭐ Featured</div>
-            <div class="featured-card">
-                <div class="featured-icon">🎨</div>
-                <h2>Image Conversion Mastery Guide</h2>
-                <p>Learn how to convert images between formats like JPG, PNG, WEBP and choose the right format for every situation</p>
-                <div class="featured-tags">
-                    <span class="tag">Image Tools</span>
-                    <span class="tag">Conversion</span>
-                    <span class="tag">Formats</span>
+    <section class="blog-featured" style="margin-bottom: 4rem;">
+        <div class="glass-card" style="border-color: var(--accent-primary); position: relative; overflow: hidden;">
+            <div style="position: absolute; top: 0; right: 0; background: var(--accent-primary); color: white; padding: 0.5rem 1.5rem; border-bottom-left-radius: 15px; font-weight: 600;">⭐ Featured</div>
+            
+            <div class="featured-content" style="padding: 1rem;">
+                <div class="featured-icon" style="font-size: 3rem; margin-bottom: 1rem;">🎨</div>
+                <h2 style="font-size: 2rem; margin-bottom: 1rem; color: var(--text-primary);">Image Conversion Mastery Guide</h2>
+                <p style="color: var(--text-secondary); font-size: 1.1rem; margin-bottom: 1.5rem;">Learn how to convert images between formats like JPG, PNG, WEBP and choose the right format for every situation</p>
+                <div class="featured-tags" style="display: flex; gap: 0.5rem;">
+                    <span class="tag" style="background: rgba(var(--accent-rgb), 0.1); color: var(--accent-primary); padding: 0.25rem 0.75rem; border-radius: 15px; font-size: 0.85rem;">Image Tools</span>
+                    <span class="tag" style="background: rgba(var(--accent-rgb), 0.1); color: var(--accent-primary); padding: 0.25rem 0.75rem; border-radius: 15px; font-size: 0.85rem;">Conversion</span>
+                    <span class="tag" style="background: rgba(var(--accent-rgb), 0.1); color: var(--accent-primary); padding: 0.25rem 0.75rem; border-radius: 15px; font-size: 0.85rem;">Formats</span>
                 </div>
             </div>
         </div>
     </section>
-
 
     <!-- Blog Grid Section -->
     <section class="blog-articles">
-        <div class="articles-container">
+        <div class="articles-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
             <!-- Article 1: Image to JPG -->
-            <article class="blog-article">
-                <div class="article-header">
-                    <div class="article-icon">🖼️</div>
-                    <span class="article-category">Image Tools</span>
+            <article class="glass-card blog-article">
+                <div class="article-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <div class="article-icon" style="font-size: 2rem;">🖼️</div>
+                    <span class="article-category" style="color: var(--accent-primary); font-size: 0.9rem; font-weight: 600;">Image Tools</span>
                 </div>
-                <h3>Image to JPG: The Ultimate Guide</h3>
-                <p>JPG is the most versatile image format for photographs and complex images. Learn why JPG is perfect for sharing, storing, and displaying your photos across all devices.</p>
-                <div class="article-content-full" style="display: none;">
-                    <p><strong>What is JPG?</strong> JPG (also called JPEG) is a file format designed specifically for photographs. It uses smart compression to make files smaller while keeping images looking great.</p>
-                    <p><strong>When to use JPG:</strong> JPG is ideal for photographs, complex images with many colors, social media sharing, email attachments, and web uploads. Almost every device supports JPG, making it universally compatible.</p>
-                    <p><strong>File size advantage:</strong> JPG files are typically much smaller than PNG files, which means faster downloads and easier sharing. A high-quality photo might be 100KB as JPG but 500KB as PNG.</p>
-                    <p><strong>Quality settings:</strong> You can adjust JPG quality settings. Higher quality means larger file size but better image appearance. Lower quality reduces file size but may show compression artifacts.</p>
-                    <p><strong>Converting to JPG:</strong> Using our tool, convert any image format (PNG, WEBP, BMP, etc.) to JPG in seconds. Perfect for ensuring compatibility with older devices or specific requirements.</p>
-                    <p><strong>Pro tip:</strong> For photographs and social media, JPG with 80-85% quality provides the best balance between quality and file size.</p>
+                <h3 style="font-size: 1.5rem; margin-bottom: 1rem; color: var(--text-primary);">Image to JPG: The Ultimate Guide</h3>
+                <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">JPG is the most versatile image format for photographs and complex images. Learn why JPG is perfect for sharing, storing, and displaying your photos across all devices.</p>
+                
+                <div class="article-content-full" style="display: none; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color);">
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;"><strong style="color: var(--text-primary);">What is JPG?</strong> JPG (also called JPEG) is a file format designed specifically for photographs. It uses smart compression to make files smaller while keeping images looking great.</p>
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;"><strong style="color: var(--text-primary);">When to use JPG:</strong> JPG is ideal for photographs, complex images with many colors, social media sharing, email attachments, and web uploads. Almost every device supports JPG, making it universally compatible.</p>
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;"><strong style="color: var(--text-primary);">File size advantage:</strong> JPG files are typically much smaller than PNG files, which means faster downloads and easier sharing. A high-quality photo might be 100KB as JPG but 500KB as PNG.</p>
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;"><strong style="color: var(--text-primary);">Quality settings:</strong> You can adjust JPG quality settings. Higher quality means larger file size but better image appearance. Lower quality reduces file size but may show compression artifacts.</p>
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;"><strong style="color: var(--text-primary);">Converting to JPG:</strong> Using our tool, convert any image format (PNG, WEBP, BMP, etc.) to JPG in seconds. Perfect for ensuring compatibility with older devices or specific requirements.</p>
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;"><strong style="color: var(--text-primary);">Pro tip:</strong> For photographs and social media, JPG with 80-85% quality provides the best balance between quality and file size.</p>
                 </div>
-                <a href="#" class="read-more-btn">Read More →</a>
+                
+                <button class="btn-outline read-more-btn" style="width: 100%; margin-top: auto;">Read More →</button>
             </article>
 
             <!-- Article 2: Image to PNG -->
-            <article class="blog-article">
-                <div class="article-header">
-                    <div class="article-icon">🎭</div>
-                    <span class="article-category">Image Tools</span>
+            <article class="glass-card blog-article">
+                <div class="article-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <div class="article-icon" style="font-size: 2rem;">🎭</div>
+                    <span class="article-category" style="color: var(--accent-primary); font-size: 0.9rem; font-weight: 600;">Image Tools</span>
                 </div>
-                <h3>PNG Format Explained: Transparency & Quality</h3>
-                <p>PNG files support transparency and offer lossless compression, making them perfect for logos, icons, and graphics. Discover when and why to use PNG.</p>
-                <div class="article-content-full" style="display: none;">
-                    <p><strong>What is PNG?</strong> PNG (Portable Network Graphics) is a modern format that supports transparency and lossless compression, meaning no quality loss.</p>
-                    <p><strong>Transparency advantage:</strong> PNG files can have transparent backgrounds, perfect for logos, icons, and design elements that need to work on various backgrounds.</p>
-                    <p><strong>When to use PNG:</strong> Use PNG for logos, icons, graphics with text, design elements, images needing transparent backgrounds, and professional design work.</p>
-                    <p><strong>File size:</strong> PNG files are typically larger than JPG but maintain perfect quality. Choose PNG when quality matters more than file size.</p>
-                    <p><strong>Best for:</strong> School projects, professional designs, graphic design work, UI design, and any creative project requiring transparency.</p>
-                    <p><strong>Converting to PNG:</strong> Use our tool to convert any image to PNG format while preserving all quality and adding transparency support.</p>
+                <h3 style="font-size: 1.5rem; margin-bottom: 1rem; color: var(--text-primary);">PNG Format Explained: Transparency & Quality</h3>
+                <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">PNG files support transparency and offer lossless compression, making them perfect for logos, icons, and graphics. Discover when and why to use PNG.</p>
+                
+                <div class="article-content-full" style="display: none; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color);">
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;"><strong style="color: var(--text-primary);">What is PNG?</strong> PNG (Portable Network Graphics) is a raster graphics file format that supports lossless data compression. It was created as an improved, non-patented replacement for Graphics Interchange Format (GIF).</p>
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;"><strong style="color: var(--text-primary);">Transparency:</strong> One of the biggest advantages of PNG is its support for transparency. This allows you to create images with transparent backgrounds, which is essential for logos, icons, and web graphics.</p>
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;"><strong style="color: var(--text-primary);">Lossless Compression:</strong> Unlike JPG, PNG uses lossless compression. This means that no image data is lost when the file is compressed. The image quality remains exactly the same, no matter how many times you save it.</p>
                 </div>
-                <a href="#" class="read-more-btn">Read More →</a>
+                
+                <button class="btn-outline read-more-btn" style="width: 100%; margin-top: auto;">Read More →</button>
             </article>
-
-            <!-- Article 3: Image to WEBP -->
-            <article class="blog-article">
-                <div class="article-header">
-                    <div class="article-icon">⚡</div>
-                    <span class="article-category">Image Tools</span>
-                </div>
-                <h3>WEBP: The Modern Image Format for Web</h3>
-                <p>WEBP offers superior compression and quality. Learn how WEBP reduces file sizes by 25-35% compared to JPG, making it ideal for modern websites.</p>
-                <div class="article-content-full" style="display: none;">
-                    <p><strong>Why WEBP?</strong> WEBP is Google's modern image format designed for the web, offering significantly smaller file sizes without sacrificing quality.</p>
-                    <p><strong>Size advantage:</strong> WEBP files are 25-35% smaller than JPG with the same quality. For a website with thousands of images, this translates to faster loading and better performance.</p>
-                    <p><strong>Browser support:</strong> Modern browsers (Chrome, Firefox, Edge, Safari) all support WEBP. Older browsers may not support it, so use WEBP for modern web projects.</p>
-                    <p><strong>Best for:</strong> Websites, web applications, online portfolios, and any digital project targeting modern users.</p>
-                    <p><strong>Performance impact:</strong> Smaller images mean faster page loads, better user experience, reduced bandwidth costs, and improved SEO rankings.</p>
-                    <p><strong>Converting to WEBP:</strong> Use our tool to convert any image to WEBP format and experience the performance benefits immediately.</p>
-                </div>
-                <a href="#" class="read-more-btn">Read More →</a>
-            </article>
-
-            <!-- Article 4: Background Removal -->
-            <article class="blog-article">
-                <div class="article-header">
-                    <div class="article-icon">✂️</div>
-                    <span class="article-category">Image Processing</span>
-                </div>
-                <h3>Remove Backgrounds Instantly from Any Image</h3>
-                <p>Professional background removal made easy! Learn how AI-powered background removal can enhance your photos, product images, and designs in seconds.</p>
-                <div class="article-content-full" style="display: none;">
-                    <p><strong>What is background removal?</strong> Background removal uses AI to automatically detect the main subject of your image and remove everything behind it.</p>
-                    <p><strong>Why remove backgrounds?</strong> Clean images without backgrounds look more professional, draw attention to the subject, and work perfectly on any background color.</p>
-                    <p><strong>Use cases:</strong> Product photography, profile pictures, social media content, design projects, e-commerce listings, and creative compositions.</p>
-                    <p><strong>How it works:</strong> Our AI analyzes your image to identify the subject and background, then carefully removes the background while preserving important details.</p>
-                    <p><strong>Quality:</strong> The tool handles complex subjects including hair, fur, and intricate edges with remarkable accuracy.</p>
-                    <p><strong>After removal:</strong> Use your background-free image on solid colors, gradients, other images, or keep it with transparency for maximum flexibility.</p>
-                </div>
-                <a href="#" class="read-more-btn">Read More →</a>
-            </article>
-
-            <!-- Article 5: Merge Images -->
-            <article class="blog-article">
-                <div class="article-header">
-                    <div class="article-icon">🔗</div>
-                    <span class="article-category">Image Processing</span>
-                </div>
-                <h3>Merge Multiple Images: Create Comparisons & Collages</h3>
-                <p>Combine multiple images into one powerful visual. Perfect for before-and-after comparisons, collages, and multi-image presentations.</p>
-                <div class="article-content-full" style="display: none;">
-                    <p><strong>Why merge images?</strong> Merged images tell better stories than separate files. Before-and-after comparisons are powerful marketing tools, and collages add creativity.</p>
-                    <p><strong>Merge options:</strong> Combine images horizontally, vertically, or in grid layouts. Create before-and-after comparisons, panoramas, or artistic collages.</p>
-                    <p><strong>Use cases:</strong> Marketing materials, school projects, product demonstrations, portfolio presentations, social media content, and creative projects.</p>
-                    <p><strong>Easy process:</strong> Upload your images, choose layout options, and our tool automatically creates a professional merged image.</p>
-                    <p><strong>Customization:</strong> Adjust spacing, alignment, and styling to match your vision. Download the final result in your preferred format.</p>
-                    <p><strong>Professional results:</strong> No design skills needed. Get professional-looking merged images in minutes.</p>
-                </div>
-                <a href="#" class="read-more-btn">Read More →</a>
-            </article>
-
-            <!-- Article 6: Image to PDF -->
-            <article class="blog-article">
-                <div class="article-header">
-                    <div class="article-icon">📄</div>
-                    <span class="article-category">Documents</span>
-                </div>
-                <h3>Convert Images to PDF: Create Professional Documents</h3>
-                <p>Turn your images into professional PDF documents. Perfect for portfolios, photo albums, reports, and any document that needs to look perfect on every device.</p>
-                <div class="article-content-full" style="display: none;">
-                    <p><strong>Why convert to PDF?</strong> PDFs look identical on every device and platform. They are secure, easy to share, and widely accepted.</p>
-                    <p><strong>Reliability:</strong> PDF files maintain their formatting, fonts, and layout perfectly. An image converted to PDF looks the same on Windows, Mac, iPhone, or printed paper.</p>
-                    <p><strong>Use cases:</strong> Portfolio documents, photo albums, photo archives, assignment submissions, photo reports, and professional presentations.</p>
-                    <p><strong>Combine multiple images:</strong> Convert multiple images into a single PDF document. Perfect for creating photo albums or photo-based reports.</p>
-                    <p><strong>Security:</strong> PDFs are harder to edit than images, making them ideal for important documents and submissions.</p>
-                    <p><strong>Simple conversion:</strong> Upload images and our tool automatically creates a professional PDF with all images properly arranged.</p>
-                </div>
-                <a href="#" class="read-more-btn">Read More →</a>
-            </article>
-
-            <!-- Article 7: CSV Comparator -->
-            <article class="blog-article">
-                <div class="article-header">
-                    <div class="article-icon">📊</div>
-                    <span class="article-category">Data Tools</span>
-                </div>
-                <h3>CSV Comparator: Find Differences in Data Files</h3>
-                <p>Efficiently compare CSV files to identify differences, mismatches, and missing records. Essential for data analysis and quality control.</p>
-                <div class="article-content-full" style="display: none;">
-                    <p><strong>What is CSV comparison?</strong> Compare two CSV files to find rows that match, don't match, or are completely missing from one file.</p>
-                    <p><strong>Use cases:</strong> Database verification, data migration checks, record reconciliation, inventory comparison, customer list updates, and data quality control.</p>
-                    <p><strong>Comparison modes:</strong> Compare rows at same positions, lookup specific values, match by email and date, or match multiple columns.</p>
-                    <p><strong>Results clarity:</strong> Get clear results showing matches, mismatches (partial data differences), and not-found records (data in one file but missing in other).</p>
-                    <p><strong>Easy to use:</strong> Upload two CSV files and select your comparison method. Instant results help you identify issues quickly.</p>
-                    <p><strong>Data quality:</strong> CSV comparison is crucial for maintaining data accuracy, preventing duplicate records, and ensuring successful data migrations.</p>
-                </div>
-                <a href="#" class="read-more-btn">Read More →</a>
-            </article>
-        </div>
-    </section>
-
-    <!-- Tips & Tricks Section -->
-    <section class="blog-tips">
-        <div class="tips-container">
-            <h2>Quick Tips & Best Practices</h2>
-            <div class="tips-grid">
-                <div class="tip-card">
-                    <div class="tip-icon">💡</div>
-                    <h4>Choose the Right Format</h4>
-                    <p>Use JPG for photographs, PNG for graphics, and WEBP for modern web projects.</p>
-                </div>
-                <div class="tip-card">
-                    <div class="tip-icon">⚡</div>
-                    <h4>Optimize File Size</h4>
-                    <p>Compress images appropriately to improve loading times and user experience.</p>
-                </div>
-                <div class="tip-card">
-                    <div class="tip-icon">🎨</div>
-                    <h4>Professional Touches</h4>
-                    <p>Remove backgrounds and merge images to create polished, professional visuals.</p>
-                </div>
-                <div class="tip-card">
-                    <div class="tip-icon">📋</div>
-                    <h4>Data Accuracy</h4>
-                    <p>Use CSV comparison to maintain data integrity and prevent errors.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- CTA Section -->
-    <section class="blog-cta">
-        <div class="cta-content">
-            <h2>Ready to Process Your Files?</h2>
-            <p>Use any of our tools for free. No registration required.</p>
-            <a href="{{ url_for('tools') }}" class="cta-button">Explore All Tools</a>
         </div>
     </section>
 </div>
 
-<style>
-    .blog-main {
-        background: #f8f9fa;
-        padding: 0;
-    }
-
-    /* Hero Section */
-    .blog-hero {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        padding: 6rem 2rem;
-        text-align: center;
-        position: relative;
-        overflow: hidden;
-        min-height: 500px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .hero-background {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        top: 0;
-        left: 0;
-        z-index: 1;
-    }
-
-    .hero-pattern {
-        width: 100%;
-        height: 100%;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Cg fill='none' stroke='rgba(255,255,255,0.05)' stroke-width='1'%3E%3Cpath d='M30 0v60M0 30h60M0 0l60 60M60 0L0 60'/%3E%3C/g%3E%3C/svg%3E");
-    }
-
-    .hero-content {
-        z-index: 2;
-        animation: fadeInDown 0.8s ease-out;
-        max-width: 800px;
-    }
-
-    .hero-badge {
-        display: inline-block;
-        background: rgba(255, 255, 255, 0.2);
-        color: rgba(255, 255, 255, 0.95);
-        padding: 0.6rem 1.5rem;
-        border-radius: 50px;
-        font-size: 0.9rem;
-        font-weight: 600;
-        margin-bottom: 1.5rem;
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        backdrop-filter: blur(10px);
-    }
-
-    .hero-title {
-        font-size: 3.5rem;
-        font-weight: 800;
-        margin-bottom: 1rem;
-        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-    }
-
-    .hero-subtitle {
-        font-size: 1.3rem;
-        opacity: 0.95;
-        margin-bottom: 3rem;
-        line-height: 1.6;
-    }
-
-    .hero-stats {
-        display: flex;
-        justify-content: center;
-        gap: 3rem;
-        flex-wrap: wrap;
-    }
-
-    .stat {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .stat-number {
-        font-size: 1.8rem;
-        font-weight: 800;
-        margin-bottom: 0.3rem;
-    }
-
-    .stat-label {
-        font-size: 0.9rem;
-        opacity: 0.9;
-    }
-
-    /* Featured Section */
-    .blog-featured {
-        background: white;
-        padding: 3rem 2rem;
-        position: relative;
-    }
-
-    .featured-container {
-        max-width: 1100px;
-        margin: 0 auto;
-        position: relative;
-    }
-
-    .featured-badge {
-        display: inline-block;
-        background: linear-gradient(135deg, #667eea, #764ba2);
-        color: white;
-        padding: 0.5rem 1rem;
-        border-radius: 8px;
-        font-size: 0.8rem;
-        font-weight: 700;
-        margin-bottom: 1.5rem;
-    }
-
-    .featured-card {
-        background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05));
-        border: 2px solid rgba(102, 126, 234, 0.2);
-        border-radius: 16px;
-        padding: 2.5rem;
-        text-align: center;
-        animation: slideUp 0.6s ease-out;
-    }
-
-    .featured-icon {
-        font-size: 3rem;
-        margin-bottom: 1rem;
-        display: inline-block;
-        animation: bounce 2s ease-in-out infinite;
-    }
-
-    .featured-card h2 {
-        font-size: 2rem;
-        color: #2c3e50;
-        margin-bottom: 1rem;
-    }
-
-    .featured-card p {
-        font-size: 1.05rem;
-        color: #6b7280;
-        margin-bottom: 1.5rem;
-        line-height: 1.6;
-    }
-
-    .featured-tags {
-        display: flex;
-        justify-content: center;
-        gap: 1rem;
-        flex-wrap: wrap;
-    }
-
-    .tag {
-        display: inline-block;
-        background: rgba(102, 126, 234, 0.1);
-        color: #667eea;
-        padding: 0.4rem 0.8rem;
-        border-radius: 20px;
-        font-size: 0.85rem;
-        font-weight: 600;
-    }
-
-    /* Blog Articles Section */
-    .blog-articles {
-        background: white;
-        padding: 4rem 2rem;
-    }
-
-    .articles-container {
-        max-width: 1100px;
-        margin: 0 auto;
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-        gap: 2rem;
-    }
-
-    .blog-article {
-        background: white;
-        border: 1px solid #e5e7eb;
-        border-radius: 12px;
-        padding: 2rem;
-        transition: all 0.3s ease;
-        animation: fadeInUp 0.6s ease-out;
-    }
-
-    .blog-article:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
-        border-color: #667eea;
-    }
-
-    .article-header {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        margin-bottom: 1rem;
-    }
-
-    .article-icon {
-        font-size: 2.5rem;
-        line-height: 1;
-    }
-
-    .article-category {
-        display: inline-block;
-        background: linear-gradient(135deg, #667eea, #764ba2);
-        background-clip: text;
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        font-weight: 700;
-        font-size: 0.85rem;
-    }
-
-    .blog-article h3 {
-        font-size: 1.4rem;
-        color: #2c3e50;
-        margin-bottom: 1rem;
-        font-weight: 700;
-        line-height: 1.4;
-    }
-
-    .blog-article p {
-        font-size: 0.95rem;
-        color: #6b7280;
-        line-height: 1.6;
-        margin-bottom: 1.5rem;
-    }
-
-    .article-content-full {
-        margin-top: 1.5rem;
-        padding-top: 1.5rem;
-        border-top: 1px solid #e5e7eb;
-    }
-
-    .article-content-full p {
-        margin-bottom: 1rem;
-    }
-
-    .read-more-btn {
-        display: inline-block;
-        color: #667eea;
-        text-decoration: none;
-        font-weight: 600;
-        transition: all 0.3s ease;
-        cursor: pointer;
-    }
-
-    .read-more-btn:hover {
-        color: #764ba2;
-        transform: translateX(4px);
-    }
-
-    /* Tips Section */
-    .blog-tips {
-        background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05));
-        padding: 4rem 2rem;
-    }
-
-    .tips-container {
-        max-width: 1100px;
-        margin: 0 auto;
-    }
-
-    .blog-tips h2 {
-        font-size: 2.5rem;
-        color: #2c3e50;
-        text-align: center;
-        margin-bottom: 3rem;
-        font-weight: 800;
-    }
-
-    .tips-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-        gap: 2rem;
-    }
-
-    .tip-card {
-        background: white;
-        border-radius: 12px;
-        padding: 2rem;
-        text-align: center;
-        border: 1px solid #e5e7eb;
-        transition: all 0.3s ease;
-        animation: fadeInUp 0.6s ease-out;
-    }
-
-    .tip-card:hover {
-        transform: translateY(-6px);
-        box-shadow: 0 10px 25px rgba(102, 126, 234, 0.1);
-    }
-
-    .tip-icon {
-        font-size: 2.5rem;
-        margin-bottom: 1rem;
-        display: inline-block;
-    }
-
-    .tip-card h4 {
-        font-size: 1.2rem;
-        color: #2c3e50;
-        margin-bottom: 0.75rem;
-        font-weight: 700;
-    }
-
-    .tip-card p {
-        font-size: 0.95rem;
-        color: #6b7280;
-        line-height: 1.5;
-    }
-
-    /* CTA Section */
-    .blog-cta {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        padding: 4rem 2rem;
-        text-align: center;
-    }
-
-    .cta-content {
-        max-width: 700px;
-        margin: 0 auto;
-    }
-
-    .cta-content h2 {
-        font-size: 2.2rem;
-        margin-bottom: 1rem;
-        font-weight: 800;
-    }
-
-    .cta-content p {
-        font-size: 1.1rem;
-        opacity: 0.95;
-        margin-bottom: 2rem;
-    }
-
-    .cta-button {
-        display: inline-block;
-        background: white;
-        color: #667eea;
-        padding: 1rem 2.5rem;
-        border-radius: 8px;
-        text-decoration: none;
-        font-weight: 700;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    }
-
-    .cta-button:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
-    }
-
-    /* Animations */
-    @keyframes fadeInDown {
-        from {
-            opacity: 0;
-            transform: translateY(-30px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    @keyframes fadeInUp {
-        from {
-            opacity: 0;
-            transform: translateY(30px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    @keyframes slideUp {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    @keyframes bounce {
-        0%, 100% {
-            transform: translateY(0);
-        }
-        50% {
-            transform: translateY(-10px);
-        }
-    }
-
-    /* Mobile Responsive */
-    @media (max-width: 768px) {
-        .blog-hero {
-            padding: 3rem 1.5rem;
-            min-height: auto;
-        }
-
-        .hero-title {
-            font-size: 2.2rem;
-        }
-
-        .hero-subtitle {
-            font-size: 1rem;
-        }
-
-        .hero-stats {
-            gap: 1.5rem;
-        }
-
-        .stat-number {
-            font-size: 1.4rem;
-        }
-
-        .featured-card {
-            padding: 1.5rem;
-        }
-
-        .featured-card h2 {
-            font-size: 1.5rem;
-        }
-
-        .articles-container {
-            grid-template-columns: 1fr;
-            gap: 1.5rem;
-        }
-
-        .blog-tips h2 {
-            font-size: 1.8rem;
-        }
-
-        .tips-grid {
-            grid-template-columns: repeat(2, 1fr);
-        }
-
-        .cta-content h2 {
-            font-size: 1.6rem;
-        }
-    }
-
-    @media (max-width: 480px) {
-        .hero-title {
-            font-size: 1.8rem;
-        }
-
-        .blog-article h3 {
-            font-size: 1.2rem;
-        }
-
-        .blog-article p {
-            font-size: 0.9rem;
-        }
-
-        .tips-grid {
-            grid-template-columns: 1fr;
-        }
-
-        .hero-stats {
-            flex-direction: column;
-            gap: 1rem;
-        }
-    }
-</style>
-
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Toggle article expansion
-        const readMoreBtns = document.querySelectorAll('.read-more-btn');
-        
-        readMoreBtns.forEach(btn => {
-            btn.addEventListener('click', function(e) {
-                e.preventDefault();
-                const article = this.closest('.blog-article');
-                const fullContent = article.querySelector('.article-content-full');
-                
-                if (fullContent.style.display === 'none') {
-                    fullContent.style.display = 'block';
-                    this.textContent = 'Show Less ↑';
-                    this.style.color = '#764ba2';
-                } else {
-                    fullContent.style.display = 'none';
-                    this.textContent = 'Read More →';
-                    this.style.color = '#667eea';
-                }
-            });
+document.addEventListener('DOMContentLoaded', function() {
+    const readMoreBtns = document.querySelectorAll('.read-more-btn');
+    
+    readMoreBtns.forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const article = this.closest('.blog-article');
+            const content = article.querySelector('.article-content-full');
+            
+            if (content.style.display === 'none' || !content.style.display) {
+                content.style.display = 'block';
+                this.textContent = 'Show Less ↑';
+                this.classList.add('active');
+            } else {
+                content.style.display = 'none';
+                this.textContent = 'Read More →';
+                this.classList.remove('active');
+                article.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
         });
     });
+});
 </script>
-
 {% endblock %}

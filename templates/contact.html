@@ -2,464 +2,133 @@
 
 {% block title %}Contact Us - Cutcompress{% endblock %}
 
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/futuristic_theme.css') }}">
+    <script src="{{ url_for('static', filename='js/tools_common.js') }}"></script>
+{% endblock %}
+
 {% block content %}
-<div class="contact-container">
-    <section class="contact-hero">
-        <h1>Get in Touch</h1>
-        <p>Have questions? Want to build a custom tool? Let's talk!</p>
+<div class="page-container">
+    <!-- Theme Toggle -->
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle Theme">
+        <span class="icon-sun">☀️</span>
+        <span class="icon-moon">🌙</span>
+    </button>
+
+    <!-- Animated Background -->
+    <div class="bg-animation">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+        <div class="grid-overlay"></div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero-section" style="text-align: center; margin-bottom: 4rem;">
+        <h1 class="section-title">Get in <span class="gradient-text">Touch</span></h1>
+        <p class="section-subtitle">Have questions? Want to build a custom tool? Let's talk!</p>
     </section>
 
-    <section class="contact-content">
-        <div class="contact-grid">
-            <!-- Contact Form -->
-            <div class="contact-form-section">
-                <h2>Send us a Message</h2>
-                <form id="contactForm" method="POST" action="/send-contact">
-                    <div class="form-group">
-                        <label for="name">Name *</label>
-                        <input type="text" id="name" name="name" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="email">Email *</label>
-                        <input type="email" id="email" name="email" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="phone">Phone Number</label>
-                        <input type="tel" id="phone" name="phone">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="subject">Subject *</label>
-                        <select id="subject" name="subject" required>
-                            <option value="">Select a subject</option>
-                            <option value="general">General Inquiry</option>
-                            <option value="custom-tool">Custom Tool Development</option>
-                            <option value="prompts">AI Prompts</option>
-                            <option value="support">Technical Support</option>
-                            <option value="partnership">Partnership</option>
-                            <option value="other">Other</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="message">Message *</label>
-                        <textarea id="message" name="message" rows="6" required></textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="checkbox-label">
-                            <input type="checkbox" name="subscribe" value="yes">
-                            Subscribe to our newsletter
-                        </label>
-                    </div>
-
-                    <button type="submit" class="submit-btn">Send Message</button>
-                </form>
-            </div>
-
-            <!-- Contact Information -->
-            <div class="contact-info-section">
-                <h2>Contact Information</h2>
-
-                <div class="info-card">
-                    <div class="info-icon">👤</div>
-                    <h3>Owner</h3>
-                    <p><strong>Samir Saren</strong></p>
-                    <p class="info-details">Founder & Developer</p>
+    <div class="contact-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; max-width: 1200px; margin: 0 auto;">
+        <!-- Contact Form -->
+        <div class="glass-card">
+            <h2 style="font-size: 1.5rem; margin-bottom: 1.5rem; color: var(--text-primary);">Send us a Message</h2>
+            <form id="contactForm" method="POST" action="/send-contact">
+                <div class="form-group" style="margin-bottom: 1.5rem;">
+                    <label for="name" style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary);">Name *</label>
+                    <input type="text" id="name" name="name" required style="width: 100%; padding: 0.75rem; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-secondary); color: var(--text-primary);">
                 </div>
 
-                <div class="info-card">
-                    <div class="info-icon">📧</div>
-                    <h3>Email</h3>
-                    <p><a href="mailto:smartsamir0205@gmail.com">smartsamir0205@gmail.com</a></p>
-                    <p class="info-details">Response within 24 hours</p>
+                <div class="form-group" style="margin-bottom: 1.5rem;">
+                    <label for="email" style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary);">Email *</label>
+                    <input type="email" id="email" name="email" required style="width: 100%; padding: 0.75rem; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-secondary); color: var(--text-primary);">
                 </div>
 
-                <div class="info-card">
-                    <div class="info-icon">📱</div>
-                    <h3>Phone</h3>
-                    <p><a href="tel:+918918103540">+91 8918103540</a></p>
-                    <p class="info-details">Available 10 AM - 6 PM IST</p>
+                <div class="form-group" style="margin-bottom: 1.5rem;">
+                    <label for="phone" style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary);">Phone Number</label>
+                    <input type="tel" id="phone" name="phone" style="width: 100%; padding: 0.75rem; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-secondary); color: var(--text-primary);">
                 </div>
 
-                <div class="info-card">
-                    <div class="info-icon">📍</div>
-                    <h3>Address</h3>
-                    <p>Dakshin Bankati, Bhagabandh<br>Bankura, 722146<br>West Bengal, India</p>
+                <div class="form-group" style="margin-bottom: 1.5rem;">
+                    <label for="subject" style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary);">Subject *</label>
+                    <select id="subject" name="subject" required style="width: 100%; padding: 0.75rem; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-secondary); color: var(--text-primary);">
+                        <option value="">Select a subject</option>
+                        <option value="general">General Inquiry</option>
+                        <option value="custom-tool">Custom Tool Development</option>
+                        <option value="prompts">AI Prompts</option>
+                        <option value="support">Technical Support</option>
+                        <option value="partnership">Partnership</option>
+                        <option value="other">Other</option>
+                    </select>
                 </div>
 
-                <div class="info-card">
-                    <div class="info-icon">🌐</div>
-                    <h3>Follow Us</h3>
-                    <p>
-                        <a href="https://www.linkedin.com/in/artsamir/" target="_blank">LinkedIn</a> | 
-                        <a href="#" target="_blank">Twitter</a> | 
-                        <a href="#" target="_blank">Instagram</a>
-                    </p>
+                <div class="form-group" style="margin-bottom: 1.5rem;">
+                    <label for="message" style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary);">Message *</label>
+                    <textarea id="message" name="message" rows="6" required style="width: 100%; padding: 0.75rem; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-secondary); color: var(--text-primary); resize: vertical;"></textarea>
                 </div>
 
-                <div class="info-card">
-                    <div class="info-icon">🚀</div>
-                    <h3>Quick Links</h3>
-                    <ul>
-                        <li><a href="/terms">Terms & Conditions</a></li>
-                        <li><a href="/refund-policy">Refund Policy</a></li>
-                        <li><a href="/privacy-policy">Privacy Policy</a></li>
-                    </ul>
+                <div class="form-group" style="margin-bottom: 1.5rem;">
+                    <label class="checkbox-label" style="display: flex; align-items: center; gap: 0.5rem; color: var(--text-secondary); cursor: pointer;">
+                        <input type="checkbox" name="subscribe" value="yes" style="width: 16px; height: 16px;">
+                        Subscribe to our newsletter
+                    </label>
                 </div>
-            </div>
+
+                <button type="submit" class="btn-glow" style="width: 100%; justify-content: center;">Send Message</button>
+            </form>
         </div>
-    </section>
 
-    <!-- FAQ Section -->
-    <section class="faq-section">
-        <h2>Frequently Asked Questions</h2>
-        <div class="faq-container">
-            <div class="faq-item">
-                <div class="faq-header">
-                    <h3>How long does custom tool development take?</h3>
-                    <span class="faq-toggle">+</span>
-                </div>
-                <div class="faq-content">
-                    <p>
-                        Development timeline depends on project complexity. Simple tools can take 1-2 weeks, 
-                        while complex projects may take 4-8 weeks. We'll provide a detailed timeline during the consultation phase.
-                    </p>
+        <!-- Contact Information -->
+        <div class="contact-info-section">
+            <h2 style="font-size: 1.5rem; margin-bottom: 1.5rem; color: var(--text-primary); text-align: center;">Contact Information</h2>
+
+            <div class="glass-card" style="margin-bottom: 1.5rem; display: flex; align-items: center; gap: 1rem;">
+                <div class="info-icon" style="font-size: 2rem;">👤</div>
+                <div>
+                    <h3 style="font-size: 1.1rem; margin-bottom: 0.25rem; color: var(--text-primary);">Owner</h3>
+                    <p style="color: var(--text-primary); font-weight: 600;">Samir Saren</p>
+                    <p class="info-details" style="color: var(--text-secondary); font-size: 0.9rem;">Founder & Developer</p>
                 </div>
             </div>
 
-            <div class="faq-item">
-                <div class="faq-header">
-                    <h3>What AI tools do your prompts work with?</h3>
-                    <span class="faq-toggle">+</span>
-                </div>
-                <div class="faq-content">
-                    <p>
-                        Our prompts are compatible with: DALL-E 3, Midjourney, Stable Diffusion, Adobe Firefly, 
-                        and most other modern AI image generators. Video prompts work with Runway, Synthesia, and similar platforms.
-                    </p>
+            <div class="glass-card" style="margin-bottom: 1.5rem; display: flex; align-items: center; gap: 1rem;">
+                <div class="info-icon" style="font-size: 2rem;">📧</div>
+                <div>
+                    <h3 style="font-size: 1.1rem; margin-bottom: 0.25rem; color: var(--text-primary);">Email</h3>
+                    <p><a href="mailto:smartsamir0205@gmail.com" style="color: var(--accent-primary); text-decoration: none;">smartsamir0205@gmail.com</a></p>
+                    <p class="info-details" style="color: var(--text-secondary); font-size: 0.9rem;">Response within 24 hours</p>
                 </div>
             </div>
 
-            <div class="faq-item">
-                <div class="faq-header">
-                    <h3>Can I use your free tools commercially?</h3>
-                    <span class="faq-toggle">+</span>
-                </div>
-                <div class="faq-content">
-                    <p>
-                        Yes! All images processed with our free tools can be used for commercial purposes. 
-                        You can use them in projects, sell them, or redistribute them without restrictions.
-                    </p>
+            <div class="glass-card" style="margin-bottom: 1.5rem; display: flex; align-items: center; gap: 1rem;">
+                <div class="info-icon" style="font-size: 2rem;">📱</div>
+                <div>
+                    <h3 style="font-size: 1.1rem; margin-bottom: 0.25rem; color: var(--text-primary);">Phone</h3>
+                    <p><a href="tel:+918918103540" style="color: var(--accent-primary); text-decoration: none;">+91 8918103540</a></p>
+                    <p class="info-details" style="color: var(--text-secondary); font-size: 0.9rem;">Available 10 AM - 6 PM IST</p>
                 </div>
             </div>
 
-            <div class="faq-item">
-                <div class="faq-header">
-                    <h3>Do you offer refunds for custom tools?</h3>
-                    <span class="faq-toggle">+</span>
-                </div>
-                <div class="faq-content">
-                    <p>
-                        Refunds are available during development with decreasing percentages based on completion. 
-                        See our <a href="/refund-policy">Refund Policy</a> for complete details.
-                    </p>
+            <div class="glass-card" style="margin-bottom: 1.5rem; display: flex; align-items: center; gap: 1rem;">
+                <div class="info-icon" style="font-size: 2rem;">📍</div>
+                <div>
+                    <h3 style="font-size: 1.1rem; margin-bottom: 0.25rem; color: var(--text-primary);">Address</h3>
+                    <p style="color: var(--text-secondary);">Dakshin Bankati, Bhagabandh<br>Bankura, 722146<br>West Bengal, India</p>
                 </div>
             </div>
 
-            <div class="faq-item">
-                <div class="faq-header">
-                    <h3>How can I integrate Cutcompress tools into my application?</h3>
-                    <span class="faq-toggle">+</span>
-                </div>
-                <div class="faq-content">
-                    <p>
-                        We offer API access for integration. Contact us to discuss your integration requirements, 
-                        and we'll provide documentation and support.
+            <div class="glass-card" style="display: flex; align-items: center; gap: 1rem;">
+                <div class="info-icon" style="font-size: 2rem;">🌐</div>
+                <div>
+                    <h3 style="font-size: 1.1rem; margin-bottom: 0.25rem; color: var(--text-primary);">Follow Us</h3>
+                    <p style="display: flex; gap: 1rem;">
+                        <a href="https://www.linkedin.com/in/artsamir/" target="_blank" style="color: var(--accent-primary); text-decoration: none;">LinkedIn</a>
+                        <a href="#" target="_blank" style="color: var(--accent-primary); text-decoration: none;">Twitter</a>
+                        <a href="#" target="_blank" style="color: var(--accent-primary); text-decoration: none;">Instagram</a>
                     </p>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
 </div>
-
-<style>
-.contact-container {
-    width: 100%;
-}
-
-.contact-hero {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    padding: 3rem 2rem;
-    text-align: center;
-    margin-bottom: 3rem;
-}
-
-.contact-hero h1 {
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
-}
-
-.contact-content {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 2rem 3rem;
-}
-
-.contact-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 3rem;
-    margin-bottom: 3rem;
-}
-
-.contact-form-section,
-.contact-info-section {
-    background: white;
-    padding: 2rem;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-}
-
-.contact-form-section h2,
-.contact-info-section h2 {
-    color: #2c3e50;
-    font-size: 1.8rem;
-    margin-bottom: 1.5rem;
-}
-
-.form-group {
-    margin-bottom: 1.5rem;
-}
-
-.form-group label {
-    display: block;
-    color: #2c3e50;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-}
-
-.form-group input[type="text"],
-.form-group input[type="email"],
-.form-group input[type="tel"],
-.form-group select,
-.form-group textarea {
-    width: 100%;
-    padding: 0.75rem;
-    border: 2px solid #e1e8ed;
-    border-radius: 6px;
-    font-size: 1rem;
-    font-family: inherit;
-    transition: border-color 0.3s ease;
-}
-
-.form-group input:focus,
-.form-group select:focus,
-.form-group textarea:focus {
-    outline: none;
-    border-color: #667eea;
-    box-shadow: 0 0 0 3px rgba(103, 126, 234, 0.1);
-}
-
-.checkbox-label {
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-    font-weight: normal;
-}
-
-.checkbox-label input {
-    margin-right: 0.5rem;
-}
-
-.submit-btn {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    padding: 0.75rem 2rem;
-    border: none;
-    border-radius: 6px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    box-shadow: 0 4px 15px rgba(103, 126, 234, 0.3);
-    width: 100%;
-}
-
-.submit-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(103, 126, 234, 0.4);
-}
-
-.info-card {
-    padding: 1.5rem;
-    background: #f8f9ff;
-    border-radius: 10px;
-    margin-bottom: 1.5rem;
-    border-left: 4px solid #667eea;
-}
-
-.info-icon {
-    font-size: 2rem;
-    margin-bottom: 0.75rem;
-}
-
-.info-card h3 {
-    color: #2c3e50;
-    font-size: 1.1rem;
-    margin-bottom: 0.5rem;
-}
-
-.info-card p {
-    color: #666;
-    margin-bottom: 0.25rem;
-}
-
-.info-details {
-    font-size: 0.85rem;
-    color: #999;
-}
-
-.info-card a {
-    color: #667eea;
-    text-decoration: none;
-}
-
-.info-card a:hover {
-    text-decoration: underline;
-}
-
-.info-card ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.info-card li {
-    margin-bottom: 0.5rem;
-}
-
-.faq-section {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 3rem 2rem;
-    background: #f8f9ff;
-    border-radius: 12px;
-}
-
-.faq-section h2 {
-    text-align: center;
-    color: #2c3e50;
-    font-size: 2rem;
-    margin-bottom: 2rem;
-}
-
-.faq-container {
-    max-width: 900px;
-    margin: 0 auto;
-}
-
-.faq-item {
-    background: white;
-    margin-bottom: 1rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-}
-
-.faq-header {
-    padding: 1.5rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    cursor: pointer;
-    user-select: none;
-}
-
-.faq-header h3 {
-    color: #2c3e50;
-    margin: 0;
-    font-size: 1.05rem;
-}
-
-.faq-toggle {
-    color: #667eea;
-    font-size: 1.5rem;
-    font-weight: bold;
-    transition: transform 0.3s ease;
-}
-
-.faq-item.active .faq-toggle {
-    transform: rotate(45deg);
-}
-
-.faq-content {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.3s ease;
-    padding: 0 1.5rem;
-}
-
-.faq-item.active .faq-content {
-    max-height: 500px;
-    padding: 0 1.5rem 1.5rem;
-}
-
-.faq-content p {
-    color: #666;
-    line-height: 1.6;
-}
-
-.faq-content a {
-    color: #667eea;
-    text-decoration: none;
-}
-
-.faq-content a:hover {
-    text-decoration: underline;
-}
-
-@media (max-width: 768px) {
-    .contact-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .contact-hero h1 {
-        font-size: 1.8rem;
-    }
-
-    .contact-form-section,
-    .contact-info-section {
-        padding: 1.5rem;
-    }
-
-    .faq-section {
-        padding: 1.5rem;
-    }
-}
-</style>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const faqItems = document.querySelectorAll('.faq-item');
-    
-    faqItems.forEach(item => {
-        const header = item.querySelector('.faq-header');
-        header.addEventListener('click', function() {
-            item.classList.toggle('active');
-        });
-    });
-
-    // Form submission (basic example)
-    const contactForm = document.getElementById('contactForm');
-    if (contactForm) {
-        contactForm.addEventListener('submit', function(e) {
-            // Form will be submitted to the server
-            // You can add client-side validation here if needed
-        });
-    }
-});
-</script>
 {% endblock %}
