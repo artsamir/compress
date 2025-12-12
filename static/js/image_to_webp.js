@@ -45,6 +45,7 @@ gridBtn?.addEventListener('click', ()=>{ statePNG.view='gallery'; statePNG.userS
 convertBtn?.addEventListener('click', ()=>{
   if(!statePNG.uploaded.length) return;
   progressBar.style.display='block'; convertBtn.disabled=true;
+  el('spinner').style.display='inline-block';
   statePNG.converted = new Array(statePNG.uploaded.length);
   let done=0;
   statePNG.uploaded.forEach((f,i)=>{
@@ -57,8 +58,12 @@ convertBtn?.addEventListener('click', ()=>{
         done++; const pct=Math.round((done/statePNG.uploaded.length)*100);
         progressFill.style.width=pct+'%'; progressText.textContent=pct+'%';
         if(done===statePNG.uploaded.length){
-          convertBtn.disabled=false; prePreview.style.display='none'; viewToggle.style.display='flex';
-          render(); dlZip.disabled=!statePNG.converted.filter(Boolean).length;
+          convertBtn.disabled=false; 
+          el('spinner').style.display='none';
+          prePreview.style.display='none'; 
+          viewToggle.style.display='flex';
+          render(); 
+          dlZip.disabled=!statePNG.converted.filter(Boolean).length;
         }
       });
   });

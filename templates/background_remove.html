@@ -5,58 +5,395 @@
 {% block keywords %}background remover, remove background, transparent background, ai background removal, background eraser tool{% endblock %}
 
 {% block head %}
-    <meta name="robots" content="index, follow">
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "SoftwareApplication",
-        "name": "Background Remover",
-        "description": "Free AI-powered tool to remove image backgrounds instantly",
-        "url": "https://www.cutcompress.com/tool/background-remove",
-        "applicationCategory": "UtilitiesApplication",
-        "operatingSystem": "Web",
-        "aggregateRating": {
-            "@type": "AggregateRating",
-            "ratingValue": "4.9",
-            "ratingCount": "1500"
-        }
+<link rel="stylesheet" href="{{ url_for('static', filename='css/background_remove.css') }}">
+<meta name="robots" content="index, follow">
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Background Remover",
+    "description": "Free AI-powered tool to remove image backgrounds instantly",
+    "url": "https://www.cutcompress.com/tool/background-remove",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Web",
+    "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.9",
+        "ratingCount": "1500"
     }
-    </script>
+}
+</script>
 {% endblock %}
 
 {% block content %}
-    <div class="tool-container">
-        <h1>Background Remove</h1>
-        <div id="upload-area" class="drag-drop-area">
-            <p>Drag & drop your image here or click to upload</p>
-            <input type="file" id="file-input" accept="image/*" hidden>
-        </div>
-        <div id="loader" class="loader hidden"></div>
-        <div id="result-section" class="hidden">
-            <div class="slider-container">
-                <div id="before-image" class="image-container"></div>
-                <div id="after-container">
-                    <div id="after-image" class="image-container">
-                        <div class="overlay"></div>
-                    </div>
-                </div>
-                <div class="slider"></div>
-            </div>
-            <div class="options">
-                <h3>Add Background Color</h3>
-                <input type="color" id="bg-color" value="#ffffff">
-                <h3>Add Background Image</h3>
-                <div class="predefined-bgs">
-                    <!-- Predefined backgrounds -->
-                    <div class="bg-option" style="background-image: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e');" data-url="https://images.unsplash.com/photo-1507525428034-b723cf961d3e"></div>
-                    <div class="bg-option" style="background-image: url('https://images.unsplash.com/photo-1519125323398-675f0ddb6308');" data-url="https://images.unsplash.com/photo-1519125323398-675f0ddb6308"></div>
-                </div>
-                <input type="file" id="bg-upload" accept="image/*">
-                <button id="reset-btn">Reset</button>
-                <button id="download-btn">Download</button>
-            </div>
-        </div>
+<div class="tool-page-wrapper">
+  <!-- Hero Section -->
+  <div class="tool-hero">
+    <div class="hero-content-tool">
+      <span class="tool-badge">✨ AI-Powered</span>
+      <h1>Remove Image Backgrounds in Seconds</h1>
+      <p>Instantly remove backgrounds from your images with AI precision. No manual editing, no skills needed. Perfect for e-commerce, social media, and professional designs.</p>
     </div>
+  </div>
+
+  <!-- How It Works Section -->
+  <div class="how-it-works">
+    <h2>How It Works</h2>
+    <div class="steps-container">
+      <div class="step-card">
+        <div class="step-icon">
+          <span class="step-emoji">📤</span>
+          <span class="step-number">1</span>
+        </div>
+        <h3>Upload Image</h3>
+        <p>Drag & drop or select your image file</p>
+      </div>
+
+      <div class="step-arrow">➜</div>
+
+      <div class="step-card">
+        <div class="step-icon">
+          <span class="step-emoji">🤖</span>
+          <span class="step-number">2</span>
+        </div>
+        <h3>AI Processing</h3>
+        <p>Automatic background removal with AI</p>
+      </div>
+
+      <div class="step-arrow">➜</div>
+
+      <div class="step-card">
+        <div class="step-icon">
+          <span class="step-emoji">🎨</span>
+          <span class="step-number">3</span>
+        </div>
+        <h3>Customize</h3>
+        <p>Add color or background image</p>
+      </div>
+
+      <div class="step-arrow">➜</div>
+
+      <div class="step-card">
+        <div class="step-icon">
+          <span class="step-emoji">📥</span>
+          <span class="step-number">4</span>
+        </div>
+        <h3>Download</h3>
+        <p>Save your result as PNG or JPG</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tool Container -->
+  <div class="tool-container">
+    <!-- Upload Section -->
+    <div class="upload-section">
+      <div class="drag-drop-area" id="upload-area">
+        <div class="upload-icon-wrapper">
+          <i class="fas fa-cloud-upload-alt"></i>
+          <div class="upload-pulse"></div>
+        </div>
+        <h3>Drag & Drop Your Image Here</h3>
+        <p><strong>or click to browse files</strong></p>
+        <input type="file" id="file-input" accept="image/*" hidden>
+        <div class="supported-formats">
+          <small>✅ Supported: JPG, PNG, WebP, GIF | 📁 Max 50MB</small>
+        </div>
+      </div>
+      
+      <!-- Quick tips -->
+      <div class="upload-tips">
+        <div class="tip-item">
+          <i class="fas fa-lightbulb"></i>
+          <span>Works best with clear subject against busy background</span>
+        </div>
+        <div class="tip-item">
+          <i class="fas fa-star"></i>
+          <span>AI handles hair, fur, and fine edges perfectly</span>
+        </div>
+        <div class="tip-item">
+          <i class="fas fa-bolt"></i>
+          <span>Processing takes just a few seconds</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Result Section -->
+    <div id="result-section" class="hidden">
+      <!-- Slider Comparison -->
+      <div class="comparison-section">
+        <h2>Before & After Comparison</h2>
+        <div class="slider-container">
+          <div id="before-image" class="image-container"></div>
+          <div id="after-container">
+            <div id="after-image" class="image-container">
+              <div class="overlay"></div>
+            </div>
+          </div>
+          <div class="slider"></div>
+        </div>
+      </div>
+
+      <!-- Background Options -->
+      <div class="background-options">
+        <h2>🎨 Customize Background</h2>
+        
+        <!-- Color Background -->
+        <div class="option-group">
+          <h3>Color Background</h3>
+          <div class="color-picker-wrapper">
+            <input type="color" id="bg-color" value="#ffffff">
+            <span class="color-label">Choose any color</span>
+          </div>
+        </div>
+
+        <!-- Predefined Backgrounds -->
+        <div class="option-group">
+          <h3>Preset Backgrounds</h3>
+          <div class="predefined-bgs">
+            <div class="bg-option preset" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);" data-type="gradient" data-value="linear-gradient(135deg, #667eea 0%, #764ba2 100%)"></div>
+            <div class="bg-option preset" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);" data-type="gradient" data-value="linear-gradient(135deg, #f093fb 0%, #f5576c 100%)"></div>
+            <div class="bg-option preset" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);" data-type="gradient" data-value="linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)"></div>
+            <div class="bg-option preset" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);" data-type="gradient" data-value="linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)"></div>
+            <div class="bg-option preset" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);" data-type="gradient" data-value="linear-gradient(135deg, #fa709a 0%, #fee140 100%)"></div>
+            <div class="bg-option preset" style="background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);" data-type="gradient" data-value="linear-gradient(135deg, #30cfd0 0%, #330867 100%)"></div>
+          </div>
+        </div>
+
+        <!-- Upload Custom Background -->
+        <div class="option-group">
+          <h3>Upload Custom Background</h3>
+          <input type="file" id="bg-upload" accept="image/*" class="bg-upload-input">
+          <span class="bg-upload-label">Choose an image from your device</span>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+          <button id="reset-btn" class="btn-secondary">
+            <i class="fas fa-redo"></i> Reset
+          </button>
+          <button id="download-btn" class="btn-primary">
+            <i class="fas fa-download"></i> Download Result
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loader" class="loader hidden"></div>
+  </div>
+
+  <!-- Features Section -->
+  <div class="tool-features">
+    <h2>Why Choose Our Background Remover?</h2>
+    <div class="features-grid-tool">
+      <div class="feature-item">
+        <span class="feature-emoji">⚡</span>
+        <h3>Lightning Fast</h3>
+        <p>Process multiple images in seconds with our optimized AI</p>
+      </div>
+      <div class="feature-item">
+        <span class="feature-emoji">🎯</span>
+        <h3>Precision Edges</h3>
+        <p>Perfect detection of fine details like hair and fur</p>
+      </div>
+      <div class="feature-item">
+        <span class="feature-emoji">🎨</span>
+        <h3>Creative Options</h3>
+        <p>Apply colors, gradients, or custom images as backgrounds</p>
+      </div>
+      <div class="feature-item">
+        <span class="feature-emoji">📱</span>
+        <h3>Mobile Friendly</h3>
+        <p>Works seamlessly on desktop, tablet, and mobile</p>
+      </div>
+      <div class="feature-item">
+        <span class="feature-emoji">🔒</span>
+        <h3>100% Private</h3>
+        <p>Your images are processed securely and never stored</p>
+      </div>
+      <div class="feature-item">
+        <span class="feature-emoji">✨</span>
+        <h3>No Sign-up</h3>
+        <p>Start removing backgrounds immediately for free</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Blog Section -->
+  <div class="tool-blog">
+    <div class="blog-container-tool">
+      <h2>Complete Guide to Background Removal</h2>
+      <div class="blog-article">
+        <h3>📸 What is Background Removal?</h3>
+        <p>Background removal is the process of separating the main subject of an image from its background and making that background transparent or replaceable. With traditional image editing software like Photoshop, this required hours of manual work using selection tools like the Magic Wand, Lasso, or Pen Tool. However, modern AI-powered tools can now accomplish this in mere seconds with minimal effort.</p>
+        
+        <p>Our Background Remover uses advanced deep learning algorithms trained on millions of images to instantly detect what's in focus (the subject) and what's just scenery (the background). Whether it's a person, product, animal, or object, the AI learns to distinguish between them with remarkable accuracy.</p>
+
+        <h3>🤖 How AI-Powered Background Removal Works</h3>
+        <p>AI background removal relies on three key technologies:</p>
+        <div class="blog-list">
+          <ul>
+            <li><strong>Semantic Segmentation:</strong> The AI analyzes every pixel in your image and classifies it as either "subject" or "background." This is done using convolutional neural networks (CNNs) trained on thousands of diverse images.</li>
+            <li><strong>Instance Segmentation:</strong> If there are multiple objects, the AI identifies each one separately, allowing you to remove only specific backgrounds.</li>
+            <li><strong>Alpha Channel Masking:</strong> Once segmentation is complete, the AI applies transparency (alpha channel) to the background pixels, creating a PNG with a transparent background.</li>
+            <li><strong>Edge Refinement:</strong> Post-processing algorithms smooth and refine edges, especially important for complex details like hair, fur, or fabric textures.</li>
+          </ul>
+        </div>
+
+        <h3>✨ Real-World Applications & Use Cases</h3>
+        <p><strong>E-commerce & Product Photography:</strong> Online retailers use background removal extensively. A clean white, transparent, or themed background makes products stand out, improves photo consistency, and enhances professional appearance. Studies show that high-quality product photos increase conversion rates by up to 40%.</p>
+        
+        <p><strong>Social Media & Content Creation:</strong> Influencers, TikTokers, and content creators use background removal to create eye-catching posts. Remove boring office backgrounds from remote work videos, replace webcam backgrounds, or create composite images for creative storytelling.</p>
+        
+        <p><strong>Graphic Design & Marketing:</strong> Designers save hours by using AI background removal instead of manual selection. Create posters, flyers, banners, and advertisements faster. Combine multiple product images on themed backgrounds for promotional materials.</p>
+        
+        <p><strong>ID Cards & Passports:</strong> Government and organizational ID photos require specific backgrounds. Our tool instantly creates compliant ID photos by removing and replacing backgrounds to standard specifications.</p>
+        
+        <p><strong>Real Estate Photography:</strong> Property listings benefit from clean, professional images. Remove distracting objects or replace gloomy skies with better weather backdrops to showcase properties more attractively.</p>
+
+        <h3>🎨 Background Customization Options</h3>
+        <p>Once you've removed the background, you have multiple options:</p>
+        
+        <p><strong>Transparent Background (PNG):</strong> Perfect for web design, graphic overlays, or further editing. The transparent background allows your subject to be placed on any background.</p>
+        
+        <p><strong>Solid Color Background:</strong> Professional and clean. Choose any color that matches your brand or design aesthetic. White backgrounds are popular for product photography.</p>
+        
+        <p><strong>Gradient Background:</strong> Eye-catching and modern. Gradients add visual interest while keeping focus on your subject. Use complementary colors for maximum impact.</p>
+        
+        <p><strong>Custom Image Background:</strong> Upload your own image—a beach scene for vacation photos, an office for professional headshots, or a studio setting for product shots. The possibilities are endless.</p>
+
+        <h3>📊 Before & After Results: Real Examples</h3>
+        <p>Let's look at actual examples of background removal transformations:</p>
+        <div class="comparison-table">
+          <table>
+            <tr>
+              <th>Original Image</th>
+              <th>Scenario</th>
+              <th>Background Removed</th>
+              <th>With New Background</th>
+            </tr>
+            <tr>
+              <td>Product on cluttered desk</td>
+              <td>E-commerce</td>
+              <td>Transparent PNG</td>
+              <td>On white or gradient</td>
+            </tr>
+            <tr>
+              <td>Person in office</td>
+              <td>Headshot</td>
+              <td>Transparent PNG</td>
+              <td>Professional blue background</td>
+            </tr>
+            <tr>
+              <td>Object with shadow</td>
+              <td>Product Photo</td>
+              <td>Transparent PNG</td>
+              <td>Placed on themed background</td>
+            </tr>
+            <tr>
+              <td>Portrait with busy park</td>
+              <td>Social Media</td>
+              <td>Transparent PNG</td>
+              <td>On beach or sunset gradient</td>
+            </tr>
+          </table>
+        </div>
+
+        <h3>💡 Pro Tips for Perfect Results</h3>
+        <p><strong>Lighting & Image Quality:</strong> Higher quality source images produce better results. Ensure your subject is well-lit and in focus. Avoid blurry, underexposed, or overexposed images.</p>
+        
+        <p><strong>Subject Contrast:</strong> The more distinct your subject is from the background, the better the AI performs. A person against a solid color wall is easier to process than a person in a forest.</p>
+        
+        <p><strong>Complex Details:</strong> Hair, transparent materials (glass, fabric), and fur are handled well but may benefit from fine-tuning. Our tool includes manual refinement options for tricky edges.</p>
+        
+        <p><strong>Color Bleeding Prevention:</strong> Ensure your subject's color doesn't closely match the background to avoid accidental removal of important parts.</p>
+        
+        <p><strong>Save in Right Format:</strong> Use PNG for transparent backgrounds (web design, graphics). Use JPG for solid backgrounds (printing, email, social media).</p>
+
+        <h3>❓ Frequently Asked Questions</h3>
+        <div class="faq-item">
+          <h4>Can the tool handle complex details like hair?</h4>
+          <p>Yes! Our AI excels at detecting fine edges. Hair, fur, facial hair, and clothing textures are processed with precision. However, extremely thin hair strands might need manual refinement.</p>
+        </div>
+        <div class="faq-item">
+          <h4>What file formats are supported?</h4>
+          <p>We accept JPG, PNG, WebP, and GIF. The output can be PNG (transparent) or JPG (with background). File size limit is 50MB.</p>
+        </div>
+        <div class="faq-item">
+          <h4>How long does processing take?</h4>
+          <p>Most images process in 2-5 seconds. Very high-resolution images (8K+) might take slightly longer.</p>
+        </div>
+        <div class="faq-item">
+          <h4>Is my image data private?</h4>
+          <p>Absolutely. Images are processed in real-time on our servers and are not stored or used for any other purpose. We comply with GDPR and privacy regulations.</p>
+        </div>
+        <div class="faq-item">
+          <h4>Can I remove backgrounds from multiple images at once?</h4>
+          <p>Currently, we process one image at a time through our web interface. However, our API supports batch processing for enterprise users.</p>
+        </div>
+        <div class="faq-item">
+          <h4>What's the best background to choose for e-commerce?</h4>
+          <p>White or light gray backgrounds are industry standard for product photography as they're neutral and professional. However, some brands use colored or gradient backgrounds to stand out.</p>
+        </div>
+
+        <h3>🚀 Getting Started: Step-by-Step</h3>
+        <p><strong>Step 1 - Prepare Your Image:</strong> Choose a clear, well-lit image with good contrast between subject and background.</p>
+        
+        <p><strong>Step 2 - Upload:</strong> Drag & drop or click to upload your image to our tool.</p>
+        
+        <p><strong>Step 3 - Wait for Processing:</strong> Our AI processes your image within seconds.</p>
+        
+        <p><strong>Step 4 - Customize:</strong> Choose a solid color, gradient, or upload a custom background image.</p>
+        
+        <p><strong>Step 5 - Preview:</strong> Use the before/after slider to compare results.</p>
+        
+        <p><strong>Step 6 - Download:</strong> Save your result as PNG (transparent) or JPG (with background).</p>
+
+        <h3>📈 Benefits Over Manual Editing</h3>
+        <div class="comparison-table">
+          <table>
+            <tr>
+              <th>Aspect</th>
+              <th>Manual Editing (Photoshop)</th>
+              <th>Our AI Tool</th>
+            </tr>
+            <tr>
+              <td>Time per image</td>
+              <td>15-60 minutes</td>
+              <td>2-5 seconds</td>
+            </tr>
+            <tr>
+              <td>Skill required</td>
+              <td>Expert level</td>
+              <td>None - fully automated</td>
+            </tr>
+            <tr>
+              <td>Consistency</td>
+              <td>Varies with operator</td>
+              <td>Always perfect</td>
+            </tr>
+            <tr>
+              <td>Cost per image</td>
+              <td>$10-50 (freelancer)</td>
+              <td>Free</td>
+            </tr>
+            <tr>
+              <td>Learning curve</td>
+              <td>Weeks to months</td>
+              <td>Minutes</td>
+            </tr>
+          </table>
+        </div>
+
+        <h3>✅ Conclusion</h3>
+        <p>Background removal is no longer the domain of professional photographers and designers. With modern AI tools like CutCompress Background Remover, anyone can create professional-quality images in seconds. Whether you're an e-commerce seller, content creator, designer, or casual user, our tool empowers you to take control of your visual content. Start removing backgrounds today and see how it transforms your images, your workflow, and your creative possibilities.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/background_remove.js') }}"></script>
 
 
      <!-- Blog Section -->

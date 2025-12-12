@@ -5,6 +5,7 @@
 
 {% block head %}
     <meta name="robots" content="index, follow">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/image_to_png.css') }}">
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
@@ -24,26 +25,306 @@
 {% endblock %}
 
 {% block content %}
-<div class="container">
-  <h1>Any Image to PNG</h1>
-  <div id="uploadBox" class="upload-box">
-    <input type="file" id="imageInput" multiple accept="image/*" hidden>
-    <div class="upload-instructions">
-      <i class="fas fa-cloud-upload-alt"></i>
-      <p>Drag & drop images here or</p>
-      <button id="browseBtn" type="button">Browse Files</button>
-      <p class="upload-limit">(Up to 100 images)</p>
+<div class="tool-page-wrapper">
+  <!-- Hero Section -->
+  <div class="tool-hero">
+    <div class="hero-content-tool">
+      <span class="tool-badge">🎨 Professional PNG Conversion</span>
+      <h1>Convert Any Image to PNG Format</h1>
+      <p>Transform your images to PNG with perfect transparency support. Fast, secure, and completely free. No registration required.</p>
     </div>
   </div>
-  <div id="preUploadPreview" class="upload-preview" style="display:none;"></div>
-  <div class="convert-actions"><button id="convertBtn" disabled>Convert to PNG</button></div>
-  <div id="progressBar" class="progress-bar" style="display:none;"><div id="progressFill" class="progress-fill"></div><span id="progressText">0%</span></div>
-  <div class="view-toggle" style="display:none;"><button id="listViewBtn" class="active"><i class="fas fa-list"></i> List View</button><button id="galleryViewBtn"><i class="fas fa-th"></i> Gallery View</button></div>
-  <div id="listView" class="list-view"></div>
-  <div id="galleryView" class="gallery-view"></div>
-  <div class="download-actions"><button id="downloadZipBtn" class="btn-zip" disabled><i class="fas fa-file-zipper"></i> Download All (ZIP)</button></div>
-  <div class="add-more"><button id="addNewBtn" type="button"><i class="fas fa-plus"></i> Add New Image</button></div>
+
+  <!-- How It Works Section -->
+  <div class="how-it-works">
+    <h2>How It Works</h2>
+    <div class="steps-container">
+      <div class="step-card">
+        <div class="step-icon">
+          <span class="step-emoji">📤</span>
+          <span class="step-number">1</span>
+        </div>
+        <h3>Upload Images</h3>
+        <p>Select one or multiple images from your device or drag & drop</p>
+      </div>
+
+      <div class="step-arrow">➜</div>
+
+      <div class="step-card">
+        <div class="step-icon">
+          <span class="step-emoji">✨</span>
+          <span class="step-number">2</span>
+        </div>
+        <h3>Convert</h3>
+        <p>Click convert and watch the magic happen in seconds</p>
+      </div>
+
+      <div class="step-arrow">➜</div>
+
+      <div class="step-card">
+        <div class="step-icon">
+          <span class="step-emoji">📥</span>
+          <span class="step-number">3</span>
+        </div>
+        <h3>Download</h3>
+        <p>Save individual files or download all as a ZIP archive</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tool Container -->
+  <div class="tool-container">
+    <div id="uploadBox" class="upload-box">
+      <input type="file" id="imageInput" multiple accept="image/*" hidden>
+      <div class="upload-icon-wrapper">
+        <i class="fas fa-cloud-upload-alt"></i>
+        <div class="upload-pulse"></div>
+      </div>
+      <div class="upload-instructions">
+        <p><strong>Drag & drop images here</strong></p>
+        <p>or</p>
+        <button id="browseBtn" type="button">Browse Files</button>
+        <p class="upload-limit">(Up to 100 images, max 50MB each)</p>
+      </div>
+    </div>
+
+    <div id="preUploadPreview" class="upload-preview"></div>
+    
+    <div class="convert-actions">
+      <button id="convertBtn" disabled>
+        <span class="spinner" id="spinner" style="display:none;"></span>
+        Convert to PNG
+      </button>
+    </div>
+
+    <div id="progressBar" class="progress-bar" style="display:none;">
+      <div id="progressFill" class="progress-fill"></div>
+      <span id="progressText">0%</span>
+    </div>
+
+    <div class="view-toggle" style="display:none;">
+      <button id="listViewBtn" class="active"><i class="fas fa-list"></i> List View</button>
+      <button id="galleryViewBtn"><i class="fas fa-th"></i> Gallery View</button>
+    </div>
+
+    <div id="listView" class="list-view"></div>
+    <div id="galleryView" class="gallery-view"></div>
+
+    <div class="download-actions">
+      <button id="downloadZipBtn" class="btn-zip" disabled>
+        <i class="fas fa-file-zipper"></i> Download All (ZIP)
+      </button>
+    </div>
+
+    <div class="add-more">
+      <button id="addNewBtn" type="button">
+        <i class="fas fa-plus"></i> Add New Images
+      </button>
+    </div>
+  </div>
+
+  <!-- Features Section -->
+  <div class="tool-features">
+    <h2>Why Choose Our PNG Converter?</h2>
+    <div class="features-grid-tool">
+      <div class="feature-item">
+        <span class="feature-emoji">🔒</span>
+        <h3>Secure & Private</h3>
+        <p>All conversions happen locally. Files are never stored on our servers.</p>
+      </div>
+      <div class="feature-item">
+        <span class="feature-emoji">⚡</span>
+        <h3>Lightning Fast</h3>
+        <p>Convert multiple images simultaneously in just seconds.</p>
+      </div>
+      <div class="feature-item">
+        <span class="feature-emoji">🎨</span>
+        <h3>Transparency Support</h3>
+        <p>Preserve alpha channels and background transparency perfectly.</p>
+      </div>
+      <div class="feature-item">
+        <span class="feature-emoji">🔄</span>
+        <h3>Batch Processing</h3>
+        <p>Convert up to 100 images at once and download as ZIP.</p>
+      </div>
+      <div class="feature-item">
+        <span class="feature-emoji">📱</span>
+        <h3>Works Everywhere</h3>
+        <p>Desktop, tablet, or mobile - convert on any device.</p>
+      </div>
+      <div class="feature-item">
+        <span class="feature-emoji">🆓</span>
+        <h3>100% Free</h3>
+        <p>No hidden costs, no registration, no watermarks ever.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Supported Formats -->
+  <div class="supported-formats">
+    <h2>Supported Input Formats</h2>
+    <div class="formats-container">
+      <span class="format-badge">JPG/JPEG</span>
+      <span class="format-badge">PNG</span>
+      <span class="format-badge">WebP</span>
+      <span class="format-badge">GIF</span>
+      <span class="format-badge">BMP</span>
+      <span class="format-badge">TIFF</span>
+      <span class="format-badge">SVG</span>
+      <span class="format-badge">ICO</span>
+    </div>
+  </div>
+
+  <!-- Blog Section -->
+  <div class="tool-blog">
+    <div class="blog-container-tool">
+      <h2>Complete Guide to PNG Format & Conversion</h2>
+      <div class="blog-article">
+        <h3>What is PNG Format?</h3>
+        <p>PNG stands for Portable Network Graphics and is a modern image format that excels at preserving image quality without data loss. Unlike JPEG which uses lossy compression, PNG employs lossless compression, meaning no image data is discarded during the saving process. This makes PNG the ideal choice for graphics, logos, and images where quality preservation is critical.</p>
+
+        <h3>Key Advantages of PNG Format</h3>
+        <ul class="blog-list numbered">
+          <li><strong>Lossless Compression:</strong> Every pixel of information is preserved, resulting in perfect image quality with smaller file sizes than uncompressed formats.</li>
+          <li><strong>Transparency Support:</strong> PNG supports full alpha channel transparency, allowing you to create images with transparent backgrounds. This is perfect for web graphics, logos, and overlays.</li>
+          <li><strong>Web Compatibility:</strong> PNG is universally supported by all modern web browsers without any plugins or special software.</li>
+          <li><strong>Better for Graphics:</strong> Sharp lines, text, and solid colors in PNG look crisp and clear, making it ideal for design work.</li>
+          <li><strong>No Quality Loss:</strong> Unlike JPEG, PNG won't create artifacts or blurriness around edges and text.</li>
+        </ul>
+
+        <h3>When to Use PNG Format</h3>
+        <p>PNG is the best choice for:</p>
+        <ul class="blog-list">
+          <li>Graphics, diagrams, and illustrations</li>
+          <li>Screenshots and technical documentation</li>
+          <li>Logos and brand assets</li>
+          <li>Web icons and UI elements</li>
+          <li>Images requiring transparency</li>
+          <li>Quality-critical applications like print design</li>
+        </ul>
+
+        <h3>PNG vs JPEG: Detailed Comparison</h3>
+        <div class="comparison-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Feature</th>
+                <th>PNG</th>
+                <th>JPEG</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Compression Type</strong></td>
+                <td>Lossless</td>
+                <td>Lossy</td>
+              </tr>
+              <tr>
+                <td><strong>Transparency</strong></td>
+                <td>Yes (Full Alpha)</td>
+                <td>No</td>
+              </tr>
+              <tr>
+                <td><strong>File Size</strong></td>
+                <td>Larger (Quality preserved)</td>
+                <td>Smaller (Data reduced)</td>
+              </tr>
+              <tr>
+                <td><strong>Best For</strong></td>
+                <td>Graphics, Logos, UI</td>
+                <td>Photographs, Realistic Images</td>
+              </tr>
+              <tr>
+                <td><strong>Quality Loss</strong></td>
+                <td>None</td>
+                <td>Yes (Artifacts)</td>
+              </tr>
+              <tr>
+                <td><strong>Web Support</strong></td>
+                <td>Universal</td>
+                <td>Universal</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>PNG vs WebP: Which Should You Choose?</h3>
+        <p>WebP is a newer format developed by Google that offers better compression than both PNG and JPEG. However, PNG remains more universally compatible, especially for older browsers and applications. WebP files are typically 25-35% smaller than PNG files while maintaining similar quality.</p>
+        <p>Choose WebP for modern web applications where browser support isn't a concern. Choose PNG when you need maximum compatibility and transparency support.</p>
+
+        <h3>Understanding PNG Transparency (Alpha Channel)</h3>
+        <p>One of PNG's most powerful features is its support for transparency through an alpha channel. This allows each pixel to have not just RGB color values, but also an alpha value indicating how transparent the pixel should be.</p>
+        <ul class="blog-list">
+          <li><strong>Fully Opaque:</strong> Alpha value of 255 (pixel is completely visible)</li>
+          <li><strong>Semi-Transparent:</strong> Alpha value between 1-254 (pixel is partially transparent)</li>
+          <li><strong>Fully Transparent:</strong> Alpha value of 0 (pixel is invisible)</li>
+        </ul>
+        <p>This allows for smooth gradual transparency, perfect for shadows, fade effects, and complex graphics.</p>
+
+        <h3>How to Convert Images to PNG Using Our Tool</h3>
+        <ol class="blog-list numbered">
+          <li>Open the converter and upload your image (JPG, WebP, GIF, BMP, TIFF, or any supported format)</li>
+          <li>The tool automatically detects the format and prepares for conversion</li>
+          <li>Click "Convert to PNG" and wait a few seconds</li>
+          <li>Download your new PNG file or convert more images</li>
+          <li>For multiple images, use the ZIP download to get all conversions at once</li>
+        </ol>
+
+        <h3>Tips for Best PNG Quality</h3>
+        <ul class="blog-list">
+          <li><strong>Start with high-quality originals:</strong> Converting from a compressed JPEG won't improve quality. Start with the best available version.</li>
+          <li><strong>Use PNG for graphics:</strong> PNG's lossless compression excels with graphics, illustrations, and design work.</li>
+          <li><strong>Leverage transparency:</strong> PNG's alpha channel is powerful. Use transparent backgrounds instead of solid colors when possible.</li>
+          <li><strong>Compress after conversion:</strong> Even PNG files can be optimized using compression tools to reduce file size further.</li>
+          <li><strong>Consider alternatives:</strong> For photographs, JPEG is often better. For very large files, WebP might be more suitable.</li>
+        </ul>
+
+        <h3>Common PNG Conversion Questions</h3>
+        <div class="faq-item">
+          <h4>Q: Will converting to PNG make my image bigger?</h4>
+          <p>A: PNG typically has larger file sizes than JPEG for photographs because it uses lossless compression. However, for graphics and illustrations, PNG is often smaller than JPEG.</p>
+        </div>
+        <div class="faq-item">
+          <h4>Q: Can I convert GIF animations to PNG?</h4>
+          <p>A: PNG is a static format. Converting an animated GIF to PNG will save only the first frame as a static image. For animations, use APNG (Animated PNG) or keep the GIF format.</p>
+        </div>
+        <div class="faq-item">
+          <h4>Q: Is PNG good for web use?</h4>
+          <p>A: Yes! PNG is excellent for web use, especially for graphics, icons, and images requiring transparency. Consider using WebP as an alternative for even better compression on modern browsers.</p>
+        </div>
+        <div class="faq-item">
+          <h4>Q: What about transparency when converting from JPEG?</h4>
+          <p>A: JPEG doesn't support transparency. When you convert JPEG to PNG, you'll need to manually add a transparent background using image editing software if needed. Our tool converts the JPEG exactly as-is.</p>
+        </div>
+        <div class="faq-item">
+          <h4>Q: Can I batch convert multiple images?</h4>
+          <p>A: Absolutely! You can upload up to 100 images at once, convert them all simultaneously, and download them as a single ZIP file.</p>
+        </div>
+        <div class="faq-item">
+          <h4>Q: Are my images secure during conversion?</h4>
+          <p>A: Yes, completely! All conversion happens in your browser. Images are never uploaded to our servers and are deleted immediately after conversion.</p>
+        </div>
+
+        <h3>Professional Uses for PNG Conversion</h3>
+        <p>PNG conversion is essential for professionals across various industries:</p>
+        <ul class="blog-list">
+          <li><strong>Web Designers:</strong> Converting between formats for different design projects and ensuring transparency in web graphics</li>
+          <li><strong>UI/UX Designers:</strong> Creating icon sets and UI elements with perfect transparency</li>
+          <li><strong>Content Creators:</strong> Converting screenshot formats and preparing images for social media</li>
+          <li><strong>Developers:</strong> Preparing assets for web and app development</li>
+          <li><strong>Print Professionals:</strong> Converting formats while maintaining quality for print projects</li>
+        </ul>
+
+        <h3>PNG Format Future & APNG</h3>
+        <p>The PNG format continues to evolve. APNG (Animated PNG) is an extension that adds support for animations while maintaining PNG's benefits. APNG allows multiple frames with transparency, making it a powerful alternative to GIF for web animations.</p>
+        <p>As web standards improve, PNG remains relevant and widely used across web, design, and development industries.</p>
+
+        <h3>Conclusion</h3>
+        <p>PNG is an essential image format for anyone working with graphics, web design, or digital content. Its lossless compression, transparency support, and universal compatibility make it the go-to choice for quality-critical applications. Our free PNG converter makes it simple to transform your images into this powerful format without any technical knowledge required.</p>
+      </div>
+    </div>
+  </div>
 </div>
-<link rel="stylesheet" href="{{ url_for('static', filename='css/image_to_jpg.css') }}">
+
 <script src="{{ url_for('static', filename='js/image_to_png.js') }}"></script>
 {% endblock %}

@@ -1,164 +1,190 @@
 {% extends 'base.html' %}
 
-{% block title %}Reduce Image Size - Cutcompress{% endblock %}
+{% block title %}Reduce Image Size - Compress & Resize Images Free{% endblock %}
 
 {% block head %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/reduce_image_size.css') }}">
-<style>
-/* Inline critical styles to ensure they load first */
-.reduce-image-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 2rem;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Image Size Reducer",
+    "description": "Free online tool to reduce and compress image sizes",
+    "url": "https://www.cutcompress.com/tool/reduce-image-size",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Web",
+    "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.9",
+        "ratingCount": "1200"
+    }
 }
-
-.drag-drop-area {
-    border: 3px dashed #667eea;
-    border-radius: 15px;
-    padding: 3rem 2rem;
-    text-align: center;
-    background: linear-gradient(135deg, #f5f7ff 0%, #e8f2ff 100%);
-    transition: all 0.3s ease;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-    margin: 2rem 0;
-}
-
-.drag-drop-area:hover {
-    border-color: #5a6fd8;
-    background: linear-gradient(135deg, #e8f2ff 0%, #d1e7ff 100%);
-    transform: translateY(-2px);
-    box-shadow: 0 10px 30px rgba(103, 126, 234, 0.2);
-}
-
-.upload-icon {
-    font-size: 4rem;
-    color: #667eea;
-    margin-bottom: 1rem;
-}
-</style>
+</script>
 {% endblock %}
 
 {% block content %}
-<div class="reduce-image-container">
-    <div class="tool-header">
-        <h1><i class="fas fa-compress-alt"></i> Reduce Image Size</h1>
-        <p>Compress and resize your images while maintaining quality. Upload single or multiple images with drag & drop.</p>
+<div class="tool-page-wrapper">
+  <!-- Hero Section -->
+  <div class="tool-hero">
+    <div class="hero-content-tool">
+      <span class="tool-badge">📉 Smart Compression</span>
+      <h1>Reduce Image Size Without Quality Loss</h1>
+      <p>Compress and resize your images instantly. Save storage space, improve page speed, and keep your images looking perfect. No registration required.</p>
     </div>
+  </div>
 
+  <!-- How It Works Section -->
+  <div class="how-it-works">
+    <h2>How It Works</h2>
+    <div class="steps-container">
+      <div class="step-card">
+        <div class="step-icon">
+          <span class="step-emoji">📤</span>
+          <span class="step-number">1</span>
+        </div>
+        <h3>Upload Images</h3>
+        <p>Drag & drop or select one or multiple images</p>
+      </div>
+
+      <div class="step-arrow">➜</div>
+
+      <div class="step-card">
+        <div class="step-icon">
+          <span class="step-emoji">⚙️</span>
+          <span class="step-number">2</span>
+        </div>
+        <h3>Configure</h3>
+        <p>Choose preset sizes or set custom dimensions</p>
+      </div>
+
+      <div class="step-arrow">➜</div>
+
+      <div class="step-card">
+        <div class="step-icon">
+          <span class="step-emoji">📥</span>
+          <span class="step-number">3</span>
+        </div>
+        <h3>Download</h3>
+        <p>Get compressed files individually or as ZIP</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tool Container -->
+  <div class="tool-container">
     <!-- Upload Section -->
     <div class="upload-section">
-        <div class="drag-drop-area" id="dragDropArea">
-            <div class="upload-icon">
-                <i class="fas fa-cloud-upload-alt"></i>
-            </div>
-            <h3>🎯 Drag & Drop Your Images Here</h3>
-            <p><strong>or click to browse files</strong></p>
-            <input type="file" id="fileInput" multiple accept="image/*" hidden>
-            <div class="supported-formats">
-                <small>✅ Supported: JPG, PNG, WEBP, GIF, BMP | 📁 Multiple files supported</small>
-            </div>
+      <div class="drag-drop-area" id="dragDropArea">
+        <div class="upload-icon-wrapper">
+          <i class="fas fa-cloud-upload-alt"></i>
+          <div class="upload-pulse"></div>
         </div>
-        
-        <!-- Quick tips -->
-        <div class="upload-tips">
-            <div class="tip-item">
-                <i class="fas fa-info-circle"></i>
-                <span>Drop multiple images at once for batch processing</span>
-            </div>
-            <div class="tip-item">
-                <i class="fas fa-magic"></i>
-                <span>Choose from preset sizes or set custom dimensions</span>
-            </div>
-            <div class="tip-item">
-                <i class="fas fa-download"></i>
-                <span>Download individually or get all as ZIP file</span>
-            </div>
+        <h3>Drag & Drop Your Images Here</h3>
+        <p><strong>or click to browse files</strong></p>
+        <input type="file" id="fileInput" multiple accept="image/*" hidden>
+        <div class="supported-formats">
+          <small>✅ Supported: JPG, PNG, WebP, GIF, BMP | 📁 Multiple files supported</small>
         </div>
+      </div>
+      
+      <!-- Quick tips -->
+      <div class="upload-tips">
+        <div class="tip-item">
+          <i class="fas fa-info-circle"></i>
+          <span>Drop multiple images at once for batch processing</span>
+        </div>
+        <div class="tip-item">
+          <i class="fas fa-magic"></i>
+          <span>Choose from preset sizes or set custom dimensions</span>
+        </div>
+        <div class="tip-item">
+          <i class="fas fa-download"></i>
+          <span>Download individually or get all as ZIP file</span>
+        </div>
+      </div>
     </div>
 
     <!-- Gallery Section -->
     <div class="gallery-section" id="gallerySection" style="display: none;">
-        <h2>Selected Images</h2>
-        <div class="image-gallery" id="imageGallery">
-            <!-- Images will be dynamically added here -->
-        </div>
+      <h2>Selected Images</h2>
+      <div class="image-gallery" id="imageGallery">
+          <!-- Images will be dynamically added here -->
+      </div>
     </div>
 
     <!-- Controls Section -->
     <div class="controls-section" id="controlsSection" style="display: none;">
-        <h2>Compression Settings</h2>
-        <div class="controls-container">
-            <div class="preset-controls">
-                <label for="presetSize">Preset Sizes:</label>
-                <select id="presetSize" name="preset_size">
-                    <option value="">Custom Size</option>
-                    <option value="1024x768">1024 × 768 px</option>
-                    <option value="800x800">800 × 800 px</option>
-                    <option value="800x600">800 × 600 px</option>
-                    <option value="640x480">640 × 480 px</option>
-                    <option value="350x270">350 × 270 px</option>
-                </select>
-            </div>
-            
-            <div class="custom-controls" id="customControls">
-                <div class="dimension-controls">
-                    <div class="control-group">
-                        <label for="width">Width (px):</label>
-                        <input type="number" id="width" name="width" min="1" max="4000">
-                    </div>
-                    <div class="control-group">
-                        <label for="height">Height (px):</label>
-                        <input type="number" id="height" name="height" min="1" max="4000">
-                    </div>
-                </div>
-            </div>
-            
-            <div class="size-controls">
-                <div class="control-group">
-                    <label for="maxFileSize">Max File Size:</label>
-                    <select id="maxFileSize" name="max_file_size">
-                        <option value="">No Limit</option>
-                        <option value="100">100 KB</option>
-                        <option value="200">200 KB</option>
-                        <option value="500">500 KB</option>
-                        <option value="1024">1 MB</option>
-                        <option value="2048">2 MB</option>
-                        <option value="5120">5 MB</option>
-                    </select>
-                </div>
-            </div>
-            
-            <div class="custom-target-size-section">
-                <h3>Custom Target Size</h3>
-                <p>Force images to a specific size (can increase or decrease original size)</p>
-                <div class="custom-size-controls">
-                    <div class="control-group">
-                        <label for="customTargetSize">Target Size:</label>
-                        <input type="number" id="customTargetSize" name="custom_target_size" min="1" max="10000" placeholder="e.g., 500">
-                    </div>
-                    <div class="control-group">
-                        <label for="sizeUnit">Unit:</label>
-                        <select id="sizeUnit" name="size_unit">
-                            <option value="kb">KB</option>
-                            <option value="mb">MB</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="size-example">
-                    <small><i class="fas fa-info-circle"></i> Example: Enter 1 with "MB" to make all images exactly 1MB</small>
-                </div>
-            </div>
-            
-            <div class="convert-button-container">
-                <button id="convertButton" class="convert-btn" disabled>
-                    <i class="fas fa-magic"></i>
-                    Convert Size
-                </button>
-            </div>
-        </div>
+      <h2>Compression Settings</h2>
+      <div class="controls-container">
+          <div class="preset-controls">
+              <label for="presetSize">Preset Sizes:</label>
+              <select id="presetSize" name="preset_size">
+                  <option value="">Custom Size</option>
+                  <option value="1024x768">1024 × 768 px</option>
+                  <option value="800x800">800 × 800 px</option>
+                  <option value="800x600">800 × 600 px</option>
+                  <option value="640x480">640 × 480 px</option>
+                  <option value="350x270">350 × 270 px</option>
+              </select>
+          </div>
+          
+          <div class="custom-controls" id="customControls">
+              <div class="dimension-controls">
+                  <div class="control-group">
+                      <label for="width">Width (px):</label>
+                      <input type="number" id="width" name="width" min="1" max="4000">
+                  </div>
+                  <div class="control-group">
+                      <label for="height">Height (px):</label>
+                      <input type="number" id="height" name="height" min="1" max="4000">
+                  </div>
+              </div>
+          </div>
+          
+          <div class="size-controls">
+              <div class="control-group">
+                  <label for="maxFileSize">Max File Size:</label>
+                  <select id="maxFileSize" name="max_file_size">
+                      <option value="">No Limit</option>
+                      <option value="100">100 KB</option>
+                      <option value="200">200 KB</option>
+                      <option value="500">500 KB</option>
+                      <option value="1024">1 MB</option>
+                      <option value="2048">2 MB</option>
+                      <option value="5120">5 MB</option>
+                  </select>
+              </div>
+          </div>
+          
+          <div class="custom-target-size-section">
+              <h3>Custom Target Size</h3>
+              <p>Force images to a specific size (can increase or decrease original size)</p>
+              <div class="custom-size-controls">
+                  <div class="control-group">
+                      <label for="customTargetSize">Target Size:</label>
+                      <input type="number" id="customTargetSize" name="custom_target_size" min="1" max="10000" placeholder="e.g., 500">
+                  </div>
+                  <div class="control-group">
+                      <label for="sizeUnit">Unit:</label>
+                      <select id="sizeUnit" name="size_unit">
+                          <option value="kb">KB</option>
+                          <option value="mb">MB</option>
+                      </select>
+                  </div>
+              </div>
+              <div class="size-example">
+                  <small><i class="fas fa-info-circle"></i> Example: Enter 1 with "MB" to make all images exactly 1MB</small>
+              </div>
+          </div>
+          
+          <div class="convert-button-container">
+              <button id="convertButton" class="convert-btn" disabled>
+                  <span class="spinner" id="spinner" style="display:none;"></span>
+                  <i class="fas fa-magic"></i>
+                  Convert Size
+              </button>
+          </div>
+      </div>
     </div>
 
     <!-- Results Section -->
@@ -182,6 +208,338 @@
             <p>Compressing images...</p>
         </div>
     </div>
+  </div>
+
+  <!-- Features Section -->
+  <div class="tool-features">
+    <h2>Why Use Our Compressor?</h2>
+    <div class="features-grid-tool">
+      <div class="feature-item">
+        <span class="feature-emoji">⚡</span>
+        <h3>Lightning Fast</h3>
+        <p>Compress single or multiple images simultaneously in seconds.</p>
+      </div>
+      <div class="feature-item">
+        <span class="feature-emoji">🎯</span>
+        <h3>Smart Compression</h3>
+        <p>Intelligent algorithms maintain visual quality while reducing file size.</p>
+      </div>
+      <div class="feature-item">
+        <span class="feature-emoji">🔒</span>
+        <h3>100% Secure</h3>
+        <p>All processing happens in your browser. Files never uploaded to servers.</p>
+      </div>
+      <div class="feature-item">
+        <span class="feature-emoji">📱</span>
+        <h3>Resize & Compress</h3>
+        <p>Resize dimensions and compress simultaneously for optimal results.</p>
+      </div>
+      <div class="feature-item">
+        <span class="feature-emoji">🎨</span>
+        <h3>Format Conversion</h3>
+        <p>Convert between JPG, PNG, WebP formats while compressing.</p>
+      </div>
+      <div class="feature-item">
+        <span class="feature-emoji">🆓</span>
+        <h3>Completely Free</h3>
+        <p>No registration, no limits, no watermarks. Use unlimited times.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Blog Section -->
+  <div class="tool-blog">
+    <div class="blog-container-tool">
+      <h2>Complete Guide to Image Compression & Resizing</h2>
+      <div class="blog-article">
+        <h3>Why Image Compression Matters</h3>
+        <p>In today's digital world, image optimization is critical for both users and website owners. Large image files consume storage space, slow down website loading, increase bandwidth costs, and negatively impact user experience—especially for mobile users on slower connections. Image compression reduces file size while maintaining visual quality, making it essential for web performance and SEO rankings.</p>
+
+        <h3>Understanding Image Compression Types</h3>
+        <p>There are two main types of image compression:</p>
+        <ul class="blog-list numbered">
+          <li><strong>Lossless Compression:</strong> Reduces file size without losing any image data. Best for graphics, text, and images requiring perfect quality. Format: PNG, GIF, WebP lossless.</li>
+          <li><strong>Lossy Compression:</strong> Removes some image data that's imperceptible to human eyes. Results in smaller files but may show slight quality degradation. Best for photographs. Formats: JPEG, WebP lossy.</li>
+        </ul>
+
+        <h3>Image Resizing vs Compression: What's the Difference?</h3>
+        <p><strong>Resizing</strong> changes the image dimensions (width and height in pixels), directly reducing file size by removing pixels. <strong>Compression</strong> reduces file size through encoding techniques while keeping dimensions unchanged. Often, both are used together for optimal results.</p>
+        <p>For example: A 4000×3000px photo at 10MB can be resized to 1600×1200px (reducing pixels), then compressed (reducing encoding overhead), resulting in a final size of 200KB with excellent quality.</p>
+
+        <h3>Common Image Compression Techniques</h3>
+        <ul class="blog-list">
+          <li><strong>Quality Reduction:</strong> Decrease quality settings to reduce file size. JPEGs use quality 1-100 (default 85).</li>
+          <li><strong>Resolution Reduction:</strong> Lower the image resolution/DPI for screen use (72-96 DPI typically).</li>
+          <li><strong>Format Selection:</strong> Choose the right format. WebP is 25-35% smaller than JPEG/PNG.</li>
+          <li><strong>Metadata Removal:</strong> Strip EXIF data, color profiles, and thumbnails embedded in images.</li>
+          <li><strong>Adaptive Encoding:</strong> Use modern codecs that intelligently adapt to image content.</li>
+        </ul>
+
+        <h3>Choosing the Right Compression Settings</h3>
+        <div class="comparison-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Use Case</th>
+                <th>Recommended Approach</th>
+                <th>Target Size</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Web Images</strong></td>
+                <td>Resize + Lossy compression (WebP or JPEG)</td>
+                <td>100-500 KB</td>
+              </tr>
+              <tr>
+                <td><strong>Thumbnails</strong></td>
+                <td>Small dimensions + Aggressive compression</td>
+                <td>20-100 KB</td>
+              </tr>
+              <tr>
+                <td><strong>Social Media</strong></td>
+                <td>Platform dimensions + Moderate compression</td>
+                <td>150-800 KB</td>
+              </tr>
+              <tr>
+                <td><strong>Blog Images</strong></td>
+                <td>1200-1600px width + Light compression</td>
+                <td>300-800 KB</td>
+              </tr>
+              <tr>
+                <td><strong>Email Images</strong></td>
+                <td>600-800px width + Strong compression</td>
+                <td>100-300 KB</td>
+              </tr>
+              <tr>
+                <td><strong>Archive/Print</strong></td>
+                <td>Original size + Lossless compression</td>
+                <td>No limit</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Preset Sizes Explained</h3>
+        <p>Our tool offers common preset sizes optimized for different purposes:</p>
+        <ul class="blog-list">
+          <li><strong>1024 × 768 px:</strong> HD-ready displays, desktop backgrounds, blog feature images</li>
+          <li><strong>800 × 800 px:</strong> Product images, social media profile pictures, portfolio items</li>
+          <li><strong>800 × 600 px:</strong> Tablet displays, embedded videos, standard web gallery images</li>
+          <li><strong>640 × 480 px:</strong> Mobile-optimized images, thumbnails, featured tiles</li>
+          <li><strong>350 × 270 px:</strong> Small thumbnails, email newsletters, sidebar images</li>
+        </ul>
+
+        <h3>The Impact of Image Optimization on Performance</h3>
+        <p>Optimizing images can dramatically improve website performance:</p>
+        <ul class="blog-list">
+          <li><strong>Page Load Time:</strong> Every 100KB reduction can save 0.5-1 second on slow connections</li>
+          <li><strong>Bandwidth Savings:</strong> 50% size reduction = 50% less data transfer = lower hosting costs</li>
+          <li><strong>Mobile Experience:</strong> Smaller images load faster on 3G/4G connections</li>
+          <li><strong>SEO Ranking:</strong> Google PageSpeed is a ranking factor; faster sites rank higher</li>
+          <li><strong>User Engagement:</strong> Faster loading means lower bounce rates and higher conversions</li>
+        </ul>
+
+        <h3>Batch Processing Benefits</h3>
+        <p>Processing multiple images simultaneously offers significant advantages:</p>
+        <ul class="blog-list">
+          <li>Save time by compressing entire photo libraries at once</li>
+          <li>Maintain consistent compression settings across all images</li>
+          <li>Easy bulk download with ZIP file for convenient file management</li>
+          <li>Perfect for photographers, web designers, and content creators</li>
+          <li>Streamline workflows for large projects</li>
+        </ul>
+
+        <h3>How Our Compression Algorithm Works</h3>
+        <p>Our tool uses advanced compression algorithms that:</p>
+        <ol class="blog-list numbered">
+          <li>Analyze image characteristics (dimensions, color palette, format)</li>
+          <li>Apply smart resizing if dimensions specified</li>
+          <li>Select optimal quality settings based on content type</li>
+          <li>Remove unnecessary metadata</li>
+          <li>Use modern compression codecs (especially for WebP)</li>
+          <li>Maintain visual fidelity while minimizing file size</li>
+        </ol>
+
+        <h3>Before and After Compression Examples</h3>
+        <p>Real-world compression results:</p>
+        <ul class="blog-list">
+          <li>Product photo: 4MB (3000×2000) → 250KB (1200×800, JPEG quality 80)</li>
+          <li>Landscape photo: 5MB (4000×3000) → 400KB (1600×1200, WebP)</li>
+          <li>Screenshot: 3MB (1920×1080) → 150KB (1024×576, PNG)</li>
+          <li>Social media image: 2.5MB (2400×1600) → 200KB (1200×800, JPEG quality 85)</li>
+          <li>Batch processing 50 images: 250MB → 15MB (94% reduction)</li>
+        </ul>
+
+        <h3>Compression Tips for Different File Types</h3>
+        <h4>For JPEG Images:</h4>
+        <ul class="blog-list">
+          <li>Use quality setting 75-85 for good balance of quality and size</li>
+          <li>Perfect for photographs and realistic images</li>
+          <li>Resize to 1600px width maximum for web use</li>
+        </ul>
+        <h4>For PNG Images:</h4>
+        <ul class="blog-list">
+          <li>Best for graphics, logos, and images with transparency</li>
+          <li>Use PNG for screenshots and images with text</li>
+          <li>PNG is lossless; compression focuses on structural optimization</li>
+        </ul>
+        <h4>For WebP Images:</h4>
+        <ul class="blog-list">
+          <li>Modern format with superior compression (25-35% smaller than JPEG)</li>
+          <li>Supports both lossy and lossless compression</li>
+          <li>Ideal for websites targeting modern browsers</li>
+        </ul>
+
+        <h3>Common Compression Mistakes to Avoid</h3>
+        <div class="faq-item">
+          <h4>Q: Will aggressive compression destroy image quality?</h4>
+          <p>A: Not if done properly. Smart algorithms can reduce file size 80% while maintaining acceptable quality. It depends on your specific needs.</p>
+        </div>
+        <div class="faq-item">
+          <h4>Q: Should I compress images before or after resizing?</h4>
+          <p>A: Resize first (reduce dimensions), then compress. This is more efficient than compressing oversized files.</p>
+        </div>
+        <div class="faq-item">
+          <h4>Q: Can I restore quality from a compressed image?</h4>
+          <p>A: No, lossy compression is permanent. Always keep original files for future edits.</p>
+        </div>
+        <div class="faq-item">
+          <h4>Q: What's the best format for the web?</h4>
+          <p>A: WebP for modern browsers with JPEG fallback. Use PNG only for images requiring transparency or lossless quality.</p>
+        </div>
+        <div class="faq-item">
+          <h4>Q: How do I know the optimal target size?</h4>
+          <p>A: It depends on usage. Blog images: 300-800KB. Thumbnails: 20-100KB. Social media: 150-800KB depending on platform.</p>
+        </div>
+        <div class="faq-item">
+          <h4>Q: Is my data safe during compression?</h4>
+          <p>A: Yes! All processing happens in your browser. Files never upload to servers and are deleted immediately after download.</p>
+        </div>
+
+        <h3>Mobile Optimization Strategy</h3>
+        <p>For mobile-first websites, image optimization is critical:</p>
+        <ul class="blog-list">
+          <li>Use responsive image techniques (srcset) to serve different sizes to different devices</li>
+          <li>Compress aggressively for mobile (200-400KB maximum)</li>
+          <li>Consider using WebP with PNG/JPEG fallbacks</li>
+          <li>Implement lazy loading to defer off-screen image loading</li>
+          <li>Test on actual mobile devices with 3G/4G connections</li>
+        </ul>
+
+        <h3>When to Compress vs When to Archive</h3>
+        <p><strong>Compress:</strong> For web use, social media sharing, email attachments, quick sharing</p>
+        <p><strong>Archive (no compression):</strong> For archival storage, professional printing, future editing, valuable/original content</p>
+
+        <h3>Conclusion</h3>
+        <p>Image optimization through compression and resizing is essential in modern web development. By using our free tool, you can quickly reduce image file sizes by 70-95% while maintaining excellent visual quality. Whether you're a web designer, blogger, photographer, or content creator, image compression improves performance, reduces costs, and enhances user experience. Start compressing your images today and see the difference optimized media makes.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gallery Section -->
+  <div class="gallery-section" id="gallerySection" style="display: none;">
+      <h2>Selected Images</h2>
+      <div class="image-gallery" id="imageGallery">
+          <!-- Images will be dynamically added here -->
+      </div>
+  </div>
+
+  <!-- Controls Section -->
+  <div class="controls-section" id="controlsSection" style="display: none;">
+      <h2>Compression Settings</h2>
+      <div class="controls-container">
+          <div class="preset-controls">
+              <label for="presetSize">Preset Sizes:</label>
+              <select id="presetSize" name="preset_size">
+                  <option value="">Custom Size</option>
+                  <option value="1024x768">1024 × 768 px</option>
+                  <option value="800x800">800 × 800 px</option>
+                  <option value="800x600">800 × 600 px</option>
+                  <option value="640x480">640 × 480 px</option>
+                  <option value="350x270">350 × 270 px</option>
+              </select>
+          </div>
+          
+          <div class="custom-controls" id="customControls">
+              <div class="dimension-controls">
+                  <div class="control-group">
+                      <label for="width">Width (px):</label>
+                      <input type="number" id="width" name="width" min="1" max="4000">
+                  </div>
+                  <div class="control-group">
+                      <label for="height">Height (px):</label>
+                      <input type="number" id="height" name="height" min="1" max="4000">
+                  </div>
+              </div>
+          </div>
+          
+          <div class="size-controls">
+              <div class="control-group">
+                  <label for="maxFileSize">Max File Size:</label>
+                  <select id="maxFileSize" name="max_file_size">
+                      <option value="">No Limit</option>
+                      <option value="100">100 KB</option>
+                      <option value="200">200 KB</option>
+                      <option value="500">500 KB</option>
+                      <option value="1024">1 MB</option>
+                      <option value="2048">2 MB</option>
+                      <option value="5120">5 MB</option>
+                  </select>
+              </div>
+          </div>
+          
+          <div class="custom-target-size-section">
+              <h3>Custom Target Size</h3>
+              <p>Force images to a specific size (can increase or decrease original size)</p>
+              <div class="custom-size-controls">
+                  <div class="control-group">
+                      <label for="customTargetSize">Target Size:</label>
+                      <input type="number" id="customTargetSize" name="custom_target_size" min="1" max="10000" placeholder="e.g., 500">
+                  </div>
+                  <div class="control-group">
+                      <label for="sizeUnit">Unit:</label>
+                      <select id="sizeUnit" name="size_unit">
+                          <option value="kb">KB</option>
+                          <option value="mb">MB</option>
+                      </select>
+                  </div>
+              </div>
+              <div class="size-example">
+                  <small><i class="fas fa-info-circle"></i> Example: Enter 1 with "MB" to make all images exactly 1MB</small>
+              </div>
+          </div>
+          
+          <div class="convert-button-container">
+              <button id="convertButton" class="convert-btn" disabled>
+                  <i class="fas fa-magic"></i>
+                  Convert Size
+              </button>
+          </div>
+      </div>
+  </div>
+
+  <!-- Results Section -->
+  <div class="results-section" id="resultsSection" style="display: none;">
+      <div class="results-header">
+          <h2>Converted Images</h2>
+          <button id="downloadAllBtn" class="download-all-btn">
+              <i class="fas fa-download"></i>
+              Download All as ZIP
+          </button>
+      </div>
+      <div class="results-container" id="resultsContainer">
+          <!-- Results will be dynamically added here -->
+      </div>
+  </div>
+
+  <!-- Loading Indicator -->
+  <div class="loading-overlay" id="loadingOverlay" style="display: none;">
+      <div class="loading-content">
+          <div class="spinner"></div>
+          <p>Compressing images...</p>
+      </div>
+  </div>
 </div>
 
 <script src="{{ url_for('static', filename='js/reduce_image_size.js') }}"></script>

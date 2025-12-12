@@ -123,6 +123,16 @@ document.addEventListener('DOMContentLoaded', () => {
                     ctx.fillRect(0, 0, canvas.width, canvas.height);
                     ctx.drawImage(img, 0, 0);
                     console.log("Applied color background:", currentBg.value);
+                } else if (currentBg.type === 'gradient') {
+                    // For gradients, apply them as background to the overlay directly
+                    overlay.style.background = currentBg.value;
+                    overlay.style.backgroundImage = 'none';
+                    // Still show the processed image on top
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    ctx.drawImage(img, 0, 0);
+                    overlay.style.backgroundImage = `url(${canvas.toDataURL()})`;
+                    console.log("Applied gradient background:", currentBg.value);
+                    return;
                 } else if (currentBg.type === 'image') {
                     const bgImg = new Image();
                     bgImg.crossOrigin = "anonymous";
@@ -177,12 +187,27 @@ document.addEventListener('DOMContentLoaded', () => {
         updateAfterImage();
     });
 
-    // Predefined BG
+    // Predefined BG - Handle Gradients
     predefinedBgs.forEach(bg => {
         bg.addEventListener('click', () => {
-            predefinedBgs.forEach(b => b.classList.remove('selected'));
-            bg.classList.add('selected');
-            currentBg = { type: 'image', value: bg.dataset.url };
+            predefinedBgs.forEach(b => {
+                const allSelected = b.querySelector('.selected');
+                if (allSelected) allSelected.remove();
+            });
+            const checkmark = document.createElement('div');
+            checkmark.className = 'selected';
+            checkmark.innerHTML = '✓';
+            checkmark.style.cssText = 'position:absolute;top:5px;right:5px;background:#10b981;color:white;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;';
+            bg.style.position = 'relative';
+            bg.appendChild(checkmark);
+            
+            // Get the gradient value or image URL
+            const bgStyle = bg.getAttribute('data-value') || bg.style.backgroundImage;
+            if (bgStyle && bgStyle.includes('linear-gradient')) {
+                currentBg = { type: 'gradient', value: bgStyle };
+            } else {
+                currentBg = { type: 'image', value: bgStyle };
+            }
             updateAfterImage();
         });
     });

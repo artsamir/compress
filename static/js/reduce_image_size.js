@@ -363,6 +363,10 @@ class ImageReducer {
 
     showLoading(show) {
         this.loadingOverlay.style.display = show ? 'block' : 'none';
+        const spinner = document.querySelector('.spinner');
+        if (spinner) {
+            spinner.style.display = show ? 'inline-block' : 'none';
+        }
     }
 
     formatFileSize(bytes) {

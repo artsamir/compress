@@ -5,6 +5,7 @@
 
 {% block head %}
     <meta name="robots" content="index, follow">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/image_to_webp.css') }}">
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
@@ -24,26 +25,326 @@
 {% endblock %}
 
 {% block content %}
-<div class="container">
-  <h1>Any Image to WEBP</h1>
-  <div id="uploadBox" class="upload-box">
-    <input type="file" id="imageInput" multiple accept="image/*" hidden>
-    <div class="upload-instructions">
-      <i class="fas fa-cloud-upload-alt"></i>
-      <p>Drag & drop images here or</p>
-      <button id="browseBtn" type="button">Browse Files</button>
-      <p class="upload-limit">(Up to 100 images)</p>
+<div class="tool-page-wrapper">
+  <!-- Hero Section -->
+  <div class="tool-hero">
+    <div class="hero-content-tool">
+      <span class="tool-badge">⚡ Next-Gen Image Format</span>
+      <h1>Convert Any Image to WebP Format</h1>
+      <p>Transform your images to WebP with superior compression and quality. Reduce file sizes by up to 35% and improve web performance. Completely free and browser-based.</p>
     </div>
   </div>
-  <div id="preUploadPreview" class="upload-preview" style="display:none;"></div>
-  <div class="convert-actions"><button id="convertBtn" disabled>Convert to WEBP</button></div>
-  <div id="progressBar" class="progress-bar" style="display:none;"><div id="progressFill" class="progress-fill"></div><span id="progressText">0%</span></div>
-  <div class="view-toggle" style="display:none;"><button id="listViewBtn" class="active"><i class="fas fa-list"></i> List View</button><button id="galleryViewBtn"><i class="fas fa-th"></i> Gallery View</button></div>
-  <div id="listView" class="list-view"></div>
-  <div id="galleryView" class="gallery-view"></div>
-  <div class="download-actions"><button id="downloadZipBtn" class="btn-zip" disabled><i class="fas fa-file-zipper"></i> Download All (ZIP)</button></div>
-  <div class="add-more"><button id="addNewBtn" type="button"><i class="fas fa-plus"></i> Add New Image</button></div>
+
+  <!-- How It Works Section -->
+  <div class="how-it-works">
+    <h2>How It Works</h2>
+    <div class="steps-container">
+      <div class="step-card">
+        <div class="step-icon">
+          <span class="step-emoji">📤</span>
+          <span class="step-number">1</span>
+        </div>
+        <h3>Upload Images</h3>
+        <p>Select or drag & drop your images (JPG, PNG, GIF, WebP, etc.)</p>
+      </div>
+
+      <div class="step-arrow">➜</div>
+
+      <div class="step-card">
+        <div class="step-icon">
+          <span class="step-emoji">✨</span>
+          <span class="step-number">2</span>
+        </div>
+        <h3>Optimize</h3>
+        <p>Our converter instantly optimizes for best WebP compression</p>
+      </div>
+
+      <div class="step-arrow">➜</div>
+
+      <div class="step-card">
+        <div class="step-icon">
+          <span class="step-emoji">📥</span>
+          <span class="step-number">3</span>
+        </div>
+        <h3>Download</h3>
+        <p>Save individual WebP files or download all in one ZIP</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tool Container -->
+  <div class="tool-container">
+    <div id="uploadBox" class="upload-box">
+      <input type="file" id="imageInput" multiple accept="image/*" hidden>
+      <div class="upload-icon-wrapper">
+        <i class="fas fa-cloud-upload-alt"></i>
+        <div class="upload-pulse"></div>
+      </div>
+      <div class="upload-instructions">
+        <p><strong>Drag & drop images here</strong></p>
+        <p>or</p>
+        <button id="browseBtn" type="button">Browse Files</button>
+        <p class="upload-limit">(Up to 100 images, max 50MB each)</p>
+      </div>
+    </div>
+
+    <div id="preUploadPreview" class="upload-preview"></div>
+    
+    <div class="convert-actions">
+      <button id="convertBtn" disabled>
+        <span class="spinner" id="spinner" style="display:none;"></span>
+        Convert to WebP
+      </button>
+    </div>
+
+    <div id="progressBar" class="progress-bar" style="display:none;">
+      <div id="progressFill" class="progress-fill"></div>
+      <span id="progressText">0%</span>
+    </div>
+
+    <div class="view-toggle" style="display:none;">
+      <button id="listViewBtn" class="active"><i class="fas fa-list"></i> List View</button>
+      <button id="galleryViewBtn"><i class="fas fa-th"></i> Gallery View</button>
+    </div>
+
+    <div id="listView" class="list-view"></div>
+    <div id="galleryView" class="gallery-view"></div>
+
+    <div class="download-actions">
+      <button id="downloadZipBtn" class="btn-zip" disabled>
+        <i class="fas fa-file-zipper"></i> Download All (ZIP)
+      </button>
+    </div>
+
+    <div class="add-more">
+      <button id="addNewBtn" type="button">
+        <i class="fas fa-plus"></i> Add New Images
+      </button>
+    </div>
+  </div>
+
+  <!-- Features Section -->
+  <div class="tool-features">
+    <h2>Why WebP is Superior</h2>
+    <div class="features-grid-tool">
+      <div class="feature-item">
+        <span class="feature-emoji">📉</span>
+        <h3>Smaller File Sizes</h3>
+        <p>WebP reduces file sizes by 25-35% compared to JPEG and PNG while maintaining quality.</p>
+      </div>
+      <div class="feature-item">
+        <span class="feature-emoji">🎨</span>
+        <h3>Better Quality</h3>
+        <p>Superior compression algorithm delivers better quality at smaller file sizes.</p>
+      </div>
+      <div class="feature-item">
+        <span class="feature-emoji">💨</span>
+        <h3>Faster Loading</h3>
+        <p>Smaller WebP files load faster, improving page speed and user experience.</p>
+      </div>
+      <div class="feature-item">
+        <span class="feature-emoji">🔒</span>
+        <h3>Privacy Protected</h3>
+        <p>All conversions happen in your browser. Files are never uploaded to our servers.</p>
+      </div>
+      <div class="feature-item">
+        <span class="feature-emoji">🌐</span>
+        <h3>Wide Support</h3>
+        <p>WebP is supported by all modern browsers including Chrome, Firefox, Safari, and Edge.</p>
+      </div>
+      <div class="feature-item">
+        <span class="feature-emoji">🆓</span>
+        <h3>Completely Free</h3>
+        <p>No registration, no limits, no watermarks. Convert unlimited images for free.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Supported Formats -->
+  <div class="supported-formats">
+    <h2>Supported Input Formats</h2>
+    <div class="formats-container">
+      <span class="format-badge">JPG/JPEG</span>
+      <span class="format-badge">PNG</span>
+      <span class="format-badge">GIF</span>
+      <span class="format-badge">BMP</span>
+      <span class="format-badge">TIFF</span>
+      <span class="format-badge">WebP</span>
+      <span class="format-badge">ICO</span>
+      <span class="format-badge">SVG</span>
+    </div>
+  </div>
+
+  <!-- Blog Section -->
+  <div class="tool-blog">
+    <div class="blog-container-tool">
+      <h2>Complete WebP Format Guide & Optimization Tips</h2>
+      <div class="blog-article">
+        <h3>What is WebP?</h3>
+        <p>WebP is a modern image format developed by Google that provides superior lossless and lossy compression for images on the web. It was introduced in 2010 and has gained widespread adoption across the internet as a replacement for older formats like JPEG and PNG. WebP combines the best features of both formats while offering significantly better compression.</p>
+
+        <h3>History and Development of WebP</h3>
+        <p>Google developed WebP as part of their broader initiative to accelerate the open web. The format was built on the VP8 video codec and is specifically optimized for modern web browsers and applications. Since its introduction, WebP has become an industry standard for web image optimization, with support from major CDNs, browsers, and image processing tools.</p>
+
+        <h3>Key Advantages of WebP Format</h3>
+        <ul class="blog-list numbered">
+          <li><strong>Superior Compression:</strong> WebP typically achieves 25-35% better compression than JPEG at equivalent quality levels, and 26% better than PNG.</li>
+          <li><strong>Lossless and Lossy Modes:</strong> WebP supports both compression methods, giving developers flexibility in choosing quality vs. file size tradeoffs.</li>
+          <li><strong>Transparency Support:</strong> Like PNG, WebP supports full alpha channel transparency for beautiful transparent backgrounds.</li>
+          <li><strong>Animation Support:</strong> WebP can store multiple frames, replacing animated GIFs with better quality and smaller file sizes.</li>
+          <li><strong>Better Web Performance:</strong> Smaller files mean faster loading times, reduced bandwidth usage, and improved SEO rankings.</li>
+          <li><strong>Metadata Preservation:</strong> WebP can preserve EXIF data and other image metadata during conversion.</li>
+        </ul>
+
+        <h3>WebP vs JPEG: Detailed Comparison</h3>
+        <div class="comparison-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Feature</th>
+                <th>WebP</th>
+                <th>JPEG</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Compression Type</strong></td>
+                <td>Lossless & Lossy</td>
+                <td>Lossy Only</td>
+              </tr>
+              <tr>
+                <td><strong>File Size</strong></td>
+                <td>25-35% smaller</td>
+                <td>Larger</td>
+              </tr>
+              <tr>
+                <td><strong>Transparency</strong></td>
+                <td>Yes (Full Alpha)</td>
+                <td>No</td>
+              </tr>
+              <tr>
+                <td><strong>Animation</strong></td>
+                <td>Yes</td>
+                <td>No</td>
+              </tr>
+              <tr>
+                <td><strong>Browser Support</strong></td>
+                <td>Modern Browsers</td>
+                <td>Universal</td>
+              </tr>
+              <tr>
+                <td><strong>Quality at Same Size</strong></td>
+                <td>Higher</td>
+                <td>Lower</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>WebP vs PNG: Which is Better?</h3>
+        <p>PNG is lossless and ideal for graphics requiring perfect quality, while WebP offers better compression for the same quality. For web use, WebP is almost always superior due to smaller file sizes. However, PNG remains relevant for applications requiring maximum compatibility with older systems.</p>
+        <p>For modern web applications, use WebP. For archival or professional work requiring absolute quality, PNG may be preferred. Most professionals use both - WebP for web delivery, PNG for editing and archival.</p>
+
+        <h3>Understanding WebP Compression Modes</h3>
+        <p>WebP offers multiple compression modes to balance quality and file size:</p>
+        <ul class="blog-list">
+          <li><strong>Lossless Mode:</strong> Provides 26% better compression than PNG while maintaining perfect image quality. Ideal for graphics and screenshots.</li>
+          <li><strong>Lossy Mode:</strong> Uses sophisticated compression algorithms to remove data that's imperceptible to human eyes, similar to JPEG but more efficient.</li>
+          <li><strong>Quality Setting:</strong> Adjustable from 0-100, allowing fine-tuned control over compression level.</li>
+          <li><strong>Method Parameter:</strong> Different processing methods (0-6) offer various speed vs. compression tradeoffs.</li>
+        </ul>
+
+        <h3>How to Optimize Images for WebP Conversion</h3>
+        <ol class="blog-list numbered">
+          <li>Start with high-quality source images (original files or high-quality exports)</li>
+          <li>Use our converter to transform images to WebP format</li>
+          <li>For photographs and natural images, lossy mode works best</li>
+          <li>For graphics and text, consider lossless mode for perfect quality</li>
+          <li>Test quality settings to find the best balance for your use case</li>
+          <li>Implement browser fallbacks for older browsers that don't support WebP</li>
+        </ol>
+
+        <h3>Implementing WebP on Your Website</h3>
+        <p>Modern web developers use the HTML5 <code>&lt;picture&gt;</code> element to serve WebP images with JPEG fallbacks:</p>
+        <p>This approach ensures WebP serves in modern browsers while JPEG serves to older browsers. Many CDNs and image services like Cloudinary and Imgix also automatically serve WebP to compatible browsers.</p>
+
+        <h3>WebP Performance Benefits</h3>
+        <p>Switching from JPEG to WebP can dramatically improve website performance:</p>
+        <ul class="blog-list">
+          <li><strong>Reduced Bandwidth:</strong> 30% smaller files mean 30% less data transfer</li>
+          <li><strong>Faster Page Load:</strong> Smaller images load faster, improving Core Web Vitals scores</li>
+          <li><strong>Better Mobile Experience:</strong> Critical for mobile users with slower connections</li>
+          <li><strong>Improved SEO:</strong> Page speed is a Google ranking factor</li>
+          <li><strong>Lower Hosting Costs:</strong> Reduced bandwidth usage saves money</li>
+        </ul>
+
+        <h3>Use Cases for WebP Format</h3>
+        <p>WebP is ideal for:</p>
+        <ul class="blog-list">
+          <li>E-commerce product images</li>
+          <li>Social media content optimization</li>
+          <li>Blog featured images and thumbnails</li>
+          <li>High-traffic website graphics</li>
+          <li>Mobile app resources</li>
+          <li>Background images and decorative graphics</li>
+          <li>Web animation frames</li>
+        </ul>
+
+        <h3>Browser Support for WebP</h3>
+        <p>WebP enjoys broad support across modern browsers. As of 2024, WebP is supported by:</p>
+        <ul class="blog-list">
+          <li>Chrome/Chromium (all versions since 2010)</li>
+          <li>Firefox (version 65+)</li>
+          <li>Safari (version 16+ on macOS, 17+ on iOS)</li>
+          <li>Edge (all Chromium-based versions)</li>
+          <li>Mobile browsers (Android Chrome, Safari on iOS 16+)</li>
+        </ul>
+        <p>For older browsers, always provide a JPEG or PNG fallback using the <code>&lt;picture&gt;</code> element.</p>
+
+        <h3>WebP File Size Examples</h3>
+        <p>Real-world examples of WebP compression benefits:</p>
+        <ul class="blog-list">
+          <li>Product photo: 500KB JPEG → 320KB WebP (36% reduction)</li>
+          <li>Logo graphic: 150KB PNG → 110KB WebP (27% reduction)</li>
+          <li>Screenshot: 200KB PNG → 140KB WebP (30% reduction)</li>
+          <li>Blog header: 800KB JPEG → 480KB WebP (40% reduction)</li>
+        </ul>
+
+        <h3>Common WebP Conversion Questions</h3>
+        <div class="faq-item">
+          <h4>Q: Will converting to WebP reduce image quality?</h4>
+          <p>A: No, if done correctly. Our converter uses optimal settings to maintain visual quality while achieving maximum compression. You'll see no visible difference while enjoying significant file size reduction.</p>
+        </div>
+        <div class="faq-item">
+          <h4>Q: Do I need to support older browsers?</h4>
+          <p>A: If your audience includes older browsers, use the HTML5 picture element to serve WebP to modern browsers and JPEG/PNG to older ones.</p>
+        </div>
+        <div class="faq-item">
+          <h4>Q: Can I convert animated GIFs to WebP?</h4>
+          <p>A: Yes! WebP supports animation and produces much smaller files than GIF. A typical animated GIF becomes 50-80% smaller as an animated WebP.</p>
+        </div>
+        <div class="faq-item">
+          <h4>Q: Is WebP suitable for printing?</h4>
+          <p>A: While WebP is excellent for screen display, JPEG or PNG is better for print. Use WebP for web, but keep high-quality JPEG/PNG for print files.</p>
+        </div>
+        <div class="faq-item">
+          <h4>Q: How do I implement WebP with fallbacks?</h4>
+          <p>A: Use the HTML5 picture element to serve WebP to compatible browsers and PNG/JPEG to others. CDN services can also automate this process.</p>
+        </div>
+        <div class="faq-item">
+          <h4>Q: Does WebP preserve metadata?</h4>
+          <p>A: Yes, WebP can preserve EXIF and other metadata, though our converter may strip it for file size optimization. Request metadata preservation if needed.</p>
+        </div>
+
+        <h3>Future of WebP and Image Formats</h3>
+        <p>WebP is here to stay and is increasingly becoming the standard for web image delivery. As browser support continues to improve and edge cases are resolved, WebP adoption will only increase. For new projects, WebP should be your primary image format, with PNG/JPEG as fallbacks only.</p>
+
+        <h3>Conclusion</h3>
+        <p>WebP represents the evolution of web image formats, offering superior compression, better quality, and broader capabilities than JPEG and PNG. By converting your images to WebP, you'll improve website performance, reduce bandwidth costs, and provide a better user experience. Our free WebP converter makes it simple to transform your entire image library in minutes.</p>
+      </div>
+    </div>
+  </div>
 </div>
-<link rel="stylesheet" href="{{ url_for('static', filename='css/image_to_jpg.css') }}">
+
 <script src="{{ url_for('static', filename='js/image_to_webp.js') }}"></script>
 {% endblock %}
