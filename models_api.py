@@ -63,7 +63,7 @@ class APIKey(db.Model):
     __tablename__ = 'api_keys'
     
     id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)  # User সাথে সম্পর্ক
+    user_id = db.Column(db.String(36), db.ForeignKey('users.id'), nullable=True)  # User সাথে সম্পর্ক (use String to match users.id)
     key_hash = db.Column(db.String(255), unique=True, nullable=False)  # হ্যাশড কী
     key_prefix = db.Column(db.String(10), nullable=False)  # প্রথম ১০ চর (দেখানোর জন্য)
     

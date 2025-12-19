@@ -5,3 +5,7 @@ pip freeze > requirements.txt
 add windows requirements
 pywin32==311
 pyreadline3==3.5.4
+tvve eylj hinl rngh --ei j -- 84f7f9cb1741ff593568fbd5c68b104b2c82f4e96f48e07b
+- python3
+- import secrets
+-  print(secrets.token_hex(24))
